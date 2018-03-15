@@ -40,7 +40,7 @@ public class TokenResource {
     }
     
     @PreAuthorize("permitAll")
-    @GetMapping("/state")
+    @RequestMapping(value="/state", method = RequestMethod.GET)
     public String getState() {
         return "{\"state\":\"ok\"}";
     }

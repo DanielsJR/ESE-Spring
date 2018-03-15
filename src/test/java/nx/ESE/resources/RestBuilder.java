@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //import org.apache.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -57,6 +59,8 @@ public class RestBuilder<T> {
     private HttpMethod method;
 
     private boolean log;
+    
+    private static final Logger logger = LoggerFactory.getLogger(RestBuilder.class);
 
     public RestBuilder(String serverUri, int port) {
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -184,18 +188,18 @@ public class RestBuilder<T> {
     public T build() {
         ResponseEntity<T> response;
         if (log) {
-           // Logger.getLogger(this.getClass()).info(method + " " + this.path + this.headers() + "{" + this.body + "}");
+        	logger.info(method + " " + this.path + this.headers() + "{" + this.body + "}");
         }
         if (body != null && !method.equals(HttpMethod.GET)) {
             response = restTemplate.exchange(this.uri(), method, new HttpEntity<Object>(body, this.headers()), clazz);
             if (log) {
-              //  Logger.getLogger(this.getClass()).info(response.getStatusCode() + "==" + response.getHeaders());
+            	logger.info(response.getStatusCode() + "==" + response.getHeaders());
             }
             return response.getBody();
         } else {
             response = restTemplate.exchange(this.uri(), method, new HttpEntity<Object>(this.headers()), clazz);
             if (log) {
-               // Logger.getLogger(this.getClass()).info(response.getStatusCode() + "==" + response.getHeaders());
+            	logger.info(response.getStatusCode() + "==" + response.getHeaders());
             }
             return response.getBody();
         }

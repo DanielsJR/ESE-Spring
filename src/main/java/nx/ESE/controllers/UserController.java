@@ -60,39 +60,5 @@ public class UserController {
 		return this.dniRepeated(userDto.getUsername(), userDto);
 	}
 
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * public boolean putUser(String mobile, UserDto userDto, Role[] roles) {
-	 * User user = this.userRepository.findByMobile(mobile); assert user !=
-	 * null; if
-	 * (Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()))) {
-	 * user.setMobile(userDto.getMobile());
-	 * user.setUsername(userDto.getUsername());
-	 * user.setEmail(userDto.getEmail()); user.setDni(userDto.getDni());
-	 * user.setAddress(userDto.getAddress());
-	 * user.setActive(userDto.isActive()); this.userRepository.save(user); }
-	 * else { return false; } return true; }
-	 * 
-	 * public boolean deleteUser(String mobile, Role[] roles) { User userBd =
-	 * this.userRepository.findByMobile(mobile); if (userBd == null) { return
-	 * true; } else if
-	 * (Arrays.asList(roles).containsAll(Arrays.asList(userBd.getRoles()))) {
-	 * this.userRepository.delete(userBd); return true; } else { return false; }
-	 * }
-	 * 
-	 * public Optional<UserDto> readUser(String mobile, Role[] roles) { User
-	 * userBd = this.userRepository.findByMobile(mobile); if (userBd == null) {
-	 * return Optional.empty(); } else if
-	 * (Arrays.asList(roles).containsAll(Arrays.asList(userBd.getRoles()))) {
-	 * return Optional.of(new UserDto(userBd)); } else { return
-	 * Optional.empty(); } }
-	 * 
-	 * public List<UserDto> readCustomerAll() { return
-	 * this.userRepository.findStudentAll(); }
-	 */
+
 }

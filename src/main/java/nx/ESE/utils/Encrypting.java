@@ -6,8 +6,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-// import org.apache.log4j.Logger;
 
 public class Encrypting {
 
@@ -20,6 +21,8 @@ public class Encrypting {
     public static final String SHA512 = "SHA-512";
 
     private String algorithm;
+    
+    private static final Logger logger = LoggerFactory.getLogger(Encrypting.class);
 
     public Encrypting(String algorithm) {
         this.algorithm = algorithm;
@@ -38,7 +41,7 @@ public class Encrypting {
             messageDigest.update(buffer);
             digest = messageDigest.digest();
         } catch (NoSuchAlgorithmException nsae) {
-          //  Logger.getLogger(this.getClass()).error("Error: " + nsae);
+        	logger.error("Error: " + nsae);
         }
         return digest;
     }

@@ -23,8 +23,8 @@ public class RestService {
     @Value("${nx.admin.password}")
     private String adminPassword;
     
-    //@Value("${nx.databaseSeeder.ymlFileName}")
-   // private String testFile;
+    @Value("${nx.databaseSeeder.ymlFileNameTest}")
+    private String testFile;
 
     private TokenOutputDto tokenDto;
 
