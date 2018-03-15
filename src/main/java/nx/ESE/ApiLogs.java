@@ -27,7 +27,7 @@ public class ApiLogs {
 	public void apiRequestLog(JoinPoint jp) {
 		LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName())
 				.info("------------------------- o -------------------------");
-		String log = "resourceName: " + jp.getSignature().getName();
+		String log = jp.getSignature().getName();
 		for (Object arg : jp.getArgs()) {
 			log += " >>>> arguments: " + arg;
 		}
@@ -37,13 +37,13 @@ public class ApiLogs {
 
 	@AfterReturning(pointcut = "allResources()", returning = "result")
 	public void apiResponseLog(JoinPoint jp, Object result) {
-		String log = "resourceName: " + jp.getSignature().getName() + " >>>> return : " + result;
+		String log = jp.getSignature().getName() + " >>>> return : " + result;
 		LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName()).info(log);
 	}
 
 	@AfterThrowing(pointcut = "allResources()", throwing = "exception")
 	public void apiResponseExceptionLog(JoinPoint jp, Exception exception) {
-		String log = "resourceName: " + jp.getSignature().getName() + " >>>> ReturnedException: "
+		String log = jp.getSignature().getName() + " >>>> ReturnedException: "
 				+ exception.getClass().getSimpleName();
 		LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName()).info(log);
 	}
