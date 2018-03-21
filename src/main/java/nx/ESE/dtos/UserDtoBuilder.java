@@ -6,18 +6,17 @@ import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Token;
 
-
 public class UserDtoBuilder {
 
 	private UserDto userDto;
 
 	public UserDtoBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.userDto = new UserDto();
 	}
 
+
 	public UserDtoBuilder id(String id) {
-		this.userDto = new UserDto();
 		this.userDto.setId(id);
 		return this;
 	}
@@ -29,6 +28,12 @@ public class UserDtoBuilder {
 
 	public UserDtoBuilder password(String password) {
 		this.userDto.setPassword(password);
+		return this;
+	}
+	
+	public UserDtoBuilder usernamePassword(String usernamePassword) {
+		this.userDto.setUsername(usernamePassword);
+		this.userDto.setPassword(usernamePassword);
 		return this;
 	}
 
@@ -86,7 +91,7 @@ public class UserDtoBuilder {
 		this.userDto.setCreatedAt(createdAt);
 		return this;
 	}
-	
+
 	public UserDtoBuilder token(Token token) {
 		this.userDto.setToken(token);
 		return this;

@@ -17,15 +17,56 @@ tokenList:
 userList:
   - username: u000
     password: p000
+    dni: d000
+    mobile: m000
+    email: e000
     roles:
       - ADMIN
       - MANAGER
       - TEACHER
     token: *to0
+    
   - username: u001
+    firstName: fn001 
+    lastName: ln001
     password: p001
+    dni: d001
+    mobile: m001
+    email: e001
     roles:
-      - ADMIN
-      - MANAGER
       - STUDENT
     token: *to1
+    
+  - username: u002
+    firstName: fn002 
+    lastName: ln002 
+    password: p002
+    dni: d002
+    mobile: m002
+    email: e002
+    roles:
+      - STUDENT
+    token: *to2
+    
+  - username: u003
+    firstName: fn003 
+    lastName: ln003 
+    password: p003
+    dni: d003
+    mobile: m003
+    email: e003
+    roles:
+      - STUDENT
+    token: *to3
+    
+  - username: u004
+    firstName: fn004 
+    lastName: ln004 
+    password: p004
+    dni: d004
+    mobile: m004
+    email: e004
+    roles:
+      - STUDENT
+    token: *to4
+    

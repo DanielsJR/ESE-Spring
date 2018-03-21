@@ -17,9 +17,6 @@ import nx.ESE.documents.Role;
 import nx.ESE.documents.User;
 import nx.ESE.repositories.UserRepository;
 
-
-
-
 @Service
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -37,8 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             user = userRepository.findByUsername(UsernameOrTokenValue);
             if (user != null) {
-                return this.userBuilder(String.valueOf(user.getUsername()), user.getPassword(), new Role[] {Role.AUTHENTICATED},
-                        user.isActive());
+                return this.userBuilder(user.getUsername(), user.getPassword(), new Role[] {Role.AUTHENTICATED}, user.isActive());
             } else {
                 throw new UsernameNotFoundException("Username-token not found. " + UsernameOrTokenValue);
             }

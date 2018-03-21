@@ -20,7 +20,6 @@ public class ApiLogs {
 			+ "@annotation(org.springframework.web.bind.annotation.PutMapping) || "
 			+ "@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
 	public void allResources() {
-		// don't need code
 	}
 
 	@Before("allResources()")
@@ -43,9 +42,9 @@ public class ApiLogs {
 
 	@AfterThrowing(pointcut = "allResources()", throwing = "exception")
 	public void apiResponseExceptionLog(JoinPoint jp, Exception exception) {
-		String log = jp.getSignature().getName() + " >>>> ReturnedException: "
-				+ exception.getClass().getSimpleName();
-		LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName()).info(log);
+		String log = jp.getSignature().getName() + " >>>> return: " + exception.getClass().getSimpleName() + " -> "
+				+ exception.getMessage();
+		LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName()).error(log);
 	}
 
 }

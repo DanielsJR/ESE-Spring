@@ -1,0 +1,135 @@
+# RECOMENDABLE SOLO AÑADIR 
+
+# Tokens
+tokenList:
+  - &to0
+    value: PaE8iPX3AekAaV945_ujcm7q1ik
+  - &to1
+    value: 3vZy-CGx0SZ86DjbwqvRfx45hHU
+  - &to2
+    value: 9wPhJxoFQvq4SND5ugNETxKwNKY
+  - &to3
+    value: 64jcnKajqit2bP_npC5-ddMfh6Y
+  - &to4
+    value: otRnEQ7DSaBGnS7C5T8zgs4d06g
+  - &to5
+    value: PaE8iPX3AekAaV945_ujcm323ew
+  - &to6
+    value: 3vZy-CGx0SZ86Djbwvvfdbdhrtt
+  - &to7
+    value: 9wPhJxoFQvq4SND5ugrererg43r
+  - &to8
+    value: 64jcnKajqit2bP_npC5-ddMerer
+  - &to9
+    value: otRnEQ7DSaBGnS7C5T8zgswret3
+    
+# Users u000-u009 ADMIN 
+userList:
+  - username: u000
+    password: p000
+    dni: d000
+    mobile: m000
+    email: e000
+    roles:
+      - ADMIN
+      - MANAGER
+      - TEACHER
+    token: *to0 
+    
+  - username: u001
+    password: p001
+    dni: d001
+    mobile: m001
+    email: e001
+    roles:
+      - ADMIN
+    token: *to1   
+      
+# Users u010-u019 MANAGER 
+  - username: u010
+    password: p010
+    dni: d010
+    mobile: m010
+    email: e010
+    roles:
+      - MANAGER
+      - TEACHER
+    token: *to2
+    
+  - username: u011
+    password: p011
+    dni: d011
+    mobile: m011
+    email: e011
+    roles:
+      - MANAGER
+    token: *to3
+    
+# Users u020-u029 TEACHER   
+  - username: u020
+    firstName: fn020 
+    lastName: ln020
+    password: p020
+    dni: d020
+    mobile: m020
+    email: e020
+    roles:
+      - TEACHER
+    token: *to4
+    
+  - username: u021
+    firstName: fn021 
+    lastName: ln021 
+    password: p021
+    dni: d021
+    mobile: m021
+    email: e021
+    roles:
+      - TEACHER
+    token: *to5
+    
+  - username: u022
+    firstName: fn022 
+    lastName: ln022 
+    password: p022
+    dni: d022
+    mobile: m022
+    email: e022
+    roles:
+      - TEACHER
+    token: *to6
+    
+# Users u030-u039 STUDENT     
+  - username: u030
+    firstName: fn030 
+    lastName: ln030 
+    password: p030
+    dni: d030
+    mobile: m030
+    email: e030
+    roles:
+      - STUDENT
+    token: *to7
+    
+  - username: u031
+    firstName: fn031 
+    lastName: ln031 
+    password: p031
+    dni: d031
+    mobile: m031
+    email: e031
+    roles:
+      - STUDENT
+    token: *to8
+    
+  - username: u032
+    firstName: fn032 
+    lastName: ln032 
+    password: p032
+    dni: d032
+    mobile: m032
+    email: e032
+    roles:
+      - STUDENT
+    token: *to9
+    

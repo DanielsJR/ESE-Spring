@@ -4,28 +4,22 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Token;
+import nx.ESE.documents.User;
 
 public class UserDto {
 
 	private String id;
 
+	@NotNull
 	private String username;
 
 	private String password;
-
-	private Gender gender;
-
-	private Role[] roles;
-
-	private Token token;
-
-	private boolean active;
-
-	private Date createdAt;
-
+	
 	private String firstName;
 
 	private String lastName;
@@ -33,6 +27,8 @@ public class UserDto {
 	private String dni;
 
 	private int age;
+	
+	private Gender gender;
 
 	private String mobile;
 
@@ -42,31 +38,65 @@ public class UserDto {
 
 	private String commune;
 
+	private Role[] roles;
+
+	private Token token;
+
+	private boolean active;
+
+	private Date createdAt;
+
+
 	public UserDto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
+	
 
-	public UserDto(String id, String username, String password, Gender gender, Role[] roles, Token token, boolean active,
-			Date createdAt, String firstName, String lastName, String dni, int age, String mobile, String email,
-			String address, String commune) {
+	public UserDto(String id, @NotNull String username, String password, String firstName, String lastName, String dni, int age,
+			Gender gender, String mobile, String email, String address, String commune, Role[] roles, Token token,
+			boolean active, Date createdAt) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.gender = gender;
-		this.roles = roles;
-		this.token = token;
-		this.active = active;
-		this.createdAt = createdAt;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dni = dni;
 		this.age = age;
+		this.gender = gender;
 		this.mobile = mobile;
 		this.email = email;
 		this.address = address;
 		this.commune = commune;
+		this.roles = roles;
+		this.token = token;
+		this.active = active;
+		this.createdAt = createdAt;
+	}
+	
+	public UserDto(String usernamePass) {
+		
+		this(null, usernamePass, usernamePass, null, null, null, 0, null, null, null, null, null, null, null, true, null);
+	}
+	
+
+	public UserDto(User user){
+		this.id = user.getId();
+		this.username = user.getUsername();
+		this.password = user.getPassword();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.dni = user.getDni();
+		this.age = user.getAge();
+		this.gender = user.getGender();
+		this.mobile = user.getMobile();
+		this.email = user.getEmail();
+		this.address = user.getAddress();
+		this.commune = user.getCommune();
+		this.roles = user.getRoles();
+		this.token = user.getToken();
+		this.active = user.isActive();
+		this.createdAt = user.getCreatedAt();
 	}
 
 	public String getId() {
@@ -197,16 +227,17 @@ public class UserDto {
 		this.commune = commune;
 	}
 
+
 	@Override
 	public String toString() {
 		String date = "null";
 		if (createdAt != null) {
 			date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
 		}
-		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", gender=" + gender
-				+ ", roles=" + Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt="
-				+ date + ", firstName=" + firstName + ", lastName=" + lastName + ", dni=" + dni + ", age=" + age
-				+ ", mobile=" + mobile + ", email=" + email + ", address=" + address + ", commune=" + commune + "]";
+		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", dni=" + dni + ", age=" + age + ", gender=" + gender + ", mobile="
+				+ mobile + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
+				+ Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt=" + date + "]";
 	}
 
 

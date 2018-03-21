@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import nx.ESE.resources.exceptions.ErrorMessage;
 import nx.ESE.resources.exceptions.FieldInvalidException;
+import nx.ESE.resources.exceptions.FileException;
 import nx.ESE.resources.exceptions.ForbiddenException;
 import nx.ESE.resources.exceptions.UserFieldAlreadyExistException;
 import nx.ESE.resources.exceptions.UserIdNotFoundException;
@@ -20,15 +21,14 @@ import nx.ESE.resources.exceptions.UserIdNotFoundException;
 public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({UserIdNotFoundException.class})
+    @ExceptionHandler({UserIdNotFoundException.class, FileException.class,})
     @ResponseBody
     public ErrorMessage notFoundRequest(HttpServletRequest request, Exception exception) {
         return new ErrorMessage(exception, request.getRequestURI());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({Exception.class,	UserFieldAlreadyExistException.class,
-    	FieldInvalidException.class})
+    @ExceptionHandler({Exception.class,	UserFieldAlreadyExistException.class, FieldInvalidException.class})
     @ResponseBody
     public ErrorMessage badRequest(Exception exception) {
         return new ErrorMessage(exception, "");

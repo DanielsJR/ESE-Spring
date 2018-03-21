@@ -7,43 +7,32 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.controllers.TokenController;
 import nx.ESE.dtos.TokenOutputDto;
 
-
 @RestController
 @RequestMapping(TokenResource.TOKENS)
 public class TokenResource {
 
-    public static final String TOKENS = "/tokens";
+	public static final String TOKENS = "/tokens";
+	
+	public static final String AUTHENTICATED = "/authenticated";
 
-    public static final String AUTHENTICATED = "/authenticated";
-    
-    public static final String STATE = "/state";
+	@Autowired
+	private TokenController tokenController;
 
-    @Autowired
-    private TokenController tokenController;
+	@PreAuthorize("authenticated")
+	@PostMapping
+	public TokenOutputDto login(@AuthenticationPrincipal User activeUser) {
+		return tokenController.login(activeUser.getUsername());
+	}
 
-    @PreAuthorize("authenticated")
-    @PostMapping
-    public TokenOutputDto login(@AuthenticationPrincipal User activeUser) {
-        return tokenController.login(activeUser.getUsername());
-    }
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
-    @GetMapping(AUTHENTICATED)
-    public boolean tokenRoles(@AuthenticationPrincipal User activeUser) {
-        return true;
-    }
-    
-    @PreAuthorize("permitAll")
-    @RequestMapping(value="/state", method = RequestMethod.GET)
-    public String getState() {
-        return "{\"state\":\"ok\"}";
-    }
-
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
+	@GetMapping(AUTHENTICATED)
+	public boolean tokenRoles(@AuthenticationPrincipal User activeUser) {
+		return true;
+	}
 
 }

@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
 @Document
 public class User {
 
@@ -20,8 +19,24 @@ public class User {
 	private String username;
 
 	private String password;
+	
+	private String firstName;
+
+	private String lastName;
+
+	private String dni;
+
+	private int age;
 
 	private Gender gender;
+	
+	private String mobile;
+
+	private String email;
+
+	private String address;
+
+	private String commune;
 
 	private Role[] roles;
 
@@ -32,27 +47,33 @@ public class User {
 	private Date createdAt;
 
 	public User() {
-		createdAt = new Date();
 		active = true;
-	}
-	
-	public User(String username, String password) {
-		this();
-		this.username = username;
-		this.password = password;
-		this.gender = Gender.MALE;
-		this.setPassword(password);
-		this.roles = new Role[] { Role.STUDENT };
+		createdAt = new Date();
 	}
 
-	public User(String username, String password, Gender gender) {
+	public User(String username, String password, String firstName, String lastName, String dni, int age, Gender gender,
+			String mobile, String email, String address, String commune) {
 		this();
 		this.username = username;
-		this.password = password;
-		this.gender = gender;
 		this.setPassword(password);
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dni = dni;
+		this.age = age;
+		this.gender = gender;
+		this.mobile = mobile;
+		this.email = email;
+		this.address = address;
+		this.commune = commune;
 		this.roles = new Role[] { Role.STUDENT };
 	}
+	
+
+	public User(String username, String password) {
+		this(username, password, null, null, null, 0, null, null, null, null, null);
+
+	}
+	
 
 	public String getUsername() {
 		return username;
@@ -66,8 +87,40 @@ public class User {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = new BCryptPasswordEncoder().encode(password);
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	public Gender getGender() {
@@ -76,6 +129,38 @@ public class User {
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCommune() {
+		return commune;
+	}
+
+	public void setCommune(String commune) {
+		this.commune = commune;
 	}
 
 	public Role[] getRoles() {
@@ -102,31 +187,35 @@ public class User {
 		this.active = active;
 	}
 
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public String getId() {
 		return id;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-	
-	
-
 	@Override
 	public String toString() {
-	       String date = "null";
-	        if (createdAt != null) {
-	            date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
-	        }
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", gender=" + gender
-				+ ", roles=" + Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt="
-				+ date + "]";
+		String date = "null";
+		if (createdAt != null) {
+			date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
+		}
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", dni=" + dni + ", age=" + age + ", gender=" + gender + ", mobile="
+				+ mobile + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
+				+ Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt=" + date + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((dni == null) ? 0 : dni.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -140,6 +229,11 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (dni == null) {
+			if (other.dni != null)
+				return false;
+		} else if (!dni.equals(other.dni))
+			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -147,7 +241,8 @@ public class User {
 			return false;
 		return true;
 	}
-	
-	
+
+
+
 
 }
