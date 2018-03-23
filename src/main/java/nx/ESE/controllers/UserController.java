@@ -1,6 +1,5 @@
 package nx.ESE.controllers;
 
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,6 @@ import nx.ESE.documents.User;
 import nx.ESE.dtos.UserDto;
 import nx.ESE.dtos.UserMinDto;
 import nx.ESE.repositories.UserRepository;
-
 
 
 @Controller
@@ -94,8 +92,8 @@ public class UserController {
         }
 	}
 	
-	public List<UserMinDto> getUsers() {
-		return this.userRepository.findStudentAll();
+	public List<UserDto> getUsers() {
+		return this.userRepository.findStudentFullAll();
 
 	}
 	

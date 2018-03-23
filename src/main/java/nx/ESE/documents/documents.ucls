@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="nx.ESE.documents.User" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/User.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="282" y="372"/>    
+    <position height="-1" width="-1" x="282" y="274"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <enumeration id="2" language="java" name="nx.ESE.documents.Role" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Role.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="277" y="702"/>    
+    <position height="-1" width="-1" x="284" y="548"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <enumeration id="4" language="java" name="nx.ESE.documents.Gender" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Gender.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="83" y="375"/>    
+    <position height="-1" width="-1" x="84" y="271"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,34 +39,38 @@
   </enumeration>  
   <association id="5">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="6" name="token">        
-        <position height="0" width="0" x="-123" y="6"/>      
+      <attribute id="6" name="gender">        
+        <position height="0" width="0" x="1" y="-104"/>      
       </attribute>      
       <multiplicity id="7" minimum="0" maximum="1">        
+        <position height="0" width="0" x="1" y="-104"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="8">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="9" name="token">        
+        <position height="0" width="0" x="-123" y="6"/>      
+      </attribute>      
+      <multiplicity id="10" minimum="0" maximum="1">        
         <position height="0" width="0" x="-123" y="6"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="8">    
+  <association id="11">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="9" name="roles">        
-        <position height="0" width="0" x="59" y="624"/>      
+      <attribute id="12" name="roles">        
+        <position height="0" width="0" x="66" y="470"/>      
       </attribute>      
-      <multiplicity id="10" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="59" y="624"/>      
+      <multiplicity id="13" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="66" y="470"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="11">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="12" name="gender"/>      
-      <multiplicity id="13" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

@@ -40,13 +40,13 @@ public class UserResourceFuntionalTesting {
 	private UserDto getUser() {
 		return userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
 		.path(UserResource.USERS).path(UserResource.STUDENT).path(UserResource.USER_NAME).expand(userDto.getUsername())
-		.body(userDto).get().build();
+		.get().build();
 	}
 	
 	private UserDto getUser(String username) {
 		return userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
 		.path(UserResource.USERS).path(UserResource.STUDENT).path(UserResource.USER_NAME).expand(username)
-		.body(userDto).get().build();
+		.get().build();
 	}
 	
 	private void createUser() {
@@ -61,7 +61,6 @@ public class UserResourceFuntionalTesting {
 	     .body(dto).put().build();
 	}
 	
-
 	
 	//POST--------------------------------------------
 	@Test

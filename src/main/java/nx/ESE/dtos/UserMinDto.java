@@ -1,17 +1,26 @@
 package nx.ESE.dtos;
 
+import javax.validation.constraints.NotNull;
+
 public class UserMinDto {
-    
-    private String id;
-    
-    private String firstName;
-    
-    private String lastName;
-    
-  
+
+	private String id;
+
+	@NotNull
+	private String firstName;
+
+	@NotNull
+	private String lastName;
+
 	public UserMinDto() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public UserMinDto(String firstName, String lastName) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public String getFirstName() {
@@ -38,8 +47,5 @@ public class UserMinDto {
 	public String toString() {
 		return "UserMinDto [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
-
-
-
 
 }

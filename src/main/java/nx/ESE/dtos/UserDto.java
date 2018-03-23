@@ -5,12 +5,18 @@ import java.util.Arrays;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Token;
 import nx.ESE.documents.User;
+import nx.ESE.dtos.validators.RUTValid;
 
+@JsonInclude(Include.NON_NULL)
 public class UserDto {
 
 	private String id;
@@ -24,14 +30,17 @@ public class UserDto {
 
 	private String lastName;
 
+	@RUTValid
 	private String dni;
 
 	private int age;
-	
+
 	private Gender gender;
 
+	//@Pattern(regexp = nx.ESE.dtos.validators.Pattern.NINE_DIGITS )
 	private String mobile;
 
+	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.EMAIL)
 	private String email;
 
 	private String address;
@@ -51,7 +60,6 @@ public class UserDto {
 		super();
 	}
 	
-
 	public UserDto(String id, @NotNull String username, String password, String firstName, String lastName, String dni, int age,
 			Gender gender, String mobile, String email, String address, String commune, Role[] roles, Token token,
 			boolean active, Date createdAt) {
@@ -61,11 +69,11 @@ public class UserDto {
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.dni = dni;
+		this.setDni(dni);
 		this.age = age;
-		this.gender = gender;
+		this.setGender(gender);
 		this.mobile = mobile;
-		this.email = email;
+		this.setEmail(email);
 		this.address = address;
 		this.commune = commune;
 		this.roles = roles;
@@ -74,12 +82,12 @@ public class UserDto {
 		this.createdAt = createdAt;
 	}
 	
+
 	public UserDto(String usernamePass) {
 		
 		this(null, usernamePass, usernamePass, null, null, null, 0, null, null, null, null, null, null, null, true, null);
 	}
 	
-
 	public UserDto(User user){
 		this.id = user.getId();
 		this.username = user.getUsername();
@@ -122,7 +130,7 @@ public class UserDto {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	
 	public Gender getGender() {
 		return gender;
 	}
@@ -184,7 +192,11 @@ public class UserDto {
 	}
 
 	public void setDni(String dni) {
-		this.dni = dni;
+	    if (dni != null) {
+            this.dni = dni.toUpperCase();
+        } else {
+            this.dni = dni;
+        }
 	}
 
 	public int getAge() {
@@ -208,7 +220,11 @@ public class UserDto {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+        if (email != null) {
+            this.email = email.toLowerCase();
+        } else {
+            this.email = email;
+        }
 	}
 
 	public String getAddress() {

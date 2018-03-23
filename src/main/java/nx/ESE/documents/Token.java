@@ -9,7 +9,7 @@ public class Token {
 
     private String value;
 
-    private Date creationDate;
+    private Date createdAt;
 
     public Token() {
         this.setValue(new Encrypting().encryptInBase64UrlSafe());
@@ -19,13 +19,13 @@ public class Token {
         return value;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
     public void setValue(String value) {
         this.value = value;
-        this.creationDate = new Date();
+        this.createdAt = new Date();
     }
 
     @Override
@@ -49,6 +49,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token [value=" + value + ", creationDate=" + creationDate.toString() + "]";
+        return "Token [value=" + value + ", createdAt=" + createdAt.toString() + "]";
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import nx.ESE.documents.User;
+import nx.ESE.dtos.UserDto;
 import nx.ESE.dtos.UserMinDto;
 
 public interface UserRepository extends MongoRepository<User, String> {
@@ -23,5 +24,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 	@Query(value = "{'roles' : 'STUDENT'}", fields = "{ '_id' : 1, 'firstName' : 1, 'lastName' : 1}")
 	public List<UserMinDto> findStudentAll();
+	
+	@Query(value = "{'roles' : 'STUDENT'}")
+	public List<UserDto> findStudentFullAll();
 
 }
