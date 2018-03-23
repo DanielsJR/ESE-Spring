@@ -26,12 +26,13 @@ public class UserController {
 		user.setFirstName(userDto.getFirstName());
 		user.setLastName(userDto.getLastName());
 		user.setDni(userDto.getDni());
-		user.setAge(userDto.getAge());
+		user.setBirthday(userDto.getBirthday());
 		user.setGender(userDto.getGender());
 		user.setEmail(userDto.getEmail());
 		user.setMobile(userDto.getMobile());
 		user.setAddress(userDto.getAddress());
 		user.setCommune(userDto.getCommune());
+		//System.out.println("user::::: " + user.toString());
 	}
 	
 	public boolean usernameRepeated(String oldUsername, UserDto userDto) {
@@ -92,7 +93,12 @@ public class UserController {
         }
 	}
 	
-	public List<UserDto> getUsers() {
+	public List<UserMinDto> getMinUsers() {
+		return this.userRepository.findStudentAll();
+
+	}
+	
+	public List<UserDto> getFullUsers() {
 		return this.userRepository.findStudentFullAll();
 
 	}

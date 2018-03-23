@@ -7,6 +7,7 @@ public class RUTValidator implements ConstraintValidator<RUTValid, String>{
 
 	@Override
 	public boolean isValid(String rut, ConstraintValidatorContext arg1) {
+		if(rut !=null){
 		boolean validacion = false;
 		try {
 		rut =  rut.toUpperCase();
@@ -28,6 +29,9 @@ public class RUTValidator implements ConstraintValidator<RUTValid, String>{
 		} catch (Exception e) {
 		}
 		return validacion;
+		}else{
+			return true;
+		}
 	}
 
 }

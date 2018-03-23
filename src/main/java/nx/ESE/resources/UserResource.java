@@ -34,6 +34,8 @@ public class UserResource {
 	public static final String USERS = "/users";
 
 	public static final String STUDENT = "/student";
+	
+	public static final String MIN = "/min";
 
 	public static final String USER_NAME = "/{username}";
 
@@ -47,8 +49,13 @@ public class UserResource {
 	}
 
 	@GetMapping(STUDENT)
-	public List<UserDto> getStudents() {
-		return this.userController.getUsers();
+	public List<UserDto> getFullStudents() {
+		return this.userController.getFullUsers();
+	}
+	
+	@GetMapping(STUDENT + MIN)
+	public List<UserMinDto> getMinStudents() {
+		return this.userController.getMinUsers();
 	}
 
 	@PostMapping(STUDENT)

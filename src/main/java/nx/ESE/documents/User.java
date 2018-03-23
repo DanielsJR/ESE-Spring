@@ -2,6 +2,7 @@ package nx.ESE.documents;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -26,8 +27,8 @@ public class User {
 
 	private String dni;
 
-	private int age;
-
+	private Date birthday;
+	
 	private Gender gender;
 	
 	private String mobile;
@@ -51,7 +52,7 @@ public class User {
 		createdAt = new Date();
 	}
 
-	public User(String username, String password, String firstName, String lastName, String dni, int age, Gender gender,
+	public User(String username, String password, String firstName, String lastName, String dni, Date birthday, Gender gender,
 			String mobile, String email, String address, String commune) {
 		this();
 		this.username = username;
@@ -59,7 +60,7 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dni = dni;
-		this.age = age;
+		this.birthday = birthday;
 		this.gender = gender;
 		this.mobile = mobile;
 		this.email = email;
@@ -70,7 +71,7 @@ public class User {
 	
 
 	public User(String username, String password) {
-		this(username, password, null, null, null, 0, null, null, null, null, null);
+		this(username, password, null, null, null, null, null, null, null, null, null);
 
 	}
 	
@@ -115,12 +116,12 @@ public class User {
 		this.dni = dni;
 	}
 
-	public int getAge() {
-		return age;
+	public Date getBirthday() {
+		return birthday;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
 	public Gender getGender() {
@@ -201,12 +202,16 @@ public class User {
 
 	@Override
 	public String toString() {
+		String birthdayF = "null";
+		if (this.birthday != null) {
+			birthdayF = new SimpleDateFormat("dd-MMM-yyyy").format(birthday.getTime());
+		}
 		String date = "null";
 		if (createdAt != null) {
 			date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
 		}
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", dni=" + dni + ", age=" + age + ", gender=" + gender + ", mobile="
+				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender + ", mobile="
 				+ mobile + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
 				+ Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt=" + date + "]";
 	}

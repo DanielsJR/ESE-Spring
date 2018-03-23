@@ -1,7 +1,13 @@
 package nx.ESE.documents;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import nx.ESE.utils.CustomDateDeserializer;
+import nx.ESE.utils.CustomDateSerializer;
 import nx.ESE.utils.Encrypting;
 
 
@@ -9,6 +15,7 @@ public class Token {
 
     private String value;
 
+  	@JsonSerialize(using = CustomDateSerializer.class)
     private Date createdAt;
 
     public Token() {
@@ -49,6 +56,10 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token [value=" + value + ", createdAt=" + createdAt.toString() + "]";
+		String date = "null";
+		if (createdAt != null) {
+			date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
+		}
+        return "Token [value=" + value + ", createdAt=" + date + "]";
     }
 }

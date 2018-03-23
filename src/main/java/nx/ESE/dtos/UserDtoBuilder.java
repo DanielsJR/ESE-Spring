@@ -1,5 +1,6 @@
 package nx.ESE.dtos;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import nx.ESE.documents.Gender;
@@ -57,8 +58,8 @@ public class UserDtoBuilder {
 		return this;
 	}
 
-	public UserDtoBuilder age(int age) {
-		this.userDto.setAge(age);
+	public UserDtoBuilder age(Date birthday) {
+		this.userDto.setBirthday(birthday);
 		return this;
 	}
 

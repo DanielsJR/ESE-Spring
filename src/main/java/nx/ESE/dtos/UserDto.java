@@ -9,12 +9,16 @@ import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Token;
 import nx.ESE.documents.User;
 import nx.ESE.dtos.validators.RUTValid;
+import nx.ESE.utils.CustomDateDeserializer;
+import nx.ESE.utils.CustomDateSerializer;
 
 @JsonInclude(Include.NON_NULL)
 public class UserDto {
@@ -22,8 +26,10 @@ public class UserDto {
 	private String id;
 
 	@NotNull
+	//@Pattern(regexp = nx.ESE.dtos.validators.Pattern.USERNAME)
 	private String username;
 
+	//@Pattern(regexp = nx.ESE.dtos.validators.Pattern.PASSWORD)
 	private String password;
 	
 	private String firstName;
@@ -32,15 +38,17 @@ public class UserDto {
 
 	@RUTValid
 	private String dni;
-
-	private int age;
+	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
+	@JsonSerialize(using = CustomDateSerializer.class)
+	private Date birthday;
 
 	private Gender gender;
 
 	//@Pattern(regexp = nx.ESE.dtos.validators.Pattern.NINE_DIGITS )
 	private String mobile;
 
-	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.EMAIL)
+	//@Pattern(regexp = nx.ESE.dtos.validators.Pattern.EMAIL)
 	private String email;
 
 	private String address;
@@ -53,14 +61,14 @@ public class UserDto {
 
 	private boolean active;
 
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createdAt;
-
 
 	public UserDto() {
 		super();
 	}
 	
-	public UserDto(String id, @NotNull String username, String password, String firstName, String lastName, String dni, int age,
+	public UserDto(String id, String username, String password, String firstName, String lastName, String dni, Date birthday,
 			Gender gender, String mobile, String email, String address, String commune, Role[] roles, Token token,
 			boolean active, Date createdAt) {
 		super();
@@ -70,7 +78,7 @@ public class UserDto {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.setDni(dni);
-		this.age = age;
+		this.birthday = birthday;
 		this.setGender(gender);
 		this.mobile = mobile;
 		this.setEmail(email);
@@ -85,7 +93,7 @@ public class UserDto {
 
 	public UserDto(String usernamePass) {
 		
-		this(null, usernamePass, usernamePass, null, null, null, 0, null, null, null, null, null, null, null, true, null);
+		this(null, usernamePass, usernamePass, null, null, null, null, null, null, null, null, null, null, null, true, null);
 	}
 	
 	public UserDto(User user){
@@ -95,7 +103,7 @@ public class UserDto {
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
 		this.dni = user.getDni();
-		this.age = user.getAge();
+		this.birthday = user.getBirthday();
 		this.gender = user.getGender();
 		this.mobile = user.getMobile();
 		this.email = user.getEmail();
@@ -193,18 +201,18 @@ public class UserDto {
 
 	public void setDni(String dni) {
 	    if (dni != null) {
-            this.dni = dni.toUpperCase();
+            this.dni = dni.toUpperCase().replace(".", "").replace("-", "");
         } else {
             this.dni = dni;
         }
 	}
 
-	public int getAge() {
-		return age;
+	public Date getBirthday() {
+		return birthday;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
 	public String getMobile() {
@@ -246,12 +254,16 @@ public class UserDto {
 
 	@Override
 	public String toString() {
+		String birthdayF = "null";
+		if (this.birthday != null) {
+			birthdayF = new SimpleDateFormat("dd-MMM-yyyy").format(birthday.getTime());
+		}
 		String date = "null";
 		if (createdAt != null) {
 			date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
 		}
 		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", dni=" + dni + ", age=" + age + ", gender=" + gender + ", mobile="
+				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender + ", mobile="
 				+ mobile + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
 				+ Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt=" + date + "]";
 	}
