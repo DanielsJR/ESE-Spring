@@ -7,18 +7,15 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Token;
 import nx.ESE.documents.User;
 import nx.ESE.dtos.validators.RUTValid;
-import nx.ESE.utils.CustomDateDeserializer;
-import nx.ESE.utils.CustomDateSerializer;
 
 @JsonInclude(Include.NON_NULL)
 public class UserDto {
@@ -38,9 +35,8 @@ public class UserDto {
 
 	@RUTValid
 	private String dni;
-	
-	@JsonDeserialize(using = CustomDateDeserializer.class)
-	@JsonSerialize(using = CustomDateSerializer.class)
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
 	private Date birthday;
 
 	private Gender gender;
@@ -61,7 +57,7 @@ public class UserDto {
 
 	private boolean active;
 
-	@JsonSerialize(using = CustomDateSerializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
 	private Date createdAt;
 
 	public UserDto() {

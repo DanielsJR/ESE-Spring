@@ -26,7 +26,7 @@ import nx.ESE.resources.exceptions.ForbiddenException;
 import nx.ESE.resources.exceptions.UserFieldAlreadyExistException;
 import nx.ESE.resources.exceptions.UserIdNotFoundException;
 
-// @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER')")
+@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
 @RequestMapping(UserResource.USERS)
 public class UserResource {
