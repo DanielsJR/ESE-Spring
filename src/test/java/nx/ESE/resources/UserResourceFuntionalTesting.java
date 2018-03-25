@@ -33,7 +33,7 @@ public class UserResourceFuntionalTesting {
 
 	@Before
 	public void before() {
-		this.userDto = new UserDto("Lukas");
+		this.userDto = new UserDto("lukas");
 	}
 	
 
@@ -162,9 +162,9 @@ public class UserResourceFuntionalTesting {
 	@Test
 	public void testPutStudent() {
 		this.createUser();
-		userDto.setUsername("Lucho");
+		userDto.setUsername("lucho");
 		userDto.setEmail("lucho@lucho.com");
-		this.modifyUser("Lukas", userDto);
+		this.modifyUser("lukas", userDto);
 		this.getUser();
         assertEquals("lucho@lucho.com", userDto.getEmail());
 	}

@@ -37,7 +37,7 @@ public class User {
 
 	private String address;
 
-	private String commune;
+	private Commune commune;
 
 	private Role[] roles;
 
@@ -53,7 +53,7 @@ public class User {
 	}
 
 	public User(String username, String password, String firstName, String lastName, String dni, Date birthday, Gender gender,
-			String mobile, String email, String address, String commune) {
+			String mobile, String email, String address, Commune commune) {
 		this();
 		this.username = username;
 		this.setPassword(password);
@@ -156,11 +156,11 @@ public class User {
 		this.address = address;
 	}
 
-	public String getCommune() {
+	public Commune getCommune() {
 		return commune;
 	}
 
-	public void setCommune(String commune) {
+	public void setCommune(Commune commune) {
 		this.commune = commune;
 	}
 

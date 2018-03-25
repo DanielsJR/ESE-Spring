@@ -3,6 +3,7 @@ package nx.ESE.dtos;
 import java.util.Calendar;
 import java.util.Date;
 
+import nx.ESE.documents.Commune;
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Token;
@@ -78,7 +79,7 @@ public class UserDtoBuilder {
 		return this;
 	}
 
-	public UserDtoBuilder commune(String commune) {
+	public UserDtoBuilder commune(Commune commune) {
 		this.userDto.setCommune(commune);
 		return this;
 	}

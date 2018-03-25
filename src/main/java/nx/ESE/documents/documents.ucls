@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="nx.ESE.documents.User" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/User.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="282" y="274"/>    
+    <position height="-1" width="-1" x="334" y="277"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <enumeration id="2" language="java" name="nx.ESE.documents.Role" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Role.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="284" y="548"/>    
+    <position height="-1" width="-1" x="336" y="551"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </enumeration>  
   <class id="3" language="java" name="nx.ESE.documents.Token" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Token.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="281" y="49"/>    
+    <position height="-1" width="-1" x="333" y="52"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,44 +30,61 @@
   </class>  
   <enumeration id="4" language="java" name="nx.ESE.documents.Gender" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Gender.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="84" y="271"/>    
+    <position height="-1" width="-1" x="82" y="182"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </enumeration>  
-  <association id="5">    
+  <enumeration id="5" language="java" name="nx.ESE.documents.Commune" project="E.S.E-mongo" 
+    file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Commune.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="148" width="180" x="10" y="288"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <association id="6">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="6" name="gender">        
-        <position height="0" width="0" x="1" y="-104"/>      
+      <attribute id="7" name="token">        
+        <position height="0" width="0" x="-71" y="9"/>      
       </attribute>      
-      <multiplicity id="7" minimum="0" maximum="1">        
-        <position height="0" width="0" x="1" y="-104"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="8">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="9" name="token">        
-        <position height="0" width="0" x="-123" y="6"/>      
-      </attribute>      
-      <multiplicity id="10" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-123" y="6"/>      
+      <multiplicity id="8" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-71" y="9"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="11">    
+  <association id="9">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="12" name="roles">        
-        <position height="0" width="0" x="66" y="470"/>      
+      <attribute id="10" name="commune"/>      
+      <multiplicity id="11" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="12">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="13" name="gender">        
+        <position height="0" width="0" x="-1" y="-193"/>      
       </attribute>      
-      <multiplicity id="13" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="66" y="470"/>      
+      <multiplicity id="14" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-1" y="-193"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="15">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="16" name="roles">        
+        <position height="0" width="0" x="118" y="473"/>      
+      </attribute>      
+      <multiplicity id="17" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="118" y="473"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
