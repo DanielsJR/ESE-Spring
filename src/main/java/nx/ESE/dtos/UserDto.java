@@ -70,7 +70,7 @@ public class UserDto {
 			Token token, boolean active, Date createdAt) {
 		super();
 		this.id = id;
-		this.username = username;
+		this.setUsername(username);
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -95,8 +95,8 @@ public class UserDto {
 
 	public UserDto(User user) {
 		this.id = user.getId();
-		this.setUsername(user.getUsername());
-		this.password = user.getPassword();
+		this.username =user.getUsername();
+		//this.password = user.getPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
 		this.dni = user.getDni();

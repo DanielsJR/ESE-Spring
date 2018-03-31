@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import nx.ESE.documents.Role;
@@ -22,7 +24,7 @@ public class UserController {
 	
 	private void setUserFromDto(User user, UserDto userDto){
 		user.setUsername(userDto.getUsername());
-		user.setPassword(userDto.getPassword());
+		//user.setPassword(userDto.getPassword());
 		user.setFirstName(userDto.getFirstName());
 		user.setLastName(userDto.getLastName());
 		user.setDni(userDto.getDni());
@@ -32,76 +34,48 @@ public class UserController {
 		user.setMobile(userDto.getMobile());
 		user.setAddress(userDto.getAddress());
 		user.setCommune(userDto.getCommune());
-		//System.out.println("user::::: " + user.toString());
+		user.setToken(userDto.getToken());
+		//System.out.println("userToString:::::: " + user.toString());
 	}
 	
-	public boolean usernameRepeated(String oldUsername, UserDto userDto) {
+
+	public boolean existsUserId(String id) {
+		return this.userRepository.findByIdQuery(id) != null;
+	}
+	
+	public boolean usernameRepeated(UserDto userDto) {
 		User user = this.userRepository.findByUsername(userDto.getUsername());
-		return user != null && !user.getUsername().equals(oldUsername);
+		return user != null && !user.getId().equals(userDto.getId());
 	}
 
-	public boolean existsUsername(String username) {
-		return this.userRepository.findByUsername(username) != null;
-	}
 
-	public boolean emailRepeated(String username, UserDto userDto) {
+	public boolean emailRepeated(UserDto userDto) {
 		if(userDto.getEmail() == null){
 			return false;
 		}
 		User user = this.userRepository.findByEmail(userDto.getEmail());
-		return user != null && !user.getUsername().equals(username);
+		return user != null && !user.getId().equals(userDto.getId());
 	}
 
-	public boolean emailRepeated(UserDto userDto) {
-		return this.emailRepeated(userDto.getUsername(), userDto);
-	}
 
-	public boolean dniRepeated(String username, UserDto userDto) {
+	public boolean dniRepeated(UserDto userDto) {
 		if(userDto.getDni() == null){
 			return false;
 		}
 		User user = this.userRepository.findByDni(userDto.getDni());
-		return user != null && !user.getUsername().equals(username);
+		return user != null && !user.getId().equals(userDto.getId());
 	}
 
-	public boolean dniRepeated(UserDto userDto) {
-		return this.dniRepeated(userDto.getUsername(), userDto);
-	}
 	
-	public boolean mobileRepeated(String username, UserDto userDto) {
+	public boolean mobileRepeated(UserDto userDto) {
 		if(userDto.getMobile() == null){
 			return false;
 		}
 		User user = this.userRepository.findByMobile(userDto.getMobile());
-		return user != null && !user.getUsername().equals(username);
+		return user != null && !user.getId().equals(userDto.getId());
 	}
 	
-	public boolean mobileRepeated(UserDto userDto) {
-		return this.mobileRepeated(userDto.getUsername(), userDto);
-	}
-
-
 	
-	public Optional<UserDto> getUser(String username, Role[] roles) {
-        User user = this.userRepository.findByUsername(username);
-        if (user == null) {
-            return Optional.empty();
-        } else if (Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()))) {
-            return Optional.of(new UserDto(user));
-        } else {
-            return Optional.empty();
-        }
-	}
-	
-	public List<UserMinDto> getMinUsers() {
-		return this.userRepository.findStudentAll();
-
-	}
-	
-	public List<UserDto> getFullUsers() {
-		return this.userRepository.findStudentFullAll();
-
-	}
 	
 	public Optional<UserDto> createUser(UserDto userDto, Role[] roles) {
 		User user = new User(userDto.getUsername(), userDto.getPassword());
@@ -112,8 +86,8 @@ public class UserController {
 	}
 
 
-	public Optional<UserDto> modifyUser(String username, UserDto userDto, Role[] roles){
-		User user = this.userRepository.findByUsername(username);
+	public Optional<UserDto> modifyUser(String id, UserDto userDto, Role[] roles){
+		User user = this.userRepository.findByIdQuery(id);
 		assert user != null;
 		if (Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()))) {
 			this.setUserFromDto(user, userDto);
@@ -126,8 +100,8 @@ public class UserController {
 	
 	}
 	
-    public boolean deleteUser(String username, Role[] roles) {
-        User user = this.userRepository.findByUsername(username);
+    public boolean deleteUser(String id, Role[] roles) {
+        User user = this.userRepository.findByIdQuery(id);
         if (user == null) {
             return true;
         } else if (Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()))) {
@@ -137,7 +111,52 @@ public class UserController {
             return false;
         }
     }
+    
+	
+	public List<UserMinDto> getMinUsers(Role role) {
+		return this.userRepository.findUsersAll(role);
 
+	}
+	
+	public List<UserDto> getFullUsers(Role role) {
+		return this.userRepository.findUsersFullAll(role);
+
+	}
+	
+	public Optional<UserDto> getUserById(String id, Role[] roles) {
+        User user = this.userRepository.findByIdQuery(id);
+        if (user == null) {
+            return Optional.empty();
+        } else if (Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()))) {
+            return Optional.of(new UserDto(user));
+        } else {
+            return Optional.empty();
+        }
+	}
+	
+
+	public Optional<UserDto> getUserByUsername(String username, Role[] roles) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            return Optional.empty();
+        } else if (Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()))) {
+            return Optional.of(new UserDto(user));
+        } else {
+            return Optional.empty();
+        }
+	}
+	
+	public Optional<UserDto> getUserByToken(String token, Role[] roles) {
+        User user = this.userRepository.findByTokenValue(token);
+        if (user == null) {
+            return Optional.empty();
+        } else if (Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()))) {
+            return Optional.of(new UserDto(user));
+        } else {
+            return Optional.empty();
+        }
+	}
+	
 
 
 

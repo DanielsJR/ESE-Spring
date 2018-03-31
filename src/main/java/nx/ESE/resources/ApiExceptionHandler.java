@@ -28,7 +28,11 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({Exception.class,	UserFieldAlreadyExistException.class, FieldInvalidException.class})
+    @ExceptionHandler({
+    	Exception.class,
+    	UserFieldAlreadyExistException.class,
+    	FieldInvalidException.class
+    	})
     @ResponseBody
     public ErrorMessage badRequest(Exception exception) {
         return new ErrorMessage(exception, "");

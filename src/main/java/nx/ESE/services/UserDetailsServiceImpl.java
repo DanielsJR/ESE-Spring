@@ -27,16 +27,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(final String UsernameOrTokenValue) {
-        User user = userRepository.findByTokenValue(UsernameOrTokenValue);
+    public UserDetails loadUserByUsername(final String usernameOrToken) {
+        User user = userRepository.findByTokenValue(usernameOrToken);
         if (user != null) {
             return this.userBuilder(user.getUsername(), new BCryptPasswordEncoder().encode(P_TOKEN), user.getRoles(), user.isActive());
         } else {
-            user = userRepository.findByUsername(UsernameOrTokenValue);
+            user = userRepository.findByUsername(usernameOrToken);
             if (user != null) {
                 return this.userBuilder(user.getUsername(), user.getPassword(), new Role[] {Role.AUTHENTICATED}, user.isActive());
             } else {
-                throw new UsernameNotFoundException("Username-token not found. " + UsernameOrTokenValue);
+                throw new UsernameNotFoundException("Username-token not found. " + usernameOrToken);
             }
         }
     }

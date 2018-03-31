@@ -27,10 +27,15 @@ tokenList:
 userList:
   - username: u000
     password: p000
+    firstName: f000
+    lastName: l000
     dni: d000
+    birthday: 1998-11-11
     gender: MUJER
     mobile: m000
     email: e000@email.com
+    address: las viñitas 000
+    commune: LA_FLORIDA
     roles:
       - ADMIN
       - MANAGER
@@ -50,10 +55,15 @@ userList:
 # Users u010-u019 MANAGER 
   - username: u010
     password: p010
+    firstName: f010
+    lastName: l010
     dni: d010
+    birthday: 1990-11-22
     gender: HOMBRE
     mobile: m010
     email: e010@email.com
+    address: las viñitas 010
+    commune: QUINTA_NORMAL
     roles:
       - MANAGER
       - TEACHER
@@ -61,10 +71,15 @@ userList:
     
   - username: u011
     password: p011
+    firstName: f011
+    lastName: l011
     dni: d011
+    birthday: 1970-12-02
     gender: HOMBRE
     mobile: m011
     email: e011@email.com
+    address: las viñitas 011
+    commune: LO_PRADO
     roles:
       - MANAGER
     token: *to3

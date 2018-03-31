@@ -74,7 +74,7 @@ public class DatabaseSeederService {
 	public void createAdminIfNotExist() {
 		if (this.userRepository.findByUsername(this.username) == null) {
 			User user = new User(this.username, this.password);
-			user.setRoles(new Role[] { Role.ADMIN });
+			user.setRoles(new Role[] { Role.ADMIN, Role.MANAGER });
 			this.userRepository.save(user);
 		}
 	}
