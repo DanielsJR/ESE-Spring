@@ -56,11 +56,11 @@ public class UserResource {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(ADMINS + PATH_ID)
 	public UserDto getAdminById(@PathVariable String id) throws UserIdNotFoundException {
-		return this.userController.getUserByUsername(id, new Role[] { Role.ADMIN })
+		return this.userController.getUserById(id, new Role[] { Role.ADMIN })
 				.orElseThrow(() -> new UserIdNotFoundException(id));
 	}
 	
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(ADMINS + USER_NAME + PATH_USERNAME)
 	public UserDto getAdminByUsername(@PathVariable String username) throws UserIdNotFoundException {
 		return this.userController.getUserByUsername(username, new Role[] { Role.ADMIN })
@@ -146,40 +146,40 @@ public class UserResource {
 	}
 	
 	//MANAGERS************************************
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS + PATH_ID)
 	public UserDto getManagerById(@PathVariable String id) throws UserIdNotFoundException {
-		return this.userController.getUserByUsername(id, new Role[] { Role.MANAGER })
+		return this.userController.getUserById(id, new Role[] { Role.MANAGER })
 				.orElseThrow(() -> new UserIdNotFoundException(id));
 	}
 	
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS + USER_NAME + PATH_USERNAME)
 	public UserDto getManagerByUsername(@PathVariable String username) throws UserIdNotFoundException {
 		return this.userController.getUserByUsername(username, new Role[] { Role.MANAGER })
 				.orElseThrow(() -> new UserIdNotFoundException(username));
 	}
 	
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS + TOKEN + PATH_TOKEN)
 	public UserDto getManagerByToken(@PathVariable String token) throws UserIdNotFoundException {
 		return this.userController.getUserByToken(token, new Role[] { Role.MANAGER })
 				.orElseThrow(() -> new UserIdNotFoundException(token));
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS)
 	public List<UserDto> getFullManagers() {
 		return this.userController.getFullUsers(Role.MANAGER);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS + USER_MIN)
 	public List<UserMinDto> getMinManagers() {
 		return this.userController.getMinUsers(Role.MANAGER );
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(MANAGERS)
 	public UserDto createManager(@Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, UserFieldAlreadyExistException {
@@ -203,7 +203,7 @@ public class UserResource {
 				.orElseThrow(() -> new ForbiddenException());
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(MANAGERS + PATH_ID)
 	public UserDto modifyManager(@PathVariable String id, @Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, UserIdNotFoundException, UserFieldAlreadyExistException {
@@ -227,7 +227,7 @@ public class UserResource {
 				.orElseThrow(() -> new ForbiddenException());
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(MANAGERS + PATH_ID)
 	public void deleteManager(@PathVariable String id) throws ForbiddenException, FieldInvalidException, UserIdNotFoundException {
 		if (!this.userController.existsUserId(id)) {
@@ -242,11 +242,11 @@ public class UserResource {
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(TEACHERS + PATH_ID)
 	public UserDto getTeacherById(@PathVariable String id) throws UserIdNotFoundException {
-		return this.userController.getUserByUsername(id, new Role[] { Role.TEACHER })
+		return this.userController.getUserById(id, new Role[] { Role.TEACHER })
 				.orElseThrow(() -> new UserIdNotFoundException(id));
 	}
 	
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(TEACHERS + USER_NAME + PATH_USERNAME)
 	public UserDto getTeacherByUsername(@PathVariable String username) throws UserIdNotFoundException {
 		return this.userController.getUserByUsername(username, new Role[] { Role.TEACHER })
@@ -269,7 +269,7 @@ public class UserResource {
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(TEACHERS + USER_MIN)
 	public List<UserMinDto> getMinTeachers() {
-		return this.userController.getMinUsers(Role.TEACHER );
+		return this.userController.getMinUsers(Role.TEACHER);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")

@@ -57,19 +57,19 @@ public class RestService {
     }
 
     public RestService loginManager() {
-        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("666666001", "p001")
+        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("u011", "p011")
                 .clazz(TokenOutputDto.class).post().build();
         return this;
     }
 
     public RestService loginTeacher() {
-        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("666666005", "p005")
+        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("u021", "p021")
                 .clazz(TokenOutputDto.class).post().build();
         return this;
     }
 
     public RestService loginStudent() {
-        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("666666002", "p002")
+        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("u031", "p031")
                 .clazz(TokenOutputDto.class).post().build();
         return this;
     }
