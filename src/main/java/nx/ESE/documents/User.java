@@ -2,7 +2,6 @@ package nx.ESE.documents;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -31,6 +30,8 @@ public class User {
 	
 	private Gender gender;
 	
+	private Avatar avatar;
+	
 	private String mobile;
 
 	private String email;
@@ -53,7 +54,7 @@ public class User {
 	}
 
 	public User(String username, String password, String firstName, String lastName, String dni, Date birthday, Gender gender,
-			String mobile, String email, String address, Commune commune) {
+			Avatar avatar, String mobile, String email, String address, Commune commune) {
 		this();
 		this.username = username;
 		this.setPassword(password);
@@ -62,6 +63,7 @@ public class User {
 		this.dni = dni;
 		this.birthday = birthday;
 		this.gender = gender;
+		this.avatar = avatar;
 		this.mobile = mobile;
 		this.email = email;
 		this.address = address;
@@ -71,7 +73,7 @@ public class User {
 	
 
 	public User(String username, String password) {
-		this(username, password, null, null, null, null, null, null, null, null, null);
+		this(username, password, null, null, null, null, null, null, null, null, null, null);
 
 	}
 	
@@ -130,6 +132,15 @@ public class User {
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+	
+	
+	public Avatar getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Avatar avatar) {
+		this.avatar = avatar;
 	}
 
 	public String getMobile() {
@@ -199,6 +210,7 @@ public class User {
 	public String getId() {
 		return id;
 	}
+	
 
 	@Override
 	public String toString() {
@@ -212,7 +224,7 @@ public class User {
 		}
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender + ", mobile="
-				+ mobile + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
+				+ mobile +", avatar=" + avatar + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
 				+ Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt=" + date + "]";
 	}
 
@@ -246,6 +258,8 @@ public class User {
 			return false;
 		return true;
 	}
+
+
 
 
 

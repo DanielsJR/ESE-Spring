@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import nx.ESE.documents.Avatar;
+import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.User;
 import nx.ESE.repositories.UserRepository;
@@ -74,6 +76,10 @@ public class DatabaseSeederService {
 	public void createAdminIfNotExist() {
 		if (this.userRepository.findByUsername(this.username) == null) {
 			User user = new User(this.username, this.password);
+			user.setFirstName("Daniel Jesús");
+			user.setLastName("Rubio Parra");
+			user.setGender(Gender.HOMBRE);
+			user.setAvatar(new Avatar("admin.png", "image/png", Avatar.SERVER_AVATAR_PATH + "admin.png"));
 			user.setRoles(new Role[] { Role.ADMIN, Role.MANAGER });
 			this.userRepository.save(user);
 		}

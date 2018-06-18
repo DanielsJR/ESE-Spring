@@ -30,7 +30,7 @@
   </class>  
   <enumeration id="4" language="java" name="nx.ESE.documents.Gender" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Gender.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="82" y="182"/>    
+    <position height="-1" width="-1" x="96" y="68"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,51 +39,72 @@
   </enumeration>  
   <enumeration id="5" language="java" name="nx.ESE.documents.Commune" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Commune.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="148" width="180" x="10" y="288"/>    
+    <position height="148" width="180" x="35" y="201"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </enumeration>  
-  <association id="6">    
+  <class id="6" language="java" name="nx.ESE.documents.Avatar" project="E.S.E-mongo" 
+    file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Avatar.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="112" y="526"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <association id="7">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="7" name="token">        
+      <attribute id="8" name="commune">        
+        <position height="0" width="0" x="25" y="-87"/>      
+      </attribute>      
+      <multiplicity id="9" minimum="0" maximum="1">        
+        <position height="0" width="0" x="25" y="-87"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="10">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="11" name="gender">        
+        <position height="0" width="0" x="13" y="-307"/>      
+      </attribute>      
+      <multiplicity id="12" minimum="0" maximum="1">        
+        <position height="0" width="0" x="13" y="-307"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="13">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="14" name="token">        
         <position height="0" width="0" x="-71" y="9"/>      
       </attribute>      
-      <multiplicity id="8" minimum="0" maximum="1">        
+      <multiplicity id="15" minimum="0" maximum="1">        
         <position height="0" width="0" x="-71" y="9"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="9">    
+  <association id="16">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="10" name="commune"/>      
-      <multiplicity id="11" minimum="0" maximum="1"/>    
+      <attribute id="17" name="avatar"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="12">    
+  <association id="19">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="13" name="gender">        
-        <position height="0" width="0" x="-1" y="-193"/>      
-      </attribute>      
-      <multiplicity id="14" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1" y="-193"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="15">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="16" name="roles">        
+      <attribute id="20" name="roles">        
         <position height="0" width="0" x="118" y="473"/>      
       </attribute>      
-      <multiplicity id="17" minimum="0" maximum="2147483647">        
+      <multiplicity id="21" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="118" y="473"/>      
       </multiplicity>    
     </end>    

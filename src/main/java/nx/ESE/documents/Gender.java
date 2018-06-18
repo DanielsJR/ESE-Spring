@@ -3,6 +3,8 @@ package nx.ESE.documents;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import nx.ESE.utils.Capitalizer;
+
 public enum Gender {
 	HOMBRE, MUJER;
 
@@ -34,6 +36,6 @@ public enum Gender {
 
 	@JsonValue
 	public String toJson() {
-		return name().toLowerCase();
+		return Capitalizer.capitalizer(name().toLowerCase());
 	}
 }

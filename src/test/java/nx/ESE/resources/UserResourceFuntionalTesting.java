@@ -941,57 +941,58 @@ public class UserResourceFuntionalTesting {
 
 	@After
 	public void delete() {
+		this.restService.loginAdmin();
 		try {
-			this.restService.loginAdmin().restBuilder().path(UserResource.USERS).path(UserResource.ADMINS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.ADMINS)
 					.path(UserResource.PATH_ID).expand(userDto.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO1 nothing to delete");
 		}
 
 		try {
-			this.restService.loginAdmin().restBuilder().path(UserResource.USERS).path(UserResource.ADMINS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.ADMINS)
 					.path(UserResource.PATH_ID).expand(userDto2.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
 		}
 		
 		try {
-			this.restService.loginAdmin().restBuilder().path(UserResource.USERS).path(UserResource.MANAGERS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.MANAGERS)
 					.path(UserResource.PATH_ID).expand(userDto.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO1 nothing to delete");
 		}
 
 		try {
-			this.restService.loginAdmin().restBuilder().path(UserResource.USERS).path(UserResource.MANAGERS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.MANAGERS)
 					.path(UserResource.PATH_ID).expand(userDto2.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
 		}
 		
 		try {
-			this.restService.loginManager().restBuilder().path(UserResource.USERS).path(UserResource.TEACHERS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.TEACHERS)
 					.path(UserResource.PATH_ID).expand(userDto.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO1 nothing to delete");
 		}
 
 		try {
-			this.restService.loginManager().restBuilder().path(UserResource.USERS).path(UserResource.TEACHERS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.TEACHERS)
 					.path(UserResource.PATH_ID).expand(userDto2.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
 		}
 		
 		try {
-			this.restService.loginManager().restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
 					.path(UserResource.PATH_ID).expand(userDto.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO1 nothing to delete");
 		}
 
 		try {
-			this.restService.loginManager().restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
+			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
 					.path(UserResource.PATH_ID).expand(userDto2.getId()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");

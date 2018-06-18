@@ -31,7 +31,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 	@Query(value = "{'roles' : ?0}", fields = "{ '_id' : 1, 'firstName' : 1, 'lastName' : 1}")
 	public List<UserMinDto> findUsersAll(Role role);
 	
-	@Query(value = "{'roles' : ?0}")
+	@Query(value = "{'roles' : ?0}", fields = "{ 'password' : 0 }")
 	public List<UserDto> findUsersFullAll(Role role);
 
 }

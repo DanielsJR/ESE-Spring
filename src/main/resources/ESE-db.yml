@@ -25,135 +25,227 @@ tokenList:
     
 # Users u000-u009 ADMIN 
 userList:
-  - username: u000
-    password: p000
-    firstName: f000
-    lastName: l000
-    dni: d000
-    birthday: 1998-11-11
-    gender: MUJER
-    mobile: m000
-    email: e000@email.com
-    address: las viñitas 000
-    commune: LA_FLORIDA
-    roles:
-      - ADMIN
-      - MANAGER
-      - TEACHER
-    token: *to0 
-    
-  - username: u001
-    password: p001
-    dni: d001
-    gender: HOMBRE
-    mobile: m001
-    email: e001@email.com
-    roles:
-      - ADMIN
-    token: *to1   
-      
+
+       
 # Users u010-u019 MANAGER 
   - username: u010
-    password: p010
-    firstName: f010
-    lastName: l010
-    dni: d010
-    birthday: 1990-11-22
+    password: p010A@
+    firstName: Barack Hussein 
+    lastName: Obama II
+    dni: 13755572-7
+    birthday: 1961-8-4
     gender: HOMBRE
-    mobile: m010
+    avatar:
+       name: obama.png
+       type: image/png
+    mobile: 010000000
     email: e010@email.com
-    address: las viñitas 010
+    address: Las Viñitas 010
     commune: QUINTA_NORMAL
     roles:
       - MANAGER
       - TEACHER
-    token: *to2
+    token: *to1
     
   - username: u011
-    password: p011
-    firstName: f011
-    lastName: l011
-    dni: d011
-    birthday: 1970-12-02
+    password: p011A@
+    firstName: Donald John 
+    lastName: Trump
+    dni: 17667557-8
+    birthday: 1946-6-14
     gender: HOMBRE
-    mobile: m011
+    avatar:
+       name: trump.png
+       type: image/png
+    mobile: 011111111
     email: e011@email.com
-    address: las viñitas 011
+    address: Las Viñitas 011
     commune: LO_PRADO
     roles:
       - MANAGER
-    token: *to3
+    token: *to2
+    
+  - username: u012
+    password: p012A@
+    firstName: Angelina 
+    lastName: Jolie Voight
+    dni: 13712275-8
+    birthday: 1975-6-4
+    gender: MUJER
+    avatar:
+       name: angelina.png
+       type: image/png
+    mobile: 012222222
+    email: e012@email.com
+    address: Las Viñitas 012
+    commune: LA_FLORIDA
+    roles:
+      - MANAGER
+      - TEACHER
+    token: *to0 
+    
     
 # Users u020-u029 TEACHER   
   - username: u020
-    firstName: fn020 
-    lastName: ln020
-    password: p020
-    dni: d020
+    firstName: Jada Candase 
+    lastName: Stevens Jackson
+    password: p020A@
+    dni: 17177707-0
+    birthday: 1988-7-4
     gender: MUJER
-    mobile: m020
+    avatar:
+       name: jada.png
+       type: image/png
+    mobile: 020000000
     email: e020@email.com
+    address: Los Pepinos 011
+    commune: LO_PRADO
     roles:
       - TEACHER
     token: *to4
     
   - username: u021
-    firstName: fn021 
-    lastName: ln021 
-    password: p021
-    dni: d021
+    firstName: Wonder 
+    lastName: Woman 
+    password: p021A@
+    dni: 15468458-1
+    birthday: 1911-8-12
     gender: MUJER
-    mobile: m021
+    avatar:
+       name: wonder.png
+       type: image/png
+    mobile: 021111111
     email: e021@email.com
+    address: Las Viñitas 021
+    commune: CALERA_DE_TANGO
     roles:
       - TEACHER
     token: *to5
     
   - username: u022
-    firstName: fn022 
-    lastName: ln022 
-    password: p022
-    dni: d022
-    gender: MUJER
-    mobile: m022
+    password: p022A@
+    firstName: Iron
+    lastName: Man
+    dni: 16480567-0
+    birthday: 1965-4-4
+    gender: HOMBRE
+    avatar:
+       name: iron-man.png
+       type: image/png
+    mobile: 002222222
     email: e022@email.com
+    address: Las Viñitas 001
+    commune: QUINTA_NORMAL
     roles:
       - TEACHER
-    token: *to6
+    token: *to3 
+    
     
 # Users u030-u039 STUDENT     
   - username: u030
-    firstName: fn030 
-    lastName: ln030 
-    password: p030
-    dni: d030
+    firstName: Keisha 
+    lastName: Grey 
+    password: p030A@
+    dni: 17642203-3
+    birthday: 1994-6-9
     gender: MUJER
-    mobile: m030
+    avatar:
+       name: grey.png
+       type: image/png
+    mobile: 030000000
     email: e030@email.com
+    address: Las Viñitas 030
+    commune: CERRO_NAVIA
+    roles:
+      - STUDENT
+    token: *to4
+    
+  - username: u031
+    firstName: Arya
+    lastName: Stark 
+    password: p031A@
+    dni: 17812074-3
+    birthday: 1997-4-15
+    gender: MUJER
+    avatar:
+       name: arya.png
+       type: image/png
+    mobile: 031111111
+    email: e031@email.com
+    address: Las Viñitas 031
+    commune: LO_ESPEJO
+    roles:
+      - STUDENT
+    token: *to5
+    
+  - username: u032
+    firstName: Malcom 
+    lastName: Wilkerson 
+    password: p032A@
+    dni: 17314063-0
+    birthday: 1983-12-30
+    gender: HOMBRE
+    avatar:
+       name: malcom.png
+       type: image/png
+    mobile: 032222222
+    email: e032@email.com
+    address: Las Viñitas 032
+    commune: QUINTA_NORMAL
+    roles:
+      - STUDENT
+    token: *to6
+    
+  - username: u033
+    firstName: Dui  
+    lastName: Wilkerson 
+    password: p033A@
+    dni: 17316944-2
+    birthday: 1990-2-22
+    gender: HOMBRE
+    avatar:
+       name: dui.png
+       type: image/png
+    mobile: 033333333
+    email: e033@email.com
+    address: Las Viñitas 033
+    commune: LA_GRANJA
     roles:
       - STUDENT
     token: *to7
     
-  - username: u031
-    firstName: fn031 
-    lastName: ln031 
-    password: p031
-    dni: d031
-    gender: MUJER
-    mobile: m031
-    email: e031@email.com
+  - username: u034
+    firstName: Reese  
+    lastName: Wilkerson 
+    password: p034A@
+    dni: 17884219-6
+    birthday: 1979-12-11
+    gender: HOMBRE
+    avatar:
+       name: reese.png
+       type: image/png
+    mobile: 034444444
+    email: e034@email.com
+    address: Las Viñitas 034
+    commune: LA_GRANJA
     roles:
       - STUDENT
     token: *to8
     
-  - username: u032
-    firstName: fn032 
-    lastName: ln032 
-    password: p032
-    dni: d032
+  - username: u035
+    firstName: Stevie  
+    lastName: Kenarban 
+    password: p035A@
+    dni: 17921590-K
+    birthday: 1983-11-12
     gender: HOMBRE
-    mobile: m032
-    email: e032@email.com
+    avatar:
+       name: stevie.png
+       type: image/png
+    mobile: 035555555
+    email: e035@email.com
+    address: Las Viñitas 035
+    commune: LA_GRANJA
     roles:
       - STUDENT
     token: *to9

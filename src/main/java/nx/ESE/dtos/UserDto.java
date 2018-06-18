@@ -11,12 +11,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import nx.ESE.documents.Avatar;
 import nx.ESE.documents.Commune;
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Token;
 import nx.ESE.documents.User;
 import nx.ESE.dtos.validators.RUTValid;
+import nx.ESE.utils.Capitalizer;
+
 
 @JsonInclude(Include.NON_NULL)
 public class UserDto {
@@ -27,7 +30,7 @@ public class UserDto {
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.USERNAME)
 	private String username;
 
-	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.PASSWORD)
+	//@Pattern(regexp = nx.ESE.dtos.validators.Pattern.PASSWORD)
 	private String password;
 
 	private String firstName;
@@ -37,10 +40,12 @@ public class UserDto {
 	@RUTValid
 	private String dni;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date birthday;
 
 	private Gender gender;
+	
+	private Avatar avatar;
 
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.NINE_DIGITS )
 	private String mobile;
@@ -58,15 +63,16 @@ public class UserDto {
 
 	private boolean active;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date createdAt;
 
 	public UserDto() {
 		super();
 	}
 
+	//input
 	public UserDto(String id, String username, String password, String firstName, String lastName, String dni,
-			Date birthday, Gender gender, String mobile, String email, String address, Commune commune, Role[] roles,
+			Date birthday, Gender gender, Avatar avatar, String mobile, String email, String address, Commune commune, Role[] roles,
 			Token token, boolean active, Date createdAt) {
 		super();
 		this.id = id;
@@ -77,6 +83,7 @@ public class UserDto {
 		this.setDni(dni);
 		this.birthday = birthday;
 		this.setGender(gender);
+		this.avatar = avatar;
 		this.mobile = mobile;
 		this.setEmail(email);
 		this.address = address;
@@ -88,11 +95,11 @@ public class UserDto {
 	}
 
 	public UserDto(String usernamePass) {
-
-		this(null, usernamePass, usernamePass+"@A1", null, null, null, null, null, null, null, null, null, null, null, true,
+		this(null, usernamePass, usernamePass+"@A1", null, null, null, null, null, null, null, null, null, null, null, null, true,
 				null);
 	}
 
+	//output
 	public UserDto(User user) {
 		this.id = user.getId();
 		this.username =user.getUsername();
@@ -102,6 +109,7 @@ public class UserDto {
 		this.dni = user.getDni();
 		this.birthday = user.getBirthday();
 		this.gender = user.getGender();
+		this.avatar = user.getAvatar();
 		this.mobile = user.getMobile();
 		this.email = user.getEmail();
 		this.address = user.getAddress();
@@ -140,6 +148,56 @@ public class UserDto {
 		this.password = password;
 	}
 
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+	     if (firstName != null) {
+			this.firstName = Capitalizer.capitalizer(firstName);
+		} else {
+			this.firstName = firstName;
+		}
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+	     if (lastName != null) {
+			this.lastName = Capitalizer.capitalizer(lastName);
+		} else {
+			this.lastName = lastName;
+		}
+	}
+
+	public String getDni() {
+		if (dni != null) {
+		String dniClean = dni.replace("-", "");
+		return dniClean.substring(0, dniClean.length() - 1) + "-" + dniClean.substring(dniClean.length() - 1);
+		}else{
+			return dni;
+		}
+	}
+
+	public void setDni(String dni) {
+		if (dni != null) {
+			this.dni = dni.toUpperCase().replace(".", "").replace("-", "");
+		} else {
+			this.dni = dni;
+		}
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+	
 	public Gender getGender() {
 		return gender;
 	}
@@ -147,7 +205,56 @@ public class UserDto {
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
+	
+	
+	public Avatar getAvatar() {
+    	return avatar;
+	}
 
+	public void setAvatar(Avatar avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		if (email != null) {
+			this.email = email.toLowerCase();
+		} else {
+			this.email = email;
+		}
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+	     if (address != null) {
+			this.address = Capitalizer.capitalizer(address);
+		} else {
+			this.address = address;
+		}
+	}
+
+	public Commune getCommune() {
+		return commune;
+	}
+
+	public void setCommune(Commune commune) {
+		this.commune = commune;
+	}
+	
 	public Role[] getRoles() {
 		return roles;
 	}
@@ -180,96 +287,21 @@ public class UserDto {
 		this.createdAt = createdAt;
 	}
 
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getDni() {
-		if (dni != null) {
-		String dniClean = dni.replace("-", "");
-		return dniClean.substring(0, dniClean.length() - 1) + "-" + dniClean.substring(dniClean.length() - 1);
-		}else{
-			return dni;
-		}
-	}
-
-	public void setDni(String dni) {
-		if (dni != null) {
-			this.dni = dni.toUpperCase().replace(".", "").replace("-", "");
-		} else {
-			this.dni = dni;
-		}
-	}
-
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		if (email != null) {
-			this.email = email.toLowerCase();
-		} else {
-			this.email = email;
-		}
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public Commune getCommune() {
-		return commune;
-	}
-
-	public void setCommune(Commune commune) {
-		this.commune = commune;
-	}
-
 	@Override
 	public String toString() {
+		
 		String birthdayF = "null";
 		if (this.birthday != null) {
-			birthdayF = new SimpleDateFormat("dd-MMM-yyyy").format(birthday.getTime());
+			birthdayF = new SimpleDateFormat("dd/MM/yyyy").format(birthday.getTime());
 		}
+
 		String date = "null";
 		if (createdAt != null) {
-			date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
+			date = new SimpleDateFormat("dd/MM/yyyy").format(createdAt.getTime());
 		}
 		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender
-				+ ", mobile=" + mobile + ", email=" + email + ", address=" + address + ", commune=" + commune
+				+ ", mobile=" + mobile +", avatar=" + avatar + ", email=" + email + ", address=" + address + ", commune=" + commune
 				+ ", roles=" + Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt="
 				+ date + "]";
 	}
