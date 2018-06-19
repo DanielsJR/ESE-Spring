@@ -1,27 +1,6 @@
 # RECOMENDABLE SOLO AÑADIR 
 
-# Tokens
-tokenList:
-  - &to0
-    value: PaE8iPX3AekAaV945_ujcm7q1ik
-  - &to1
-    value: 3vZy-CGx0SZ86DjbwqvRfx45hHU
-  - &to2
-    value: 9wPhJxoFQvq4SND5ugNETxKwNKY
-  - &to3
-    value: 64jcnKajqit2bP_npC5-ddMfh6Y
-  - &to4
-    value: otRnEQ7DSaBGnS7C5T8zgs4d06g
-  - &to5
-    value: PaE8iPX3AekAaV945_ujcm323ew
-  - &to6
-    value: 3vZy-CGx0SZ86Djbwvvfdbdhrtt
-  - &to7
-    value: 9wPhJxoFQvq4SND5ugrererg43r
-  - &to8
-    value: 64jcnKajqit2bP_npC5-ddMerer
-  - &to9
-    value: otRnEQ7DSaBGnS7C5T8zgswret3
+
     
 # Users u000-u009 ADMIN 
 userList:
@@ -45,7 +24,7 @@ userList:
     roles:
       - MANAGER
       - TEACHER
-    token: *to1
+    
     
   - username: u011
     password: p011A@
@@ -63,7 +42,7 @@ userList:
     commune: LO_PRADO
     roles:
       - MANAGER
-    token: *to2
+    
     
   - username: u012
     password: p012A@
@@ -82,7 +61,7 @@ userList:
     roles:
       - MANAGER
       - TEACHER
-    token: *to0 
+    
     
     
 # Users u020-u029 TEACHER   
@@ -102,7 +81,7 @@ userList:
     commune: LO_PRADO
     roles:
       - TEACHER
-    token: *to4
+    
     
   - username: u021
     firstName: Wonder 
@@ -120,7 +99,7 @@ userList:
     commune: CALERA_DE_TANGO
     roles:
       - TEACHER
-    token: *to5
+    
     
   - username: u022
     password: p022A@
@@ -138,7 +117,7 @@ userList:
     commune: QUINTA_NORMAL
     roles:
       - TEACHER
-    token: *to3 
+    
     
     
 # Users u030-u039 STUDENT     
@@ -158,7 +137,7 @@ userList:
     commune: CERRO_NAVIA
     roles:
       - STUDENT
-    token: *to4
+    
     
   - username: u031
     firstName: Arya
@@ -176,7 +155,7 @@ userList:
     commune: LO_ESPEJO
     roles:
       - STUDENT
-    token: *to5
+    
     
   - username: u032
     firstName: Malcom 
@@ -194,7 +173,7 @@ userList:
     commune: QUINTA_NORMAL
     roles:
       - STUDENT
-    token: *to6
+    
     
   - username: u033
     firstName: Dui  
@@ -212,7 +191,7 @@ userList:
     commune: LA_GRANJA
     roles:
       - STUDENT
-    token: *to7
+    
     
   - username: u034
     firstName: Reese  
@@ -230,7 +209,7 @@ userList:
     commune: LA_GRANJA
     roles:
       - STUDENT
-    token: *to8
+    
     
   - username: u035
     firstName: Stevie  
@@ -248,5 +227,5 @@ userList:
     commune: LA_GRANJA
     roles:
       - STUDENT
-    token: *to9
+    
     

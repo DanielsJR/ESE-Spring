@@ -15,7 +15,6 @@ import nx.ESE.documents.Avatar;
 import nx.ESE.documents.Commune;
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
-import nx.ESE.documents.Token;
 import nx.ESE.documents.User;
 import nx.ESE.dtos.validators.RUTValid;
 import nx.ESE.utils.Capitalizer;
@@ -59,8 +58,6 @@ public class UserDto {
 
 	private Role[] roles;
 
-	private Token token;
-
 	private boolean active;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
@@ -73,7 +70,7 @@ public class UserDto {
 	//input
 	public UserDto(String id, String username, String password, String firstName, String lastName, String dni,
 			Date birthday, Gender gender, Avatar avatar, String mobile, String email, String address, Commune commune, Role[] roles,
-			Token token, boolean active, Date createdAt) {
+		    boolean active, Date createdAt) {
 		super();
 		this.id = id;
 		this.setUsername(username);
@@ -89,13 +86,12 @@ public class UserDto {
 		this.address = address;
 		this.commune = commune;
 		this.roles = roles;
-		this.token = token;
 		this.active = active;
 		this.createdAt = createdAt;
 	}
 
 	public UserDto(String usernamePass) {
-		this(null, usernamePass, usernamePass+"@A1", null, null, null, null, null, null, null, null, null, null, null, null, true,
+		this(null, usernamePass, usernamePass+"@A1", null, null, null, null, null, null, null, null, null, null, null, true,
 				null);
 	}
 
@@ -115,7 +111,6 @@ public class UserDto {
 		this.address = user.getAddress();
 		this.commune = user.getCommune();
 		this.roles = user.getRoles();
-		this.token = user.getToken();
 		this.active = user.isActive();
 		this.createdAt = user.getCreatedAt();
 	}
@@ -263,14 +258,6 @@ public class UserDto {
 		this.roles = roles;
 	}
 
-	public Token getToken() {
-		return token;
-	}
-
-	public void setToken(Token token) {
-		this.token = token;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
@@ -302,7 +289,7 @@ public class UserDto {
 		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender
 				+ ", mobile=" + mobile +", avatar=" + avatar + ", email=" + email + ", address=" + address + ", commune=" + commune
-				+ ", roles=" + Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt="
+				+ ", roles=" + Arrays.toString(roles) +  ", active=" + active + ", createdAt="
 				+ date + "]";
 	}
 

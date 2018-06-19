@@ -42,8 +42,6 @@ public class User {
 
 	private Role[] roles;
 
-	private Token token;
-
 	private boolean active;
 
 	private Date createdAt;
@@ -183,14 +181,6 @@ public class User {
 		this.roles = roles;
 	}
 
-	public Token getToken() {
-		return token;
-	}
-
-	public void setToken(Token token) {
-		this.token = token;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
@@ -225,7 +215,7 @@ public class User {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender + ", mobile="
 				+ mobile +", avatar=" + avatar + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
-				+ Arrays.toString(roles) + ", token=" + token + ", active=" + active + ", createdAt=" + date + "]";
+				+ Arrays.toString(roles)  + ", active=" + active + ", createdAt=" + date + "]";
 	}
 
 	@Override
