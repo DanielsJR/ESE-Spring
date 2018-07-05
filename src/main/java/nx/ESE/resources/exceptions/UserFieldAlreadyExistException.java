@@ -4,7 +4,7 @@ public class UserFieldAlreadyExistException extends Exception {
 	
 	private static final long serialVersionUID = -8638280129117812902L;
 	
-	public static final String DESCRIPTION = "User Field Already Exist";
+	public static final String DESCRIPTION = "Campo existente.";
 
     public UserFieldAlreadyExistException() {
         super(DESCRIPTION);

@@ -13,15 +13,20 @@ import nx.ESE.resources.exceptions.ErrorMessage;
 import nx.ESE.resources.exceptions.FieldInvalidException;
 import nx.ESE.resources.exceptions.FileException;
 import nx.ESE.resources.exceptions.ForbiddenException;
+import nx.ESE.resources.exceptions.PasswordNotMatchException;
 import nx.ESE.resources.exceptions.UserFieldAlreadyExistException;
 import nx.ESE.resources.exceptions.UserIdNotFoundException;
+import nx.ESE.resources.exceptions.UserUsernameNotFoundException;
 
 
 @ControllerAdvice
 public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({UserIdNotFoundException.class, FileException.class,})
+    @ExceptionHandler({
+    	UserIdNotFoundException.class,
+    	UserUsernameNotFoundException.class,
+    	FileException.class,})
     @ResponseBody
     public ErrorMessage notFoundRequest(HttpServletRequest request, Exception exception) {
         return new ErrorMessage(exception, request.getRequestURI());
@@ -31,7 +36,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler({
     	Exception.class,
     	UserFieldAlreadyExistException.class,
-    	FieldInvalidException.class
+    	FieldInvalidException.class,
+    	PasswordNotMatchException.class
     	})
     @ResponseBody
     public ErrorMessage badRequest(Exception exception) {
@@ -39,7 +45,9 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler({ForbiddenException.class, AccessDeniedException.class})
+    @ExceptionHandler({
+    	ForbiddenException.class,
+    	AccessDeniedException.class})
     @ResponseBody
     public ErrorMessage forbiddenRequest(Exception exception) {
         return new ErrorMessage(exception, "");

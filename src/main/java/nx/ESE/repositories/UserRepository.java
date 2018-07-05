@@ -25,9 +25,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 	@Query("{ 'id' : ?0 }")
 	public User findByIdQuery(String id);
 
-	@Query("{ 'token.value' : ?0 }")
-	public User findByTokenValue(String tokenValue);
-
 	@Query(value = "{'roles' : ?0}", fields = "{ '_id' : 1, 'firstName' : 1, 'lastName' : 1}")
 	public List<UserMinDto> findUsersAll(Role role);
 	
