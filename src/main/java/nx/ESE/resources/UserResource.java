@@ -97,16 +97,16 @@ public class UserResource {
 	public UserDto createManager(@Valid @RequestBody UserDto userDto) throws UserFieldAlreadyExistException {
 
 		if (this.userController.usernameRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Nombre de usuario existente.");
+			throw new UserFieldAlreadyExistException("Nombre de usuario.");
 
 		if (this.userController.dniRepeated(userDto))
-			throw new UserFieldAlreadyExistException("RUT existente.");
+			throw new UserFieldAlreadyExistException("RUT.");
 
 		if (this.userController.mobileRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Telefono existente.");
+			throw new UserFieldAlreadyExistException("Telefono.");
 
 		if (this.userController.emailRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Email existente.");
+			throw new UserFieldAlreadyExistException("Email.");
 
 		return this.userController.createUser(userDto, new Role[] { Role.MANAGER });
 	}
@@ -120,16 +120,16 @@ public class UserResource {
 			throw new UserUsernameNotFoundException();
 
 		if (this.userController.usernameRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Nombre de usuario existente.");
+			throw new UserFieldAlreadyExistException("Nombre de usuario.");
 
 		if (this.userController.dniRepeated(userDto))
-			throw new UserFieldAlreadyExistException("RUT existente.");
+			throw new UserFieldAlreadyExistException("RUT.");
 
 		if (this.userController.mobileRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Telefono existente.");
+			throw new UserFieldAlreadyExistException("Telefono.");
 
 		if (this.userController.emailRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Email existente.");
+			throw new UserFieldAlreadyExistException("Email.");
 
 		if (!this.userController.checkEqualOrGreaterPrivileges(userDto.getUsername(), new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
@@ -226,16 +226,16 @@ public class UserResource {
 			throws ForbiddenException, UserFieldAlreadyExistException {
 
 		if (this.userController.usernameRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Nombre de usuario existente.");
+			throw new UserFieldAlreadyExistException("Nombre de usuario.");
 
 		if (this.userController.dniRepeated(userDto))
-			throw new UserFieldAlreadyExistException("RUT existente.");
+			throw new UserFieldAlreadyExistException("RUT.");
 
 		if (this.userController.mobileRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Telefono existente.");
+			throw new UserFieldAlreadyExistException("Telefono.");
 
 		if (this.userController.emailRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Email existente.");
+			throw new UserFieldAlreadyExistException("Email.");
 
 		return this.userController.createUser(userDto, new Role[] { Role.TEACHER });
 	}
@@ -249,16 +249,16 @@ public class UserResource {
 			throw new UserUsernameNotFoundException();
 
 		if (this.userController.usernameRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Nombre de usuario existente.");
+			throw new UserFieldAlreadyExistException("Nombre de usuario.");
 
 		if (this.userController.dniRepeated(userDto))
-			throw new UserFieldAlreadyExistException("RUT existente.");
+			throw new UserFieldAlreadyExistException("RUT.");
 
 		if (this.userController.mobileRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Telefono existente.");
+			throw new UserFieldAlreadyExistException("Telefono.");
 
 		if (this.userController.emailRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Email existente.");
+			throw new UserFieldAlreadyExistException("Email.");
 
 		if (!this.userController.checkEqualOrGreaterPrivileges(userDto.getUsername(), new Role[] { Role.TEACHER }))
 			throw new ForbiddenException();
@@ -354,16 +354,16 @@ public class UserResource {
 			throws ForbiddenException, UserFieldAlreadyExistException {
 
 		if (this.userController.usernameRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Nombre de usuario existente.");
+			throw new UserFieldAlreadyExistException("Nombre de usuario.");
 
 		if (this.userController.dniRepeated(userDto))
-			throw new UserFieldAlreadyExistException("RUT existente.");
+			throw new UserFieldAlreadyExistException("RUT.");
 
 		if (this.userController.mobileRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Telefono existente.");
+			throw new UserFieldAlreadyExistException("Telefono.");
 
 		if (this.userController.emailRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Email existente.");
+			throw new UserFieldAlreadyExistException("Email.");
 
 		return this.userController.createUser(userDto, new Role[] { Role.STUDENT });
 	}
@@ -373,20 +373,17 @@ public class UserResource {
 	public UserDto modifyStudent(@PathVariable String username, @Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, UserFieldAlreadyExistException, UserUsernameNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
-			throw new UserUsernameNotFoundException();
-
 		if (this.userController.usernameRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Nombre de usuario existente.");
+			throw new UserFieldAlreadyExistException("Nombre de usuario.");
 
 		if (this.userController.dniRepeated(userDto))
-			throw new UserFieldAlreadyExistException("RUT existente.");
+			throw new UserFieldAlreadyExistException("RUT.");
 
 		if (this.userController.mobileRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Telefono existente.");
+			throw new UserFieldAlreadyExistException("Telefono.");
 
 		if (this.userController.emailRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Email existente.");
+			throw new UserFieldAlreadyExistException("Email.");
 
 		if (!this.userController.checkEqualOrGreaterPrivileges(userDto.getUsername(), new Role[] { Role.STUDENT }))
 			throw new ForbiddenException();
@@ -453,16 +450,16 @@ public class UserResource {
 			throw new UserUsernameNotFoundException();
 
 		if (this.userController.usernameRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Existing username");
+			throw new UserFieldAlreadyExistException("Nombre de usuario.");
 
 		if (this.userController.dniRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Existing dni");
+			throw new UserFieldAlreadyExistException("RUT.");
 
 		if (this.userController.mobileRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Existing mobile");
+			throw new UserFieldAlreadyExistException("Telefono.");
 
 		if (this.userController.emailRepeated(userDto))
-			throw new UserFieldAlreadyExistException("Existing email");
+			throw new UserFieldAlreadyExistException("Email.");
 
 
 		return this.userController.modifyUser(username, userDto);
