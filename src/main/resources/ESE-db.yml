@@ -5,9 +5,9 @@
 # Users u000-u009 ADMIN 
 userList:
 
-       
 # Users u010-u019 MANAGER 
-  - username: u010
+  - &u010
+    username: u010
     password: p010A@
     firstName: Barack Hussein 
     lastName: Obama II
@@ -26,7 +26,8 @@ userList:
       - TEACHER
     
     
-  - username: u011
+  - &u011
+    username: u011
     password: p011A@
     firstName: Donald John 
     lastName: Trump
@@ -44,7 +45,8 @@ userList:
       - MANAGER
     
     
-  - username: u012
+  - &u012
+    username: u012
     password: p012A@
     firstName: Angelina 
     lastName: Jolie Voight
@@ -65,7 +67,8 @@ userList:
     
     
 # Users u020-u029 TEACHER   
-  - username: u020
+  - &u020
+    username: u020
     firstName: Jada Candase 
     lastName: Stevens Jackson
     password: p020A@
@@ -83,7 +86,8 @@ userList:
       - TEACHER
     
     
-  - username: u021
+  - &u021
+    username: u021
     firstName: Wonder 
     lastName: Woman 
     password: p021A@
@@ -101,7 +105,8 @@ userList:
       - TEACHER
     
     
-  - username: u022
+  - &u022
+    username: u022
     password: p022A@
     firstName: Iron
     lastName: Man
@@ -121,7 +126,8 @@ userList:
     
     
 # Users u030-u039 STUDENT     
-  - username: u030
+  - &u030
+    username: u030
     firstName: Keisha 
     lastName: Grey 
     password: p030A@
@@ -139,7 +145,8 @@ userList:
       - STUDENT
     
     
-  - username: u031
+  - &u031
+    username: u031
     firstName: Arya
     lastName: Stark 
     password: p031A@
@@ -157,7 +164,8 @@ userList:
       - STUDENT
     
     
-  - username: u032
+  - &u032
+    username: u032
     firstName: Malcom 
     lastName: Wilkerson 
     password: p032A@
@@ -175,7 +183,8 @@ userList:
       - STUDENT
     
     
-  - username: u033
+  - &u033
+    username: u033
     firstName: Dui  
     lastName: Wilkerson 
     password: p033A@
@@ -193,7 +202,8 @@ userList:
       - STUDENT
     
     
-  - username: u034
+  - &u034
+    username: u034
     firstName: Reese  
     lastName: Wilkerson 
     password: p034A@
@@ -211,7 +221,8 @@ userList:
       - STUDENT
     
     
-  - username: u035
+  - &u035
+    username: u035
     firstName: Stevie  
     lastName: Kenarban 
     password: p035A@
@@ -227,5 +238,78 @@ userList:
     commune: LA_GRANJA
     roles:
       - STUDENT
+      
     
     
+preferencesList:
+  - user: *u010
+    theme:
+       name: indigo-pink-dark
+       isDark: true
+       color: '#3F51B5' 
+    
+  - user: *u011
+    theme:
+       name: lime-pink
+       isDark: false
+       color: '#CDDC39' 
+ 
+  - user: *u012
+    theme:
+       name: blue-orange-dark
+       isDark: true
+       color: '#2196F3'  
+
+  - user: *u020
+    theme:
+       name: indigo-pink-dark
+       isDark: true
+       color: '#3F51B5' 
+    
+  - user: *u021
+    theme:
+       name: lime-pink
+       isDark: false
+       color: '#CDDC39' 
+ 
+  - user: *u022
+    theme:
+       name: blue-orange-dark
+       isDark: true
+       color: '#2196F3'  
+
+  - user: *u030
+    theme:
+       name: indigo-pink-dark
+       isDark: true
+       color: '#3F51B5' 
+    
+  - user: *u031
+    theme:
+       name: lime-pink
+       isDark: false
+       color: '#CDDC39' 
+ 
+  - user: *u032
+    theme:
+       name: blue-orange-dark
+       isDark: true
+       color: '#2196F3'  
+
+  - user: *u033
+    theme:
+       name: indigo-pink-dark
+       isDark: true
+       color: '#3F51B5' 
+    
+  - user: *u034
+    theme:
+       name: lime-pink
+       isDark: false
+       color: '#CDDC39' 
+ 
+  - user: *u035
+    theme:
+       name: blue-orange-dark
+       isDark: true
+       color: '#2196F3'           

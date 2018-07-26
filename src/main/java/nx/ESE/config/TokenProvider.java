@@ -60,7 +60,7 @@ public class TokenProvider implements Serializable {
 				.claim(AUTHORITIES_KEY, authorities)
 				.signWith(SignatureAlgorithm.HS256, base64EncodedKey)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
+				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 400))
 				.compact();
 	}
 

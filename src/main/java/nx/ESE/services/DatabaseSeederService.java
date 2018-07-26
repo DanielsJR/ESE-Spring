@@ -19,6 +19,7 @@ import nx.ESE.documents.Avatar;
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.User;
+import nx.ESE.repositories.PreferencesRepository;
 import nx.ESE.repositories.UserRepository;
 
 @Service
@@ -35,6 +36,9 @@ public class DatabaseSeederService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PreferencesRepository preferencesRepository;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseSeederService.class);
 
@@ -62,6 +66,10 @@ public class DatabaseSeederService {
 		if (dbGraph.getUserList() != null) {
 			this.userRepository.saveAll(dbGraph.getUserList());
 		}
+		
+		if (dbGraph.getPreferencesList() != null) {
+			this.preferencesRepository.saveAll(dbGraph.getPreferencesList());
+		}
 
 		logger.warn("------------------------- Seed: " + ymlFileName + "-----------");
 	}
@@ -70,6 +78,7 @@ public class DatabaseSeederService {
 		logger.warn("------------------------- delete All And Create Admin-----------");
 		// Delete Repositories
 		this.userRepository.deleteAll();
+		this.preferencesRepository.deleteAll();
 		this.createAdminIfNotExist();
 	}
 
