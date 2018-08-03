@@ -125,6 +125,10 @@ userList:
     
     
     
+    
+    
+    
+    
 # Users u030-u039 STUDENT     
   - &u030
     username: u030
@@ -162,82 +166,142 @@ userList:
     commune: LO_ESPEJO
     roles:
       - STUDENT
-    
-    
+   
+   
   - &u032
     username: u032
-    firstName: Malcom 
-    lastName: Wilkerson 
-    password: p032A@
-    dni: 17314063-0
-    birthday: 1983-12-30
-    gender: HOMBRE
-    avatar:
-       name: malcom.png
-       type: image/png
-    mobile: 032222222
-    email: e032@email.com
-    address: Las Viñitas 032
-    commune: QUINTA_NORMAL
-    roles:
-      - STUDENT
-    
-    
-  - &u033
-    username: u033
-    firstName: Dui  
-    lastName: Wilkerson 
-    password: p033A@
-    dni: 17316944-2
-    birthday: 1990-2-22
-    gender: HOMBRE
-    avatar:
-       name: dui.png
-       type: image/png
-    mobile: 033333333
-    email: e033@email.com
-    address: Las Viñitas 033
-    commune: LA_GRANJA
-    roles:
-      - STUDENT
-    
-    
-  - &u034
-    username: u034
     firstName: Reese  
     lastName: Wilkerson 
-    password: p034A@
+    password: p033A@
     dni: 17884219-6
     birthday: 1979-12-11
     gender: HOMBRE
     avatar:
        name: reese.png
        type: image/png
-    mobile: 034444444
+    mobile: 032222222
     email: e034@email.com
-    address: Las Viñitas 034
+    address: Las Viñitas 032
     commune: LA_GRANJA
+    roles:
+      - STUDENT  
+      
+      
+        
+    
+  - &u033
+    username: u033
+    firstName: Malcom 
+    lastName: Wilkerson 
+    password: p033A@
+    dni: 17314063-0
+    birthday: 1983-12-30
+    gender: HOMBRE
+    avatar:
+       name: malcom.png
+       type: image/png
+    mobile: 033333333
+    email: e032@email.com
+    address: Las Viñitas 033
+    commune: QUINTA_NORMAL
     roles:
       - STUDENT
     
-    
-  - &u035
-    username: u035
+  - &u034
+    username: u034
     firstName: Stevie  
     lastName: Kenarban 
-    password: p035A@
+    password: p034A@
     dni: 17921590-K
     birthday: 1983-11-12
     gender: HOMBRE
     avatar:
        name: stevie.png
        type: image/png
-    mobile: 035555555
+    mobile: 034444444
     email: e035@email.com
-    address: Las Viñitas 035
+    address: Las Viñitas 034
     commune: LA_GRANJA
     roles:
       - STUDENT
+      
+  - &u035
+    username: u035
+    firstName: Cynthia  
+    lastName: Sanders 
+    password: p035A@
+    dni: 17319677-6
+    birthday: 1983-10-21
+    gender: HOMBRE
+    avatar:
+       name: cynthia.png
+       type: image/png
+    mobile: 035555555
+    email: e037@email.com
+    address: Las Viñitas 035
+    commune: LA_GRANJA
+    roles:
+      - STUDENT      
+      
+      
+    
+  - &u036
+    username: u036
+    firstName: Dui  
+    lastName: Wilkerson 
+    password: p036A@
+    dni: 17316944-2
+    birthday: 1990-2-22
+    gender: HOMBRE
+    avatar:
+       name: dui.png
+       type: image/png
+    mobile: 036666666
+    email: e036@email.com
+    address: Las Viñitas 036
+    commune: LA_GRANJA
+    roles:
+      - STUDENT
+
+  - &u037
+    username: u037
+    firstName: Chad Do 
+    lastName: Not Touch
+    password: p037A@
+    dni: 17376494-4
+    birthday: 1990-6-8
+    gender: HOMBRE
+    avatar:
+       name: chad.png
+       type: image/png
+    mobile: 037777777
+    email: e037@email.com
+    address: Las Viñitas 037
+    commune: CERRILLOS
+    roles:
+      - STUDENT
+     
+
+      
+  - &u038
+    username: u038
+    firstName: David   
+    lastName: Hanson 
+    password: p038A@
+    dni: 17676178-4
+    birthday: 1990-4-21
+    gender: HOMBRE
+    avatar:
+       name: david.png
+       type: image/png
+    mobile: 038888888
+    email: e038@email.com
+    address: Las Viñitas 038
+    commune: LA_GRANJA
+    roles:
+      - STUDENT            
+      
+      
       
     
     
@@ -312,4 +376,87 @@ preferencesList:
     theme:
        name: blue-orange-dark
        isDark: true
-       color: '#2196F3'           
+       color: '#2196F3'   
+       
+       
+coursesList:
+
+  - &c01
+    name: PRIMERO_A
+    chiefTeacher: *u020
+    students:
+      - *u030
+      - *u031
+      - *u032
+    period: 2018-3-1 
+    
+  - &c02
+    name: TERCERO_C
+    chiefTeacher: *u021
+    students:
+      - *u033
+      - *u034
+      - *u035
+    period: 2018-3-1
+    
+  - &c03
+    name: SEXTO_B
+    chiefTeacher: *u022
+    students:
+      - *u036
+      - *u037
+      - *u038
+    period: 2018-3-1  
+    
+    
+subjectsList:
+
+  - &s01
+    name: MATEMATICAS
+    teacher: *u020
+    course: *c01
+    
+  - &s02
+    name: MATEMATICAS
+    teacher: *u020
+    course: *c02 
+    
+  - &s03
+    name: MATEMATICAS
+    teacher: *u021
+    course: *c03 
+    
+  - &s04
+    name: LENGUAJE
+    teacher: *u022
+    course: *c01 
+    
+  - &s05
+    name: LENGUAJE
+    teacher: *u021
+    course: *c02 
+    
+  - &s06
+    name: HISTORIA
+    teacher: *u021
+    course: *c03    
+    
+  - &s07
+    name: ED_FISICA
+    teacher: *u022
+    course: *c01  
+    
+  - &s08
+    name: ED_FISICA
+    teacher: *u021
+    course: *c02  
+      
+  - &s09
+    name: MUSICA
+    teacher: *u020
+    course: *c03  
+    
+              
+                 
+                         
+                   

@@ -19,7 +19,9 @@ import nx.ESE.documents.Avatar;
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.User;
+import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.PreferencesRepository;
+import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
 
 @Service
@@ -39,6 +41,12 @@ public class DatabaseSeederService {
 	
 	@Autowired
 	private PreferencesRepository preferencesRepository;
+	
+	@Autowired
+	private CourseRepository courseRepository;
+	
+	@Autowired
+	private SubjectRepository subjectRepository;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseSeederService.class);
 
@@ -69,6 +77,14 @@ public class DatabaseSeederService {
 		
 		if (dbGraph.getPreferencesList() != null) {
 			this.preferencesRepository.saveAll(dbGraph.getPreferencesList());
+		}
+		
+		if (dbGraph.getCoursesList() != null) {
+			this.courseRepository.saveAll(dbGraph.getCoursesList());
+		}
+		
+		if (dbGraph.getSubjectsList() != null) {
+			this.subjectRepository.saveAll(dbGraph.getSubjectsList());
 		}
 
 		logger.warn("------------------------- Seed: " + ymlFileName + "-----------");

@@ -12,7 +12,7 @@
   </class>  
   <enumeration id="2" language="java" name="nx.ESE.documents.Role" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Role.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="605" y="477"/>    
+    <position height="-1" width="-1" x="511" y="627"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </enumeration>  
   <enumeration id="4" language="java" name="nx.ESE.documents.Commune" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/Commune.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="148" width="180" x="35" y="201"/>    
+    <position height="148" width="180" x="15" y="201"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="nx.ESE.documents.AuthToken" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/AuthToken.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="537" y="52"/>    
+    <position height="-1" width="-1" x="478" y="47"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="nx.ESE.documents.LoginUser" project="E.S.E-mongo" 
     file="/E.S.E-mongo/src/main/java/nx/ESE/documents/LoginUser.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="540" y="166"/>    
+    <position height="-1" width="-1" x="347" y="57"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -82,76 +82,223 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <association id="10">    
+  <enumeration id="10" language="java" name="nx.ESE.documents.core.SubjectName" project="E.S.E-mongo" 
+    file="/E.S.E-mongo/src/main/java/nx/ESE/documents/core/SubjectName.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="192" x="928" y="410"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <enumeration id="11" language="java" name="nx.ESE.documents.core.CourseName" project="E.S.E-mongo" 
+    file="/E.S.E-mongo/src/main/java/nx/ESE/documents/core/CourseName.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="124" width="159" x="921" y="218"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <class id="12" language="java" name="nx.ESE.documents.core.Course" project="E.S.E-mongo" 
+    file="/E.S.E-mongo/src/main/java/nx/ESE/documents/core/Course.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="792" y="276"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="nx.ESE.documents.core.Grade" project="E.S.E-mongo" 
+    file="/E.S.E-mongo/src/main/java/nx/ESE/documents/core/Grade.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="793" y="667"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="nx.ESE.documents.core.Subject" project="E.S.E-mongo" 
+    file="/E.S.E-mongo/src/main/java/nx/ESE/documents/core/Subject.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="792" y="466"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <association id="15">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="11" name="avatar">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <attribute id="16" name="gender">        
+        <position height="18" width="42" x="135" y="138"/>      
       </attribute>      
-      <multiplicity id="12" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <multiplicity id="17" minimum="0" maximum="1">        
+        <position height="16" width="23" x="129" y="125"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="13">    
+  <association id="18">    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="14" name="theme">        
+      <attribute id="19" name="theme">        
         <position height="0" width="0" x="-4" y="-111"/>      
       </attribute>      
-      <multiplicity id="15" minimum="0" maximum="1">        
+      <multiplicity id="20" minimum="0" maximum="1">        
         <position height="0" width="0" x="-4" y="-111"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="16">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="17" name="user">        
+  <association id="21">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="22" name="subject">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="18" minimum="0" maximum="1">        
+      <multiplicity id="23" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="14" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="19">    
+  <association id="24">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="20" name="commune">        
+      <attribute id="25" name="commune">        
         <position height="0" width="0" x="25" y="-87"/>      
       </attribute>      
-      <multiplicity id="21" minimum="0" maximum="1">        
+      <multiplicity id="26" minimum="0" maximum="1">        
         <position height="0" width="0" x="25" y="-87"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="22">    
+  <association id="27">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="23" name="gender">        
-        <position height="0" width="0" x="13" y="-307"/>      
+      <attribute id="28" name="avatar">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="24" minimum="0" maximum="1">        
-        <position height="0" width="0" x="13" y="-307"/>      
+      <multiplicity id="29" minimum="0" maximum="1">        
+        <position height="16" width="23" x="168" y="418"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="25">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="26" name="roles">        
-        <position height="0" width="0" x="387" y="399"/>      
+  <association id="30">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="31" name="user">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="27" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="387" y="399"/>      
+      <multiplicity id="32" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="33">    
+    <bendpoint x="655" y="226"/>    
+    <bendpoint x="427" y="219"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="34" name="chiefTeacher">        
+        <position height="18" width="71" x="450" y="200"/>      
+      </attribute>      
+      <multiplicity id="35" minimum="0" maximum="1">        
+        <position height="16" width="23" x="426" y="201"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="36">    
+    <bendpoint x="417" y="379"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="37" name="student">        
+        <position height="18" width="44" x="412" y="361"/>      
+      </attribute>      
+      <multiplicity id="38" minimum="0" maximum="1">        
+        <position height="16" width="23" x="402" y="350"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="39">    
+    <bendpoint x="550" y="389"/>    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="40" name="teacher">        
+        <position height="18" width="45" x="434" y="303"/>      
+      </attribute>      
+      <multiplicity id="41" minimum="0" maximum="1">        
+        <position height="16" width="23" x="407" y="302"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="42">    
+    <bendpoint x="653" y="305"/>    
+    <bendpoint x="453" y="282"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="43" name="students">        
+        <position height="18" width="50" x="428" y="260"/>      
+      </attribute>      
+      <multiplicity id="44" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="400" y="262"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="45">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="46" name="course">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="47" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="48">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="49" name="roles">        
+        <position height="0" width="0" x="293" y="549"/>      
+      </attribute>      
+      <multiplicity id="50" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="293" y="549"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="51">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="52" name="name">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="53" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="54">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="55" name="name">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="56" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

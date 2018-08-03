@@ -103,7 +103,7 @@ public class UserController {
 
 	// Exceptions*********************
 	public boolean existsUserId(String id) {
-		return this.userRepository.findByIdQuery(id) != null;
+		return this.userRepository.findById(id).isPresent();
 	}
 
 	public boolean existsUserUsername(String username) {
@@ -145,7 +145,7 @@ public class UserController {
 	}
 	
 	public boolean checkEqualOrGreaterPrivileges_Id(String id, Role[] roles) {
-		User user = this.userRepository.findByIdQuery(id);
+		User user = this.userRepository.findById(id).get();
 		return user != null && Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
 	}
 
@@ -170,7 +170,7 @@ public class UserController {
 	}
 
 	public UserDto getUserById(String id) {
-		User user = this.userRepository.findByIdQuery(id);
+		User user = this.userRepository.findById(id).get();
 		this.setOutPutUserAvatar(user);
 		return new UserDto(user);
 

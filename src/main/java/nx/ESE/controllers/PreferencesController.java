@@ -49,7 +49,7 @@ public class PreferencesController {
 			return true;
 		}
 
-		User user = this.userRepository.findByIdQuery(id);
+		User user = this.userRepository.findById(id).get();
 		if (user != null) {
 			preferences = new Preferences(user, nTheme);
 			preferencesRepository.save(preferences);
