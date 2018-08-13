@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import nx.ESE.documents.LoginUser;
 import nx.ESE.services.UserDetailsServiceImpl;
 
 
@@ -102,15 +103,25 @@ public class RestBuilder<T> {
         return this;
     }
 
-    public RestBuilder<T> basicAuth(String token) {
-        return basicAuth(token, UserDetailsServiceImpl.P_TOKEN);
-    }
-
     public RestBuilder<T> basicAuth(String nick, String pass) {
         String auth = nick + ":" + pass;
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
         String authHeader = "Basic " + encodedAuth;
         this.authorization = authHeader;
+        return this;
+    }
+    
+    public RestBuilder<T> bearerAuth(String token) {
+        String authHeader = "Bearer " + token;
+        this.authorization = authHeader;
+        return this;
+    }
+    
+    public RestBuilder<T> login(String username, String password) {
+        LoginUser loginUser= new LoginUser();
+        loginUser.setUsername(username);
+        loginUser.setPassword(password);
+        this.body = loginUser;
         return this;
     }
 

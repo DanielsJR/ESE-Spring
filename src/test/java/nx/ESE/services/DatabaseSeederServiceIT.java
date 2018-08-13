@@ -27,11 +27,11 @@ public class DatabaseSeederServiceIT {
     public void testUserSeedDatabase() {
         // this.databaseSeederService.deleteAllAndCreateAdmin();
         // this.databaseSeederService.seedDatabase("ESE-db-test.yml");
-        User user = userRepository.findByUsername("u000");
+        User user = userRepository.findByUsername("u010");
         assertNotNull(user);
-        assertEquals("u000", user.getUsername());
-        assertEquals("e000", user.getEmail());
-        assertEquals("d000", user.getDni());
+        assertEquals("u010", user.getUsername());
+        assertEquals("e010@email.com", user.getEmail());
+        assertEquals("13755572-7", user.getDni());
         assertTrue(user.getRoles().length >= 2);
     }
     

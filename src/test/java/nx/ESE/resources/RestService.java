@@ -5,99 +5,132 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import nx.ESE.dtos.TokenOutputDto;
-
+import nx.ESE.documents.AuthToken;
+import nx.ESE.documents.Commune;
+import nx.ESE.documents.Gender;
+import nx.ESE.dtos.UserDto;
 
 @Service
 public class RestService {
-    
-    @Autowired
-    private Environment environment;
 
-    @Value("${server.servlet.contextPath}")
-    private String contextPath;
+	@Autowired
+	private Environment environment;
 
-    @Value("${nx.admin.username}")
-    private String adminUsername;
+	@Value("${server.servlet.contextPath}")
+	private String contextPath;
 
-    @Value("${nx.admin.password}")
-    private String adminPassword;
-    
-    @Value("${nx.databaseSeeder.ymlFileName}")
-    private String testFile;
+	@Value("${nx.test.admin.username}")
+	private String adminUsername;
 
-    private TokenOutputDto tokenDto;
+	@Value("${nx.test.admin.password}")
+	private String adminPassword;
+	
+	@Value("${nx.test.manager.username}")
+	private String managerUsername;
 
-    private int port() {
-        return Integer.parseInt(environment.getProperty("local.server.port"));
-    }
+	@Value("${nx.test.manager.password}")
+	private String managerPassword;
+	
+	@Value("${nx.test.teacher.username}")
+	private String teacherUsername;
 
-    public <T> RestBuilder<T> restBuilder(RestBuilder<T> restBuilder) {
-        restBuilder.port(this.port());
-        restBuilder.path(contextPath);
-        if (tokenDto != null) {
-            restBuilder.basicAuth(tokenDto.getToken());
-        }
-        return restBuilder;
-    }
+	@Value("${nx.test.teacher.password}")
+	private String teacherPassword;
+	
+	@Value("${nx.test.student.username}")
+	private String studentUsername;
 
-    public RestBuilder<Object> restBuilder() {
-        RestBuilder<Object> restBuilder = new RestBuilder<>(this.port());
-        restBuilder.path(contextPath);
-        if (tokenDto != null) {
-            restBuilder.basicAuth(tokenDto.getToken());
-        }
-        return restBuilder;
-    }
+	@Value("${nx.test.student.password}")
+	private String studentPassword;
+	
+	
 
-    public RestService loginAdmin() {
-        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS)
-                .basicAuth(this.adminUsername, this.adminPassword).clazz(TokenOutputDto.class).post().build();
-        return this;
-    }
+	@Value("${nx.test.databaseSeeder.ymlFileName}")
+	private String testFile;
 
-    public RestService loginManager() {
-        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("u011", "p011")
-                .clazz(TokenOutputDto.class).post().build();
-        return this;
-    }
+	private AuthToken authToken;
 
-    public RestService loginTeacher() {
-        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("u021", "p021")
-                .clazz(TokenOutputDto.class).post().build();
-        return this;
-    }
+	private int port() {
+		return Integer.parseInt(environment.getProperty("local.server.port"));
+	}
 
-    public RestService loginStudent() {
-        this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).path(contextPath).path(TokenResource.TOKENS).basicAuth("u031", "p031")
-                .clazz(TokenOutputDto.class).post().build();
-        return this;
-    }
+	public <T> RestBuilder<T> restBuilder(RestBuilder<T> restBuilder) {
+		restBuilder.port(this.port());
+		restBuilder.path(contextPath);
+		return restBuilder;
+	}
 
-    public RestService logout() {
-        this.tokenDto = null;
-        return this;
-    }
-    /*
-    public void reLoadTestDB() {
-        this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(AdminResource.DB).delete().build();
-        this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(AdminResource.DB).body(testFile).post().build();        
-    }*/
+	public RestBuilder<Object> restBuilder() {
+		RestBuilder<Object> restBuilder = new RestBuilder<>(this.port());
+		restBuilder.path(contextPath);
+		return restBuilder;
+	}
 
-    public TokenOutputDto getTokenDto() {
-        return tokenDto;
-    }
+	public RestService loginAdmin() {
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
+				.path(AuthenticationResource.GENERATE_TOKEN).login(this.adminUsername, this.adminPassword)
+				.clazz(AuthToken.class).post().build();
+		return this;
+	}
 
-    public void setTokenDto(TokenOutputDto tokenDto) {
-        this.tokenDto = tokenDto;
-    }
 
-    public String getAdminUsername() {
-        return adminUsername;
-    }
 
-    public String getAdminPassword() {
-        return adminPassword;
-    }
+	public RestService loginManager() {
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
+				.path(AuthenticationResource.GENERATE_TOKEN).login(this.managerUsername, this.managerPassword).clazz(AuthToken.class).post()
+				.build();
+		return this;
+	}
+
+
+	public RestService loginTeacher() {
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
+				.path(AuthenticationResource.GENERATE_TOKEN).login(this.teacherUsername, this.teacherPassword).clazz(AuthToken.class).post()
+				.build();
+		return this;
+	}
+
+
+	public RestService loginStudent() {
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
+				.path(AuthenticationResource.GENERATE_TOKEN).login(this.studentUsername, this.studentPassword).clazz(AuthToken.class).post()
+				.build();
+		return this;
+	}
+
+	public RestService loginUser(String user, String pass) {
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
+				.path(AuthenticationResource.GENERATE_TOKEN).login(user, pass).clazz(AuthToken.class).post().build();
+		return this;
+	}
+
+	public RestService logout() {
+		this.authToken = null;
+		return this;
+	}
+	/*
+	 * public void reLoadTestDB() {
+	 * this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(
+	 * AdminResource.DB).delete().build();
+	 * this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(
+	 * AdminResource.DB).body(testFile).post().build(); }
+	 */
+
+	public String getAdminUsername() {
+		return adminUsername;
+	}
+
+	public AuthToken getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(AuthToken authToken) {
+		this.authToken = authToken;
+	}
+
+	public String getAdminPassword() {
+		return adminPassword;
+	}
+
 
 }

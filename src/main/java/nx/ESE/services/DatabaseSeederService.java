@@ -16,6 +16,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import nx.ESE.documents.Avatar;
+import nx.ESE.documents.Commune;
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.User;
@@ -106,6 +107,7 @@ public class DatabaseSeederService {
 			user.setGender(Gender.HOMBRE);
 			user.setAvatar(new Avatar("admin.png", "image/png", Avatar.SERVER_AVATAR_PATH + "admin.png"));
 			user.setRoles(new Role[] { Role.ADMIN, Role.MANAGER });
+			user.setCommune(Commune.CERRO_NAVIA);
 			this.userRepository.save(user);
 		}
 	}

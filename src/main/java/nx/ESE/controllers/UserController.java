@@ -56,7 +56,7 @@ public class UserController {
 
 	// output
 	private void setOutPutUserAvatar(User user) {
-		String imgPrefix = "default-"; 
+		String imgPrefix = "default-";
 		String imgType = "image/png";
 		if (user.getAvatar() != null) {
 			String path = Avatar.SERVER_AVATAR_PATH + user.getAvatar().getName();
@@ -76,7 +76,7 @@ public class UserController {
 	}
 
 	private List<UserDto> setOutPutUsersAvatars(List<UserDto> usersDto) {
-		String imgPrefix = "default-"; 
+		String imgPrefix = "default-";
 		String imgType = "image/png";
 		List<UserDto> users = new CopyOnWriteArrayList<UserDto>(usersDto);
 		Iterator<UserDto> it = users.iterator();
@@ -102,6 +102,10 @@ public class UserController {
 	}
 
 	// Exceptions*********************
+	public boolean isPassNull(UserDto userDto) {
+		return userDto.getPassword() == null;
+	}
+
 	public boolean existsUserId(String id) {
 		return this.userRepository.findById(id).isPresent();
 	}
@@ -139,14 +143,18 @@ public class UserController {
 		return user != null && !user.getId().equals(userDto.getId());
 	}
 
-	public boolean checkEqualOrGreaterPrivileges(String username, Role[] roles) {
+	public boolean hasUserGreaterPrivilegesByUsername(String username, Role[] roles) {
 		User user = this.userRepository.findByUsername(username);
-		return user != null && Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
+		if (user != null && Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles())))
+			return false;
+		return true;
 	}
-	
-	public boolean checkEqualOrGreaterPrivileges_Id(String id, Role[] roles) {
+
+	public boolean hasUserGreaterPrivilegesById(String id, Role[] roles) {
 		User user = this.userRepository.findById(id).get();
-		return user != null && Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
+		if (user != null && Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles())))
+			return false;
+		return true;
 	}
 
 	public boolean passMatch(String username, String pass) {
@@ -217,7 +225,8 @@ public class UserController {
 		User user = this.userRepository.findByUsername(username);
 		user.setRoles(roles);
 		this.userRepository.save(user);
-		if(user.getAvatar().getName().startsWith("default-"))user.setAvatar(null);
+		if (user.getAvatar() != null && user.getAvatar().getName().startsWith("default-"))
+			user.setAvatar(null);
 		this.setOutPutUserAvatar(user);
 		return new UserDto(user);
 	}

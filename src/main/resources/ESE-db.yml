@@ -8,7 +8,7 @@ userList:
 # Users u010-u019 MANAGER 
   - &u010
     username: u010
-    password: p010A@
+    password: p010@ESE1
     firstName: Barack Hussein 
     lastName: Obama II
     dni: 13755572-7
@@ -28,7 +28,7 @@ userList:
     
   - &u011
     username: u011
-    password: p011A@
+    password: p011@ESE1
     firstName: Donald John 
     lastName: Trump
     dni: 17667557-8
@@ -47,7 +47,7 @@ userList:
     
   - &u012
     username: u012
-    password: p012A@
+    password: p012@ESE1
     firstName: Angelina 
     lastName: Jolie Voight
     dni: 13712275-8
@@ -71,7 +71,7 @@ userList:
     username: u020
     firstName: Jada Candase 
     lastName: Stevens Jackson
-    password: p020A@
+    password: p020@ESE1
     dni: 17177707-0
     birthday: 1988-7-4
     gender: MUJER
@@ -90,7 +90,7 @@ userList:
     username: u021
     firstName: Wonder 
     lastName: Woman 
-    password: p021A@
+    password: p021@ESE1
     dni: 15468458-1
     birthday: 1911-8-12
     gender: MUJER
@@ -107,7 +107,7 @@ userList:
     
   - &u022
     username: u022
-    password: p022A@
+    password: p022@ESE1
     firstName: Iron
     lastName: Man
     dni: 16480567-0
@@ -134,7 +134,7 @@ userList:
     username: u030
     firstName: Keisha 
     lastName: Grey 
-    password: p030A@
+    password: p030@ESE1
     dni: 17642203-3
     birthday: 1994-6-9
     gender: MUJER
@@ -153,7 +153,7 @@ userList:
     username: u031
     firstName: Arya
     lastName: Stark 
-    password: p031A@
+    password: p031@ESE1
     dni: 17812074-3
     birthday: 1997-4-15
     gender: MUJER
@@ -172,7 +172,7 @@ userList:
     username: u032
     firstName: Reese  
     lastName: Wilkerson 
-    password: p033A@
+    password: p033@ESE1
     dni: 17884219-6
     birthday: 1979-12-11
     gender: HOMBRE
@@ -193,7 +193,7 @@ userList:
     username: u033
     firstName: Malcom 
     lastName: Wilkerson 
-    password: p033A@
+    password: p033@ESE1
     dni: 17314063-0
     birthday: 1983-12-30
     gender: HOMBRE
@@ -211,7 +211,7 @@ userList:
     username: u034
     firstName: Stevie  
     lastName: Kenarban 
-    password: p034A@
+    password: p034@ESE1
     dni: 17921590-K
     birthday: 1983-11-12
     gender: HOMBRE
@@ -229,7 +229,7 @@ userList:
     username: u035
     firstName: Cynthia  
     lastName: Sanders 
-    password: p035A@
+    password: p035@ESE1
     dni: 17319677-6
     birthday: 1983-10-21
     gender: HOMBRE
@@ -249,7 +249,7 @@ userList:
     username: u036
     firstName: Dui  
     lastName: Wilkerson 
-    password: p036A@
+    password: p036@ESE1
     dni: 17316944-2
     birthday: 1990-2-22
     gender: HOMBRE
@@ -267,7 +267,7 @@ userList:
     username: u037
     firstName: Chad Do 
     lastName: Not Touch
-    password: p037A@
+    password: p037@ESE1
     dni: 17376494-4
     birthday: 1990-6-8
     gender: HOMBRE
@@ -287,7 +287,7 @@ userList:
     username: u038
     firstName: David   
     lastName: Hanson 
-    password: p038A@
+    password: p038@ESE1
     dni: 17676178-4
     birthday: 1990-4-21
     gender: HOMBRE

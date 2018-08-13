@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.controllers.SubjectController;
 import nx.ESE.dtos.SubjectDto;
+import nx.ESE.resources.exceptions.FieldNotFoundException;
 
-import nx.ESE.resources.exceptions.SubjectIdNotFoundException;
+
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
@@ -37,10 +38,10 @@ public class SubjectResource {
 	// CRUD******************************
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(PATH_ID)
-	public SubjectDto getSubjectById(@PathVariable String id) throws SubjectIdNotFoundException {
+	public SubjectDto getSubjectById(@PathVariable String id) throws FieldNotFoundException {
 
 		if (!this.subjectController.isPresentSubjectId(id))
-			throw new SubjectIdNotFoundException();
+			throw new FieldNotFoundException("Id");
 
 		return this.subjectController.getSubjectById(id);
 	}
@@ -53,10 +54,10 @@ public class SubjectResource {
 	
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
-	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto) throws SubjectIdNotFoundException {
+	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto) throws FieldNotFoundException {
 
 		if (!this.subjectController.isPresentSubjectId(subjectDto.getId()))
-			throw new SubjectIdNotFoundException();
+			throw new FieldNotFoundException("Id");
 
 		return this.subjectController.createSubject(subjectDto);
 	}
@@ -64,20 +65,20 @@ public class SubjectResource {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PutMapping(PATH_ID)
 	public SubjectDto modifySubject(@PathVariable String id, @Valid @RequestBody SubjectDto subjectDto)
-			throws SubjectIdNotFoundException {
+			throws FieldNotFoundException {
 
 		if (!this.subjectController.isPresentSubjectId(id))
-			throw new SubjectIdNotFoundException();
+			throw new FieldNotFoundException("Id");
 
 		return this.subjectController.modifySubject(id, subjectDto);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(PATH_ID)
-	public boolean deleteSubject(@PathVariable String id) throws SubjectIdNotFoundException {
+	public boolean deleteSubject(@PathVariable String id) throws FieldNotFoundException {
 
 		if (!this.subjectController.isPresentSubjectId(id))
-			throw new SubjectIdNotFoundException();
+			throw new FieldNotFoundException("Id");
 
 		return this.subjectController.deleteSubject(id);
 	}

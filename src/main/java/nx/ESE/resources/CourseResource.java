@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.controllers.CourseController;
 import nx.ESE.dtos.CourseDto;
-import nx.ESE.resources.exceptions.CourseIdNotFoundException;
+import nx.ESE.resources.exceptions.FieldNotFoundException;
+
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
@@ -35,9 +36,9 @@ public class CourseResource {
 	// CRUD******************************
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(PATH_ID)
-	public CourseDto getCourseById(@PathVariable String id) throws CourseIdNotFoundException {
+	public CourseDto getCourseById(@PathVariable String id) throws FieldNotFoundException {
 
-		return this.courseController.getCourseById(id).orElseThrow(() -> new CourseIdNotFoundException());
+		return this.courseController.getCourseById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -55,16 +56,16 @@ public class CourseResource {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PutMapping(PATH_ID)
 	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
-			throws CourseIdNotFoundException {
+			throws FieldNotFoundException {
 
-		return this.courseController.modifyCourse(id, courseDto).orElseThrow(() -> new CourseIdNotFoundException());
+		return this.courseController.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(PATH_ID)
-	public CourseDto deleteCourse(@PathVariable String id) throws CourseIdNotFoundException {
+	public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException {
 
-		return this.courseController.deleteCourse(id).orElseThrow(() -> new CourseIdNotFoundException());
+		return this.courseController.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 }

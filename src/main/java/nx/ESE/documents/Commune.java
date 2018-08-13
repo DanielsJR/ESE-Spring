@@ -14,7 +14,7 @@ public enum Commune {
 		}
 
 		for (Enum<?> enumValue : enumClass.getEnumConstants()) {
-			if (enumValue.toString().equalsIgnoreCase(value)) {
+			if (enumValue.toString().equalsIgnoreCase(value.toUpperCase().replace(" ", "_"))) {
 				return (T) enumValue;
 			}
 		}

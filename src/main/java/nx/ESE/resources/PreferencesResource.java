@@ -13,7 +13,8 @@ import nx.ESE.controllers.PreferencesController;
 import nx.ESE.controllers.UserController;
 import nx.ESE.dtos.ThemeDto;
 import nx.ESE.resources.exceptions.ForbiddenException;
-import nx.ESE.resources.exceptions.UserIdNotFoundException;
+import nx.ESE.resources.exceptions.FieldNotFoundException;
+
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
 @RestController
@@ -32,10 +33,10 @@ public class PreferencesResource {
 	public static final String PATH_ID = "/{id}";
 
 	@GetMapping(THEME + PATH_ID)
-	public ThemeDto getThemeByUsername(@PathVariable String id) throws ForbiddenException, UserIdNotFoundException {
+	public ThemeDto getThemeByUsername(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
 
 		if (!this.userController.existsUserId(id))
-			throw new UserIdNotFoundException();
+			throw new FieldNotFoundException("Id.");
 
 		return this.preferencesController.getUserTheme(id);
 
@@ -43,10 +44,10 @@ public class PreferencesResource {
 
 	@PutMapping(THEME + PATH_ID)
 	public boolean saveUserTheme(@PathVariable String id, @RequestBody ThemeDto theme)
-			throws ForbiddenException, UserIdNotFoundException {
+			throws ForbiddenException, FieldNotFoundException {
 
 		if (!this.userController.existsUserId(id))
-			throw new UserIdNotFoundException();
+			throw new FieldNotFoundException("Id.");
 
 		return this.preferencesController.saveUserTheme(id, theme);
 

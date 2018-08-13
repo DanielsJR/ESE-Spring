@@ -10,9 +10,10 @@ import nx.ESE.documents.LoginUser;
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/token")
+@RequestMapping(AuthenticationResource.TOKEN)
 public class AuthenticationResource {
-
+	
+	public static final String TOKEN = "/token";
 	public static final String GENERATE_TOKEN = "/generate-token";
 
 	@Autowired

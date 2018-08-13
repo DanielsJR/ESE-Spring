@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>ESE-mongo</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Enseñanza Sistematica Estimulante</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -49,12 +49,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
-		
+
 		<dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.0</version>
-        </dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- YAML Parser ================================== -->
 		<dependency>
@@ -106,4 +112,7 @@
 	</build>
 
 
+	<organization>
+		<name>NX Company</name>
+	</organization>
 </project>
