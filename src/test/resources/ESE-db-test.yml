@@ -80,7 +80,7 @@ userList:
        type: image/png
     mobile: 020000000
     email: e020@email.com
-    address: Los Pepinos 011
+    address: Los Pepinos 020
     commune: LO_PRADO
     roles:
       - TEACHER
@@ -118,7 +118,7 @@ userList:
        type: image/png
     mobile: 002222222
     email: e022@email.com
-    address: Las Viñitas 001
+    address: Las Viñitas 022
     commune: QUINTA_NORMAL
     roles:
       - TEACHER
@@ -172,7 +172,7 @@ userList:
     username: u032
     firstName: Reese  
     lastName: Wilkerson 
-    password: p033@ESE1
+    password: p032@ESE1
     dni: 17884219-6
     birthday: 1979-12-11
     gender: HOMBRE
@@ -180,7 +180,7 @@ userList:
        name: reese.png
        type: image/png
     mobile: 032222222
-    email: e034@email.com
+    email: e032@email.com
     address: Las Viñitas 032
     commune: LA_GRANJA
     roles:
@@ -201,7 +201,7 @@ userList:
        name: malcom.png
        type: image/png
     mobile: 033333333
-    email: e032@email.com
+    email: e033@email.com
     address: Las Viñitas 033
     commune: QUINTA_NORMAL
     roles:
@@ -219,7 +219,7 @@ userList:
        name: stevie.png
        type: image/png
     mobile: 034444444
-    email: e035@email.com
+    email: e034@email.com
     address: Las Viñitas 034
     commune: LA_GRANJA
     roles:
@@ -232,12 +232,12 @@ userList:
     password: p035@ESE1
     dni: 17319677-6
     birthday: 1983-10-21
-    gender: HOMBRE
+    gender: MUJER
     avatar:
        name: cynthia.png
        type: image/png
     mobile: 035555555
-    email: e037@email.com
+    email: e035@email.com
     address: Las Viñitas 035
     commune: LA_GRANJA
     roles:
