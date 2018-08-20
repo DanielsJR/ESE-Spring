@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,22 @@ public class UserController {
 		String path = Avatar.SERVER_AVATAR_PATH + avatar.getName();
 		UtilBase64Image.decoder(avatar.getData(), path);
 		avatar.setData(null);// not save in BD
+	}
+
+	private String uniqueUsername(String username) {
+		String newUsername= username;
+
+		while (this.existsUserUsername(newUsername)) {
+			int length = 3;
+			boolean useLetters = false;
+			boolean useNumbers = true;
+			String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
+			System.out.println(generatedString);
+			newUsername += generatedString;
+		}
+		System.out.println("NEW_USERNAME::::::::::::::::::::::::::::::::::::" + newUsername);
+		return newUsername;
+
 	}
 
 	private void setUserFromDto(User user, UserDto userDto) {
@@ -194,6 +211,7 @@ public class UserController {
 	public UserDto createUser(UserDto userDto, Role[] roles) {
 		User user = new User(userDto.getUsername(), userDto.getPassword());
 		this.setUserFromDto(user, userDto);
+		user.setUsername(uniqueUsername(userDto.getUsername()));
 		user.setRoles(roles);
 		if (user.getAvatar() != null)
 			this.saveUserAvatarInServer(user.getAvatar());

@@ -25,7 +25,7 @@ import nx.ESE.resources.exceptions.FieldNotFoundException;
 @RequestMapping(CourseResource.COURSE)
 public class CourseResource {
 
-	public static final String COURSE = "/course";
+	public static final String COURSE = "/courses";
 
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_USERNAME = "/{username}";

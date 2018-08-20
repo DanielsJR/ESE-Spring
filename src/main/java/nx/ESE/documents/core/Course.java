@@ -17,16 +17,12 @@ public class Course {
 
 	private CourseName name;
 
-	// @OneToOne // (cascade = CascadeType.ALL)
 	@DBRef
 	private User chiefTeacher;
 
-	// @CollectionTable(name = "course_students")
-	// @OneToMany // (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@DBRef
 	private List<User> students;
 
-	// @Temporal(TemporalType.DATE)
 	private Date period;
 
 	public Course() {

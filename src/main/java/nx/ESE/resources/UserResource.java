@@ -98,9 +98,6 @@ public class UserResource {
 		if (this.userController.isPassNull(userDto))
 			throw new FieldNullException("Password");
 
-		if (this.userController.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
-
 		if (this.userController.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
@@ -227,9 +224,6 @@ public class UserResource {
 	public UserDto createTeacher(@Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException {
 
-		if (this.userController.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
-
 		if (this.userController.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
@@ -348,9 +342,6 @@ public class UserResource {
 	@PostMapping(STUDENTS)
 	public UserDto createStudent(@Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException {
-
-		if (this.userController.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
 
 		if (this.userController.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
