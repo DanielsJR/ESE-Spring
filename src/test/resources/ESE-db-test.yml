@@ -388,7 +388,7 @@ coursesList:
       - *u030
       - *u031
       - *u032
-    period: 2018-3-1 
+    year: 2018
     
   - &c02
     name: TERCERO_C
@@ -397,7 +397,7 @@ coursesList:
       - *u033
       - *u034
       - *u035
-    period: 2018-3-1
+    year: 2018
     
   - &c03
     name: SEXTO_B
@@ -406,7 +406,16 @@ coursesList:
       - *u036
       - *u037
       - *u038
-    period: 2018-3-1  
+    year: 2018 
+    
+  - &c04
+    name: SEXTO_B
+    chiefTeacher: *u021
+    students:
+      - *u036
+      - *u037
+      - *u038
+    year: 2017     
     
     
 subjectsList:

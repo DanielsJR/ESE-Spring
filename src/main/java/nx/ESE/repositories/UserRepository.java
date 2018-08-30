@@ -1,6 +1,7 @@
 package nx.ESE.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -12,6 +13,8 @@ import nx.ESE.dtos.UserMinDto;
 
 public interface UserRepository extends MongoRepository<User, String> {
 	
+
+	
 	public User findByUsername(String username);
 	
 	public User findByDni(String dni);
@@ -22,6 +25,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 	
 	public User findByRoles(Role[]  roles);
 	
+	@Query(value = "{'username' : ?0}")
+	public Optional<User> findByUsernameOptional(String username);
 
 	@Query(value = "{'roles' : ?0}", fields = "{ '_id' : 1, 'firstName' : 1, 'lastName' : 1}")
 	public List<UserMinDto> findUsersAll(Role role);

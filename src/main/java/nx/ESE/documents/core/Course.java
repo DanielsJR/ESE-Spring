@@ -1,6 +1,5 @@
 package nx.ESE.documents.core;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -20,22 +19,22 @@ public class Course {
 	@DBRef
 	private User chiefTeacher;
 
-	@DBRef
+	@DBRef(lazy = true)
 	private List<User> students;
 
-	private Date period;
+	private int year;
 
 	public Course() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Course(CourseName name, User chiefTeacher, List<User> students, Date period) {
+	public Course(CourseName name, User chiefTeacher, List<User> students, int year) {
 		super();
 		this.name = name;
 		this.chiefTeacher = chiefTeacher;
 		this.students = students;
-		this.period = period;
+		this.year = year;
 	}
 
 	public CourseName getName() {
@@ -62,24 +61,17 @@ public class Course {
 		this.students = students;
 	}
 
-	public Date getPeriod() {
-		return period;
+
+	public int getYear() {
+		return year;
 	}
 
-	public void setPeriod(Date period) {
-		this.period = period;
+	public void setYear(int year) {
+		this.year = year;
 	}
-
-
 
 	public String getId() {
 		return id;
-	}
-
-	@Override
-	public String toString() {
-		return "Course [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
-				+ ", period=" + period + "]";
 	}
 
 	@Override
@@ -88,7 +80,7 @@ public class Course {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((period == null) ? 0 : period.hashCode());
+		result = prime * result + year;
 		return result;
 	}
 
@@ -108,13 +100,19 @@ public class Course {
 			return false;
 		if (name != other.name)
 			return false;
-		if (period == null) {
-			if (other.period != null)
-				return false;
-		} else if (!period.equals(other.period))
+		if (year != other.year)
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Course [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
+				+ ", year=" + year + "]";
+	}
+
+	
+
 
 
 

@@ -1,6 +1,5 @@
 package nx.ESE.dtos;
 
-import java.util.Date;
 import java.util.List;
 
 import nx.ESE.documents.User;
@@ -17,20 +16,20 @@ public class CourseDto {
 
 	private List<User> students;
 
-	private Date period;
+	private int year;
 
 	public CourseDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CourseDto(String id, CourseName name, User chiefTeacher, List<User> students, Date period) {
+	public CourseDto(String id, CourseName name, User chiefTeacher, List<User> students, int year) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.chiefTeacher = chiefTeacher;
 		this.students = students;
-		this.period = period;
+		this.year = year;
 	}
 	
 	//output
@@ -40,7 +39,7 @@ public class CourseDto {
 		this.name = course.getName();
 		this.chiefTeacher = course.getChiefTeacher();
 		this.students = course.getStudents();
-		this.period = course.getPeriod();
+		this.year = course.getYear();
 	}
 
 
@@ -68,12 +67,12 @@ public class CourseDto {
 		this.students = students;
 	}
 
-	public Date getPeriod() {
-		return period;
+	public int getYear() {
+		return year;
 	}
 
-	public void setPeriod(Date period) {
-		this.period = period;
+	public void setYear(int year) {
+		this.year = year;
 	}
 
 	public String getId() {
@@ -83,7 +82,7 @@ public class CourseDto {
 	@Override
 	public String toString() {
 		return "CourseDto [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
-				+ ", period=" + period + "]";
+				+ ", year=" + year + "]";
 	}
 	
 	

@@ -1,0 +1,27 @@
+package nx.ESE.restControllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.*;
+
+import nx.ESE.businessControllers.AuthenticationController;
+import nx.ESE.documents.LoginUser;
+
+//@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+@RequestMapping(AuthenticationResource.TOKEN)
+public class AuthenticationResource {
+	
+	public static final String TOKEN = "/token";
+	public static final String GENERATE_TOKEN = "/generate-token";
+
+	@Autowired
+	private AuthenticationController authenticationController;
+
+	@PostMapping(GENERATE_TOKEN)
+	public ResponseEntity<?> register(@RequestBody LoginUser loginUser) throws AuthenticationException {
+		return authenticationController.register(loginUser);
+	}
+
+}
