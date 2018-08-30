@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 

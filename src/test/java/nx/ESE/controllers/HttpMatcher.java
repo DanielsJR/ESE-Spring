@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

@@ -1,8 +1,9 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,14 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import nx.ESE.dataServices.DatabaseSeederService;
+import nx.ESE.controllers.UserController;
 import nx.ESE.dtos.UserDto;
-import nx.ESE.restControllers.UserResource;
+import nx.ESE.services.data.DatabaseSeederService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class UserStudentResourceFuntionalTesting {
+public class UserStudentControllerFuntionalTesting {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -62,16 +63,16 @@ public class UserStudentResourceFuntionalTesting {
 		this.restService.loginManager();
 
 		try {
-			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
-					.path(UserResource.PATH_USERNAME).expand(userDto.getUsername())
+			this.restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
+					.path(UserController.PATH_USERNAME).expand(userDto.getUsername())
 					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO1 nothing to delete");
 		}
 
 		try {
-			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
-					.path(UserResource.PATH_USERNAME).expand(userDto2.getUsername())
+			this.restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
+					.path(UserController.PATH_USERNAME).expand(userDto2.getUsername())
 					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
@@ -81,38 +82,38 @@ public class UserStudentResourceFuntionalTesting {
 
 	private UserDto getStudentByID(String id) {
 		return userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-				.path(UserResource.USERS).path(UserResource.STUDENTS).path(UserResource.ID).path(UserResource.PATH_ID)
+				.path(UserController.USERS).path(UserController.STUDENTS).path(UserController.ID).path(UserController.PATH_ID)
 				.expand(id).get().bearerAuth(restService.getAuthToken().getToken()).build();
 	}
 
 	private UserDto getStudentByUsername(String username) {
 		return userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-				.path(UserResource.USERS).path(UserResource.STUDENTS).path(UserResource.USER_NAME)
-				.path(UserResource.PATH_USERNAME).expand(username).bearerAuth(restService.getAuthToken().getToken())
+				.path(UserController.USERS).path(UserController.STUDENTS).path(UserController.USER_NAME)
+				.path(UserController.PATH_USERNAME).expand(username).bearerAuth(restService.getAuthToken().getToken())
 				.get().build();
 	}
 
 	private void postStudent() {
-		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserResource.USERS)
-				.path(UserResource.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(userDto).post()
+		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
+				.path(UserController.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(userDto).post()
 				.build();
 	}
 
 	private void postStudent2() {
-		userDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserResource.USERS)
-				.path(UserResource.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(userDto2).post()
+		userDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
+				.path(UserController.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(userDto2).post()
 				.build();
 	}
 
 	private void putStudent(UserDto dto) {
-		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserResource.USERS)
-				.path(UserResource.STUDENTS).path(UserResource.PATH_USERNAME).expand(dto.getUsername())
+		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
+				.path(UserController.STUDENTS).path(UserController.PATH_USERNAME).expand(dto.getUsername())
 				.bearerAuth(restService.getAuthToken().getToken()).body(dto).put().build();
 	}
 
 	private void patchStudentResetPass(String username, String resetedPass) {
-		restService.restBuilder(new RestBuilder<>()).path(UserResource.USERS).path(UserResource.STUDENTS)
-				.path(UserResource.PASS).path(UserResource.PATH_USERNAME).expand(username)
+		restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.STUDENTS)
+				.path(UserController.PASS).path(UserController.PATH_USERNAME).expand(username)
 				.bearerAuth(restService.getAuthToken().getToken()).body(resetedPass).patch().build();
 
 	}
@@ -124,12 +125,13 @@ public class UserStudentResourceFuntionalTesting {
 	}
 
 	@Test
-	public void testPostStudentUsernameFieldAlreadyExistException() {
-		restService.loginManager();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto2.setUsername(userDtoUsername);
+	public void testPostStudentUsernameUnique() {
+		restService.loginAdmin();
+		userDto.setUsername("u006");
 		this.postStudent();
+		userDto2.setUsername("u006");
 		this.postStudent2();
+		Assert.assertNotEquals(userDto2.getUsername(), userDto.getUsername());
 	}
 
 	@Test
@@ -166,14 +168,14 @@ public class UserStudentResourceFuntionalTesting {
 	public void testPostStudentNoBearerAuth() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS).body(userDto).post().build();
+		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).body(userDto).post().build();
 	}
 
 	@Test
 	public void testPostStudentPreAuthorize() {
 		restService.loginStudent();// PreAuthorize("hasRole('Manager')")
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
+		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
 				.bearerAuth(restService.getAuthToken().getToken()).body(userDto).post().build();
 	}
 
@@ -182,7 +184,7 @@ public class UserStudentResourceFuntionalTesting {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userDto.setUsername(null);
-		restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS)
+		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
 				.bearerAuth(restService.getAuthToken().getToken()).post().build();
 	}
 
@@ -309,7 +311,7 @@ public class UserStudentResourceFuntionalTesting {
 	public void testPutStudentNoBearerAuth() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS).body(userDto).put().build();
+		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).body(userDto).put().build();
 	}
 
 	@Test
@@ -340,7 +342,7 @@ public class UserStudentResourceFuntionalTesting {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
 		this.postStudent();
-		restService.restBuilder().path(UserResource.USERS).path(UserResource.STUDENTS).path(UserResource.PATH_ID)
+		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).path(UserController.PATH_ID)
 				.expand(userDto.getId()).get().build();
 	}
 

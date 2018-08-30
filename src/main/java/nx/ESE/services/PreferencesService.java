@@ -1,4 +1,4 @@
-package nx.ESE.businessControllers;
+package nx.ESE.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import nx.ESE.repositories.PreferencesRepository;
 import nx.ESE.repositories.UserRepository;
 
 @Controller
-public class PreferencesController {
+public class PreferencesService {
 
 	@Autowired
 	private UserRepository userRepository;

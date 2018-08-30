@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import java.util.List;
 
@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import nx.ESE.businessControllers.CourseController;
-import nx.ESE.businessControllers.UserController;
 import nx.ESE.dtos.CourseDto;
 import nx.ESE.exceptions.DocumentNotFoundException;
 import nx.ESE.exceptions.FieldNotFoundException;
+import nx.ESE.services.CourseService;
+import nx.ESE.services.UserService;
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
-@RequestMapping(CourseResource.COURSE)
-public class CourseResource {
+@RequestMapping(CourseController.COURSE)
+public class CourseController {
 
 	public static final String COURSE = "/courses";
 	public static final String YEAR = "/year";
@@ -36,16 +36,16 @@ public class CourseResource {
 	public static final String PATH_YEAR = "/{year}";
 
 	@Autowired
-	private CourseController courseController;
+	private CourseService courseService;
 
 	@Autowired
-	private UserController userController;
+	private UserService userService;
 
 	// CRUD******************************
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(PATH_ID)
 	public CourseDto getCourseById(@PathVariable String id) throws FieldNotFoundException {
-		return this.courseController.getCourseById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+		return this.courseService.getCourseById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -53,23 +53,23 @@ public class CourseResource {
 	public CourseDto getCourseByChiefTeacherName(@PathVariable String teacherName, @PathVariable int year)
 			throws DocumentNotFoundException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(teacherName))
+		if (!this.userService.existsUserUsername(teacherName))
 			throw new FieldNotFoundException("Username");
 		
-		return this.courseController.getCourseByChiefTeacherNameQdsl(teacherName, year)
+		return this.courseService.getCourseByChiefTeacherNameQdsl(teacherName, year)
 				.orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(YEAR + PATH_YEAR)
 	public List<CourseDto> getFullCoursesbyYear(@PathVariable int year) throws DocumentNotFoundException {
-		return this.courseController.getFullCoursesByYear(year).orElseThrow(() -> new DocumentNotFoundException("Course"));
+		return this.courseService.getFullCoursesByYear(year).orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
 	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) {
-		return this.courseController.createCourse(courseDto);
+		return this.courseService.createCourse(courseDto);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -77,14 +77,14 @@ public class CourseResource {
 	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
 			throws FieldNotFoundException {
 
-		return this.courseController.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
+		return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(PATH_ID)
 	public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException {
 
-		return this.courseController.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+		return this.courseService.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 }

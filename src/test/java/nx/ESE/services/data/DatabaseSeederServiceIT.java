@@ -1,4 +1,4 @@
-package nx.ESE.dataServices;
+package nx.ESE.services.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

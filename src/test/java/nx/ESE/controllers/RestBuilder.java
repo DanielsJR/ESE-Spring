@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -23,8 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import nx.ESE.dataServices.UserDetailsServiceImpl;
 import nx.ESE.documents.LoginUser;
+import nx.ESE.services.data.UserDetailsServiceImpl;
 
 
 

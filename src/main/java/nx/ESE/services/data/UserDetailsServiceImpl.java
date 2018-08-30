@@ -1,4 +1,4 @@
-package nx.ESE.dataServices;
+package nx.ESE.services.data;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,7 @@ import nx.ESE.repositories.UserRepository;
 
 import java.util.*;
 
-@Service(value = "userService")
+@Service(value = "userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Autowired

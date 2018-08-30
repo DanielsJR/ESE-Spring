@@ -1,4 +1,4 @@
-package nx.ESE.businessControllers;
+package nx.ESE.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import nx.ESE.dtos.SubjectDto;
 import nx.ESE.repositories.SubjectRepository;
 
 @Controller
-public class SubjectController {
+public class SubjectService {
 
 	@Autowired
 	private SubjectRepository subjectRepository;

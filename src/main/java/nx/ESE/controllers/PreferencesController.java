@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import nx.ESE.businessControllers.PreferencesController;
-import nx.ESE.businessControllers.UserController;
 import nx.ESE.dtos.ThemeDto;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.ForbiddenException;
+import nx.ESE.services.PreferencesService;
+import nx.ESE.services.UserService;
 
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
 @RestController
-@RequestMapping(PreferencesResource.PREFERENCES)
-public class PreferencesResource {
+@RequestMapping(PreferencesController.PREFERENCES)
+public class PreferencesController {
 
 	@Autowired
-	private PreferencesController preferencesController;
+	private PreferencesService preferencesController;
 
 	@Autowired
-	private UserController userController;
+	private UserService userService;
 
 	public static final String PREFERENCES = "/preferences";
 	public static final String THEME = "/theme";
@@ -35,7 +35,7 @@ public class PreferencesResource {
 	@GetMapping(THEME + PATH_ID)
 	public ThemeDto getThemeByUsername(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserId(id))
+		if (!this.userService.existsUserId(id))
 			throw new FieldNotFoundException("Id.");
 
 		return this.preferencesController.getUserTheme(id);
@@ -46,7 +46,7 @@ public class PreferencesResource {
 	public boolean saveUserTheme(@PathVariable String id, @RequestBody ThemeDto theme)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserId(id))
+		if (!this.userService.existsUserId(id))
 			throw new FieldNotFoundException("Id.");
 
 		return this.preferencesController.saveUserTheme(id, theme);

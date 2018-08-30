@@ -1,4 +1,4 @@
-package nx.ESE.dataServices;
+package nx.ESE.services.data;
 
 import java.util.List;
 

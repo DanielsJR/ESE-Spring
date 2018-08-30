@@ -1,4 +1,4 @@
-package nx.ESE.businessControllers;
+package nx.ESE.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import nx.ESE.documents.AuthToken;
 import nx.ESE.documents.LoginUser;
 
 @Controller
-public class AuthenticationController {
+public class AuthenticationService {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;

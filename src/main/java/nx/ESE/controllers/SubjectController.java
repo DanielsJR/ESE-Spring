@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import java.util.List;
 
@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import nx.ESE.businessControllers.SubjectController;
 import nx.ESE.dtos.SubjectDto;
 import nx.ESE.exceptions.FieldNotFoundException;
+import nx.ESE.services.SubjectService;
 
 
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
-@RequestMapping(SubjectResource.SUBJECT)
-public class SubjectResource {
+@RequestMapping(SubjectController.SUBJECT)
+public class SubjectController {
 
 	public static final String SUBJECT = "/subject";
 
@@ -32,29 +32,29 @@ public class SubjectResource {
 	public static final String PATH_USERNAME = "/{username}";
 
 	@Autowired
-	private SubjectController subjectController;
+	private SubjectService subjectService;
 	
 	// CRUD******************************
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(PATH_ID)
 	public SubjectDto getSubjectById(@PathVariable String id) throws FieldNotFoundException {
 
-		if (!this.subjectController.existsById(id))
+		if (!this.subjectService.existsById(id))
 			throw new FieldNotFoundException("Id");
 
-		return this.subjectController.getSubjectById(id);
+		return this.subjectService.getSubjectById(id);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping()
 	public List<SubjectDto> getFullCourses() {
-		return this.subjectController.getFullSubjects();
+		return this.subjectService.getFullSubjects();
 	}
 	
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
 	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto) throws FieldNotFoundException {
-		return this.subjectController.createSubject(subjectDto);
+		return this.subjectService.createSubject(subjectDto);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -62,20 +62,20 @@ public class SubjectResource {
 	public SubjectDto modifySubject(@PathVariable String id, @Valid @RequestBody SubjectDto subjectDto)
 			throws FieldNotFoundException {
 
-		if (!this.subjectController.existsById(id))
+		if (!this.subjectService.existsById(id))
 			throw new FieldNotFoundException("Id");
 
-		return this.subjectController.modifySubject(id, subjectDto);
+		return this.subjectService.modifySubject(id, subjectDto);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(PATH_ID)
 	public boolean deleteSubject(@PathVariable String id) throws FieldNotFoundException {
 
-		if (!this.subjectController.existsById(id))
+		if (!this.subjectService.existsById(id))
 			throw new FieldNotFoundException("Id");
 
-		return this.subjectController.deleteSubject(id);
+		return this.subjectService.deleteSubject(id);
 	}
 }
 

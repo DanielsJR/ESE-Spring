@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,16 +13,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-
+import nx.ESE.controllers.AuthenticationController;
+import nx.ESE.controllers.UserController;
 import nx.ESE.documents.Role;
 import nx.ESE.dtos.UserDto;
-import nx.ESE.restControllers.AuthenticationResource;
-import nx.ESE.restControllers.UserResource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class TokenResourceFunctionalTesting {
+public class TokenControllerFunctionalTesting {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -32,7 +31,7 @@ public class TokenResourceFunctionalTesting {
 
 	private UserDto getUserByUsername(String username) {
 		UserDto userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-				.path(UserResource.USERS).path(UserResource.PATH_USERNAME).expand(username)
+				.path(UserController.USERS).path(UserController.PATH_USERNAME).expand(username)
 				.bearerAuth(restService.getAuthToken().getToken()).get().log().build();
 		return userDto;
 
@@ -60,7 +59,7 @@ public class TokenResourceFunctionalTesting {
 	@Test
 	public void testLoginNoUserAndPass() {
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		restService.restBuilder().path(AuthenticationResource.TOKEN).path(AuthenticationResource.GENERATE_TOKEN).post()
+		restService.restBuilder().path(AuthenticationController.TOKEN).path(AuthenticationController.GENERATE_TOKEN).post()
 				.build();
 	}
 

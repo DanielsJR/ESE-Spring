@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import nx.ESE.businessControllers.UserController;
 import nx.ESE.documents.Role;
 import nx.ESE.dtos.UserDto;
 import nx.ESE.dtos.UserMinDto;
@@ -25,11 +24,12 @@ import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.exceptions.ForbiddenException;
 import nx.ESE.exceptions.PasswordNotMatchException;
+import nx.ESE.services.UserService;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
 @RestController
-@RequestMapping(UserResource.USERS)
-public class UserResource {
+@RequestMapping(UserController.USERS)
+public class UserController {
 
 	public static final String USERS = "/users";
 	public static final String ADMINS = "/admins";
@@ -48,20 +48,20 @@ public class UserResource {
 	public static final String PATH_USERNAME = "/{username}";
 
 	@Autowired
-	private UserController userController;
+	private UserService userService;
 
 	// MANAGERS************************************
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS + ID + PATH_ID)
 	public UserDto getManagerById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserId(id))
+		if (!this.userService.existsUserId(id))
 			throw new FieldNotFoundException("Id");
 
-		if (this.userController.hasUserGreaterPrivilegesById(id, new Role[] { Role.MANAGER, Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesById(id, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.getUserById(id);
+		return this.userService.getUserById(id);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
@@ -69,26 +69,26 @@ public class UserResource {
 	public UserDto getManagerByUsername(@PathVariable String username)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.getUserByUsername(username);
+		return this.userService.getUserByUsername(username);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS)
 	public List<UserDto> getFullManagers() {
-		return this.userController.getFullUsers(Role.MANAGER);
+		return this.userService.getFullUsers(Role.MANAGER);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(MANAGERS + USER_MIN)
 	public List<UserMinDto> getMinManagers() {
-		return this.userController.getMinUsers(Role.MANAGER);
+		return this.userService.getMinUsers(Role.MANAGER);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
@@ -96,22 +96,19 @@ public class UserResource {
 	public UserDto createManager(@Valid @RequestBody UserDto userDto)
 			throws FieldAlreadyExistException, FieldNullException {
 
-		if (this.userController.isPassNull(userDto))
+		if (this.userService.isPassNull(userDto))
 			throw new FieldNullException("Password");
 		
-		if (this.userController.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
-
-		if (this.userController.dniRepeated(userDto))
+		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
-		if (this.userController.mobileRepeated(userDto))
+		if (this.userService.mobileRepeated(userDto))
 			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userController.emailRepeated(userDto))
+		if (this.userService.emailRepeated(userDto))
 			throw new FieldAlreadyExistException("Email");
 
-		return this.userController.createUser(userDto, new Role[] { Role.MANAGER });
+		return this.userService.createUser(userDto, new Role[] { Role.MANAGER });
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
@@ -119,39 +116,39 @@ public class UserResource {
 	public UserDto modifyManager(@PathVariable String username, @Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.usernameRepeated(userDto))
+		if (this.userService.usernameRepeated(userDto))
 			throw new FieldAlreadyExistException("Nombre de usuario");
 
-		if (this.userController.dniRepeated(userDto))
+		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
-		if (this.userController.mobileRepeated(userDto))
+		if (this.userService.mobileRepeated(userDto))
 			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userController.emailRepeated(userDto))
+		if (this.userService.emailRepeated(userDto))
 			throw new FieldAlreadyExistException("Email");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(userDto.getUsername(),
+		if (this.userService.hasUserGreaterPrivilegesByUsername(userDto.getUsername(),
 				new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.modifyUser(username, userDto);
+		return this.userService.modifyUser(username, userDto);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(MANAGERS + PATH_USERNAME)
 	public boolean deleteManager(@PathVariable String username) throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.deleteUser(username);
+		return this.userService.deleteUser(username);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
@@ -159,13 +156,13 @@ public class UserResource {
 	public boolean resetPassManager(@PathVariable String username, @RequestBody String resetedPass)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.resetPassUser(username, resetedPass);
+		return this.userService.resetPassUser(username, resetedPass);
 
 	}
 
@@ -174,13 +171,13 @@ public class UserResource {
 	public UserDto setRoleManager(@PathVariable String username, @RequestBody Role[] roles)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.setRoleUser(username, roles);
+		return this.userService.setRoleUser(username, roles);
 	}
 
 	// TEACHERS************************************
@@ -188,13 +185,13 @@ public class UserResource {
 	@GetMapping(TEACHERS + ID + PATH_ID)
 	public UserDto getTeacherById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserId(id))
+		if (!this.userService.existsUserId(id))
 			throw new FieldNotFoundException("Id");
 
-		if (this.userController.hasUserGreaterPrivilegesById(id, new Role[] { Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesById(id, new Role[] { Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.getUserById(id);
+		return this.userService.getUserById(id);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -202,42 +199,45 @@ public class UserResource {
 	public UserDto getTeacherByUsername(@PathVariable String username)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.getUserByUsername(username);
+		return this.userService.getUserByUsername(username);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(TEACHERS)
 	public List<UserDto> getFullTeachers() {
-		return this.userController.getFullUsers(Role.TEACHER);
+		return this.userService.getFullUsers(Role.TEACHER);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(TEACHERS + USER_MIN)
 	public List<UserMinDto> getMinTeachers() {
-		return this.userController.getMinUsers(Role.TEACHER);
+		return this.userService.getMinUsers(Role.TEACHER);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping(TEACHERS)
 	public UserDto createTeacher(@Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException {
+			throws ForbiddenException, FieldAlreadyExistException, FieldNullException {
+		
+		if (this.userService.isPassNull(userDto))
+			throw new FieldNullException("Password");
 
-		if (this.userController.dniRepeated(userDto))
+		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
-		if (this.userController.mobileRepeated(userDto))
+		if (this.userService.mobileRepeated(userDto))
 			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userController.emailRepeated(userDto))
+		if (this.userService.emailRepeated(userDto))
 			throw new FieldAlreadyExistException("Email");
 
-		return this.userController.createUser(userDto, new Role[] { Role.TEACHER });
+		return this.userService.createUser(userDto, new Role[] { Role.TEACHER });
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -245,38 +245,38 @@ public class UserResource {
 	public UserDto modifyTeacher(@PathVariable String username, @Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.usernameRepeated(userDto))
+		if (this.userService.usernameRepeated(userDto))
 			throw new FieldAlreadyExistException("Nombre de usuario");
 
-		if (this.userController.dniRepeated(userDto))
+		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
-		if (this.userController.mobileRepeated(userDto))
+		if (this.userService.mobileRepeated(userDto))
 			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userController.emailRepeated(userDto))
+		if (this.userService.emailRepeated(userDto))
 			throw new FieldAlreadyExistException("Email");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(userDto.getUsername(), new Role[] { Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(userDto.getUsername(), new Role[] { Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.modifyUser(username, userDto);
+		return this.userService.modifyUser(username, userDto);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(TEACHERS + PATH_USERNAME)
 	public boolean deleteTeacher(@PathVariable String username) throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.deleteUser(username);
+		return this.userService.deleteUser(username);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -284,13 +284,13 @@ public class UserResource {
 	public boolean resetPassTeacher(@PathVariable String username, @RequestBody String resetedPass)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.resetPassUser(username, resetedPass);
+		return this.userService.resetPassUser(username, resetedPass);
 
 	}
 
@@ -299,13 +299,13 @@ public class UserResource {
 	public UserDto setRoleTeacher(@PathVariable String username, @RequestBody Role[] roles)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
+		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
 
-		return this.userController.setRoleUser(username, roles);
+		return this.userService.setRoleUser(username, roles);
 	}
 
 	// STUDENTS************************************
@@ -313,10 +313,10 @@ public class UserResource {
 	@GetMapping(STUDENTS + ID + PATH_ID)
 	public UserDto getStudentById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserId(id))
+		if (!this.userService.existsUserId(id))
 			throw new FieldNotFoundException("Id");
 
-		return this.userController.getUserById(id);
+		return this.userService.getUserById(id);
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
@@ -324,39 +324,42 @@ public class UserResource {
 	public UserDto getStudentByUsername(@PathVariable String username)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		return this.userController.getUserByUsername(username);
+		return this.userService.getUserByUsername(username);
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(STUDENTS)
 	public List<UserDto> getFullStudents() {
-		return this.userController.getFullUsers(Role.STUDENT);
+		return this.userService.getFullUsers(Role.STUDENT);
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(STUDENTS + USER_MIN)
 	public List<UserMinDto> getMinStudents() {
-		return this.userController.getMinUsers(Role.STUDENT);
+		return this.userService.getMinUsers(Role.STUDENT);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping(STUDENTS)
 	public UserDto createStudent(@Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException {
+			throws ForbiddenException, FieldAlreadyExistException, FieldNullException {
+		
+		if (this.userService.isPassNull(userDto))
+			throw new FieldNullException("Password");
 
-		if (this.userController.dniRepeated(userDto))
+		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
-		if (this.userController.mobileRepeated(userDto))
+		if (this.userService.mobileRepeated(userDto))
 			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userController.emailRepeated(userDto))
+		if (this.userService.emailRepeated(userDto))
 			throw new FieldAlreadyExistException("Email");
 
-		return this.userController.createUser(userDto, new Role[] { Role.STUDENT });
+		return this.userService.createUser(userDto, new Role[] { Role.STUDENT });
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
@@ -364,32 +367,32 @@ public class UserResource {
 	public UserDto modifyStudent(@PathVariable String username, @Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.usernameRepeated(userDto))
+		if (this.userService.usernameRepeated(userDto))
 			throw new FieldAlreadyExistException("Nombre de usuario");
 
-		if (this.userController.dniRepeated(userDto))
+		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
-		if (this.userController.mobileRepeated(userDto))
+		if (this.userService.mobileRepeated(userDto))
 			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userController.emailRepeated(userDto))
+		if (this.userService.emailRepeated(userDto))
 			throw new FieldAlreadyExistException("Email");
 
-		return this.userController.modifyUser(username, userDto);
+		return this.userService.modifyUser(username, userDto);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(STUDENTS + PATH_USERNAME)
 	public boolean deleteStudent(@PathVariable String username) throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		return this.userController.deleteUser(username);
+		return this.userService.deleteUser(username);
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
@@ -397,10 +400,10 @@ public class UserResource {
 	public boolean resetPassStudent(@PathVariable String username, @RequestBody String resetedPass)
 			throws ForbiddenException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		return this.userController.resetPassUser(username, resetedPass);
+		return this.userService.resetPassUser(username, resetedPass);
 
 	}
 
@@ -410,10 +413,10 @@ public class UserResource {
 	@GetMapping(PATH_USERNAME)
 	public UserDto getUserByUsername(@PathVariable String username) throws FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		return this.userController.getUserByUsername(username);
+		return this.userService.getUserByUsername(username);
 	}
 
 	@PreAuthorize("authentication.name == #username")
@@ -421,22 +424,22 @@ public class UserResource {
 	public UserDto modifyUser(@PathVariable String username, @Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (this.userController.usernameRepeated(userDto))
+		if (this.userService.usernameRepeated(userDto))
 			throw new FieldAlreadyExistException("Nombre de usuario");
 
-		if (this.userController.dniRepeated(userDto))
+		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
 
-		if (this.userController.mobileRepeated(userDto))
+		if (this.userService.mobileRepeated(userDto))
 			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userController.emailRepeated(userDto))
+		if (this.userService.emailRepeated(userDto))
 			throw new FieldAlreadyExistException("Email");
 
-		return this.userController.modifyUser(username, userDto);
+		return this.userService.modifyUser(username, userDto);
 	}
 
 	@PreAuthorize("authentication.name == #username")
@@ -444,13 +447,13 @@ public class UserResource {
 	public boolean setUserPass(@PathVariable String username, @RequestBody String[] setPass)
 			throws PasswordNotMatchException, FieldNotFoundException {
 
-		if (!this.userController.existsUserUsername(username))
+		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
-		if (!this.userController.passMatch(username, setPass[0]))
+		if (!this.userService.passMatch(username, setPass[0]))
 			throw new PasswordNotMatchException();
 
-		return this.userController.setPassUser(username, setPass);
+		return this.userService.setPassUser(username, setPass);
 	}
 
 }

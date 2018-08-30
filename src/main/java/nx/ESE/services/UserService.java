@@ -1,4 +1,4 @@
-package nx.ESE.businessControllers;
+package nx.ESE.services;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -23,7 +23,7 @@ import nx.ESE.repositories.UserRepository;
 import nx.ESE.utils.UtilBase64Image;
 
 @Controller
-public class UserController {
+public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;

@@ -1,4 +1,4 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,14 +19,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import nx.ESE.dataServices.DatabaseSeederService;
+import nx.ESE.controllers.UserController;
 import nx.ESE.dtos.UserDto;
-import nx.ESE.restControllers.UserResource;
+import nx.ESE.services.data.DatabaseSeederService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class UserResourceFuntionalTesting {
+public class UserControllerFuntionalTesting {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -57,8 +57,8 @@ public class UserResourceFuntionalTesting {
 		this.restService.loginAdmin();
 
 		try {
-			this.restService.restBuilder().path(UserResource.USERS).path(UserResource.MANAGERS)
-					.path(UserResource.PATH_USERNAME).expand(userDto.getUsername())
+			this.restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
+					.path(UserController.PATH_USERNAME).expand(userDto.getUsername())
 					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO1 nothing to delete");
@@ -69,26 +69,26 @@ public class UserResourceFuntionalTesting {
 	}
 
 	private void postUser() {
-		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserResource.USERS)
-				.path(UserResource.MANAGERS).bearerAuth(restService.getAuthToken().getToken()).body(userDto).post()
+		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
+				.path(UserController.MANAGERS).bearerAuth(restService.getAuthToken().getToken()).body(userDto).post()
 				.build();
 	}
 
 	private UserDto getUserByUsername(String username) {
 		return userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-				.path(UserResource.USERS).path(UserResource.PATH_USERNAME).expand(username)
+				.path(UserController.USERS).path(UserController.PATH_USERNAME).expand(username)
 				.bearerAuth(restService.getAuthToken().getToken()).get().log().build();
 
 	}
 
 	private void putUser(UserDto dto) {
-		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserResource.USERS)
-				.path(UserResource.PATH_USERNAME).expand(dto.getUsername())
+		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
+				.path(UserController.PATH_USERNAME).expand(dto.getUsername())
 				.bearerAuth(restService.getAuthToken().getToken()).body(dto).put().build();
 	}
 
 	private void patchSetUserPass(UserDto userDto, String[] passwords) {
-		restService.restBuilder(new RestBuilder<>()).path(UserResource.USERS).path(UserResource.PATH_USERNAME)
+		restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.PATH_USERNAME)
 				.expand(userDto.getUsername()).bearerAuth(restService.getAuthToken().getToken()).body(passwords).patch()
 				.build();
 
@@ -120,7 +120,7 @@ public class UserResourceFuntionalTesting {
 		this.postUser();
 		restService.loginUser(userDtoUsername, userDtoPassword);
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserResource.USER_NAME).path(UserResource.PATH_USERNAME).expand(userDtoUsername).get()
+		restService.restBuilder().path(UserController.USER_NAME).path(UserController.PATH_USERNAME).expand(userDtoUsername).get()
 				.build();
 	}
 
@@ -172,7 +172,7 @@ public class UserResourceFuntionalTesting {
 		restService.loginUser(userDtoUsername, userDtoPassword);
 		userDto.setEmail("new@email.com");
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserResource.USERS).path(UserResource.PATH_USERNAME)
+		restService.restBuilder().path(UserController.USERS).path(UserController.PATH_USERNAME)
 				.expand(userDto.getUsername()).body(userDto).put().build();
 	}
 
@@ -182,8 +182,8 @@ public class UserResourceFuntionalTesting {
 		this.postUser();
 		restService.loginUser(userDtoUsername, userDtoPassword);
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserResource.USERS)
-				.path(UserResource.PATH_USERNAME).expand("other" + userDtoUsername).bearerAuth(restService.getAuthToken().getToken())
+		restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
+				.path(UserController.PATH_USERNAME).expand("other" + userDtoUsername).bearerAuth(restService.getAuthToken().getToken())
 				.body(userDto).put().build();// PreAuthorize(authentication.name)
 	}
 
@@ -214,7 +214,7 @@ public class UserResourceFuntionalTesting {
 		restService.loginUser(userDtoUsername, userDtoPassword);
 		String[] passwords = { userDtoPassword, "new"+ userDtoPassword };
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserResource.USERS).body(passwords).put().build();
+		restService.restBuilder().path(UserController.USERS).body(passwords).put().build();
 	}
 
 	@Test
@@ -224,8 +224,8 @@ public class UserResourceFuntionalTesting {
 		restService.loginUser(userDtoUsername, userDtoPassword);
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		String[] passwords = { userDtoPassword, "new"+ userDtoPassword };
-		restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserResource.USERS)
-		.path(UserResource.PATH_USERNAME).expand("other" + userDtoUsername).bearerAuth(restService.getAuthToken().getToken())
+		restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
+		.path(UserController.PATH_USERNAME).expand("other" + userDtoUsername).bearerAuth(restService.getAuthToken().getToken())
 		.body(passwords).patch().build();// PreAuthorize(authentication.name)
 	}
 

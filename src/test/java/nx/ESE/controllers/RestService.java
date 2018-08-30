@@ -1,15 +1,15 @@
-package nx.ESE.restControllers;
+package nx.ESE.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import nx.ESE.controllers.AuthenticationController;
 import nx.ESE.documents.AuthToken;
 import nx.ESE.documents.Commune;
 import nx.ESE.documents.Gender;
 import nx.ESE.dtos.UserDto;
-import nx.ESE.restControllers.AuthenticationResource;
 
 @Service
 public class RestService {
@@ -68,8 +68,8 @@ public class RestService {
 	}
 
 	public RestService loginAdmin() {
-		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
-				.path(AuthenticationResource.GENERATE_TOKEN).login(this.adminUsername, this.adminPassword)
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationController.TOKEN)
+				.path(AuthenticationController.GENERATE_TOKEN).login(this.adminUsername, this.adminPassword)
 				.clazz(AuthToken.class).post().build();
 		return this;
 	}
@@ -77,31 +77,31 @@ public class RestService {
 
 
 	public RestService loginManager() {
-		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
-				.path(AuthenticationResource.GENERATE_TOKEN).login(this.managerUsername, this.managerPassword).clazz(AuthToken.class).post()
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationController.TOKEN)
+				.path(AuthenticationController.GENERATE_TOKEN).login(this.managerUsername, this.managerPassword).clazz(AuthToken.class).post()
 				.build();
 		return this;
 	}
 
 
 	public RestService loginTeacher() {
-		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
-				.path(AuthenticationResource.GENERATE_TOKEN).login(this.teacherUsername, this.teacherPassword).clazz(AuthToken.class).post()
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationController.TOKEN)
+				.path(AuthenticationController.GENERATE_TOKEN).login(this.teacherUsername, this.teacherPassword).clazz(AuthToken.class).post()
 				.build();
 		return this;
 	}
 
 
 	public RestService loginStudent() {
-		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
-				.path(AuthenticationResource.GENERATE_TOKEN).login(this.studentUsername, this.studentPassword).clazz(AuthToken.class).post()
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationController.TOKEN)
+				.path(AuthenticationController.GENERATE_TOKEN).login(this.studentUsername, this.studentPassword).clazz(AuthToken.class).post()
 				.build();
 		return this;
 	}
 
 	public RestService loginUser(String user, String pass) {
-		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationResource.TOKEN)
-				.path(AuthenticationResource.GENERATE_TOKEN).login(user, pass).clazz(AuthToken.class).post().build();
+		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationController.TOKEN)
+				.path(AuthenticationController.GENERATE_TOKEN).login(user, pass).clazz(AuthToken.class).post().build();
 		return this;
 	}
 

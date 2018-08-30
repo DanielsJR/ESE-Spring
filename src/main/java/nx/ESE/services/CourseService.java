@@ -1,4 +1,4 @@
-package nx.ESE.businessControllers;
+package nx.ESE.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.UserRepository;
 
 @Controller
-public class CourseController {
+public class CourseService {
 
 	@Autowired
 	private CourseRepository courseRepository;
