@@ -245,11 +245,6 @@ public class UserDto {
 
 	public void setCommune(Commune commune) {
 		this.commune = commune;
-		/*if (commune != null) {
-			this.commune = Commune.getEnumFromString(Commune.class, commune.toString());
-		} else {
-			this.commune = commune;
-		}*/
 	}
 	
 

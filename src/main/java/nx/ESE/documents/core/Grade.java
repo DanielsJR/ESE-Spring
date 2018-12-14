@@ -8,31 +8,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import nx.ESE.documents.User;
 
-
 @Document
 public class Grade {
 
 	@Id
 	private String id;
 
-	//@ManyToOne
-	// @Column(nullable = false)
 	@DBRef
 	private User student;
 
-	//@Column(nullable = false)
 	private double grade;
 
-	//@ManyToOne
-	// @Column(nullable = false)
 	@DBRef
 	private Subject subject;
 
-	//@Column(nullable = false)
 	private String title;
 
-	//@Column(nullable = false)
-	//@Temporal(TemporalType.DATE)
+	private String type;
+
 	private Date date;
 
 	public Grade() {
@@ -40,12 +33,13 @@ public class Grade {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Grade(User student, double grade, Subject subject, String title, Date date) {
+	public Grade(User student, double grade, Subject subject, String title, String type, Date date) {
 		super();
 		this.student = student;
 		this.grade = grade;
 		this.subject = subject;
 		this.title = title;
+		this.type = type;
 		this.date = date;
 	}
 
@@ -88,17 +82,24 @@ public class Grade {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
-	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public String getId() {
 		return id;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Grade [id=" + id + ", student=" + student + ", grade=" + grade + ", subject=" + subject + ", title="
-				+ title + ", date=" + date + "]";
+				+ title + ", type=" + type + ", date=" + date + "]";
 	}
 
 	@Override
@@ -131,7 +132,5 @@ public class Grade {
 			return false;
 		return true;
 	}
-
-
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import nx.ESE.documents.Preferences;
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
+import nx.ESE.documents.core.Grade;
 import nx.ESE.documents.core.Subject;
 
 public class DatabaseGraph {
@@ -16,6 +17,8 @@ public class DatabaseGraph {
 	private List<Course> coursesList;
 
 	private List<Subject> subjectsList;
+	
+	private List<Grade> gradesList;
 
 	public DatabaseGraph() {
 		// Empty for framework
@@ -52,5 +55,15 @@ public class DatabaseGraph {
 	public void setSubjectsList(List<Subject> subjectsList) {
 		this.subjectsList = subjectsList;
 	}
+
+	public List<Grade> getGradesList() {
+		return gradesList;
+	}
+
+	public void setGradesList(List<Grade> gradesList) {
+		this.gradesList = gradesList;
+	}
+	
+	
 
 }

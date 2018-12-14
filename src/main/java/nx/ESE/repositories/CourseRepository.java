@@ -15,8 +15,8 @@ import nx.ESE.dtos.CourseDto;
 
 public interface CourseRepository extends MongoRepository<Course, String>,CourseRepositoryCustom, QuerydslPredicateExecutor<Course> {
 	
-	public Course findByName(String name);
-	
+		
+	public CourseDto findByNameAndYear(String id, int year);
 	
 	public Course findByChiefTeacherAndYear(String id, int year);
 	

@@ -6,11 +6,16 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 
+import nx.ESE.documents.User;
+import nx.ESE.documents.core.Course;
 import nx.ESE.documents.core.Subject;
 import nx.ESE.dtos.SubjectDto;
+import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.SubjectRepository;
+import nx.ESE.repositories.UserRepository;
 
 @Controller
 public class SubjectService {
@@ -18,10 +23,38 @@ public class SubjectService {
 	@Autowired
 	private SubjectRepository subjectRepository;
 
-	private void setSubjectFromDto(Subject subject, SubjectDto subjectDto) {
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private CourseRepository courseRepository;
+
+	@Autowired
+	private CourseService courseService;
+
+	public void setSubjectFromDto(Subject subject, SubjectDto subjectDto) {
 		subject.setName(subjectDto.getName());
-		subject.setTeacher(subjectDto.getTeacher());
-		subject.setCourse(subjectDto.getCourse());
+		subject.setTeacher(setTeacher(subjectDto));
+		subject.setCourse(setCourse(subjectDto));
+	}
+
+	private User setTeacher(SubjectDto subjectDto) {
+		User teacher = userRepository.findById(subjectDto.getTeacher().getId()).get();
+		if (teacher != null)
+			userService.setUserFromDto(teacher, subjectDto.getTeacher());
+		return teacher;
+
+	}
+
+	private Course setCourse(SubjectDto subjectDto) {
+		Course course = courseRepository.findById(subjectDto.getCourse().getId()).get();
+		if (course != null)
+			courseService.setCourseFromDto(course, subjectDto.getCourse());
+		return course;
+
 	}
 
 	public boolean existsById(String id) {
@@ -32,9 +65,8 @@ public class SubjectService {
 	public List<SubjectDto> getFullSubjects() {
 		List<SubjectDto> listSubjects = new ArrayList<>();
 
-		for (Subject subject : subjectRepository.findAll()) {
-			listSubjects
-					.add(new SubjectDto(subject.getId(), subject.getName(), subject.getTeacher(), subject.getCourse()));
+		for (Subject subject : subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name"))) {
+			listSubjects.add(new SubjectDto(subject));
 		}
 		return listSubjects;
 	}

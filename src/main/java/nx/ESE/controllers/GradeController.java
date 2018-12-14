@@ -15,67 +15,69 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import nx.ESE.dtos.SubjectDto;
+import nx.ESE.dtos.GradeDto;
 import nx.ESE.exceptions.FieldNotFoundException;
-import nx.ESE.services.SubjectService;
+import nx.ESE.services.GradeService;
 
 
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
-@RequestMapping(SubjectController.SUBJECT)
-public class SubjectController {
+@RequestMapping(GradeController.GRADE)
+public class GradeController {
 
-	public static final String SUBJECT = "/subjects";
-
+	public static final String GRADE = "/grades";
+	
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_USERNAME = "/{username}";
 
+
+	
 	@Autowired
-	private SubjectService subjectService;
+	private GradeService gradeService;
 	
 	// CRUD******************************
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(PATH_ID)
-	public SubjectDto getSubjectById(@PathVariable String id) throws FieldNotFoundException {
+	public GradeDto getGradeById(@PathVariable String id) throws FieldNotFoundException {
 
-		if (!this.subjectService.existsById(id))
+		if (!this.gradeService.existsById(id))
 			throw new FieldNotFoundException("Id");
 
-		return this.subjectService.getSubjectById(id);
+		return this.gradeService.getGradeById(id);
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping()
-	public List<SubjectDto> getFullSubjects() {
-		return this.subjectService.getFullSubjects();
+	public List<GradeDto> getFullGrades() {
+		return this.gradeService.getFullGrades();
 	}
 	
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('TEACHER')")
 	@PostMapping()
-	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto) throws FieldNotFoundException {
-		return this.subjectService.createSubject(subjectDto);
+	public GradeDto createGrade(@Valid @RequestBody GradeDto gradeDto) throws FieldNotFoundException {
+		return this.gradeService.createGrade(gradeDto);
 	}
 
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('TEACHER')")
 	@PutMapping(PATH_ID)
-	public SubjectDto modifySubject(@PathVariable String id, @Valid @RequestBody SubjectDto subjectDto)
+	public GradeDto modifyGrade(@PathVariable String id, @Valid @RequestBody GradeDto gradeDto)
 			throws FieldNotFoundException {
 
-		if (!this.subjectService.existsById(id))
+		if (!this.gradeService.existsById(id))
 			throw new FieldNotFoundException("Id");
 
-		return this.subjectService.modifySubject(id, subjectDto);
+		return this.gradeService.modifyGrade(id, gradeDto);
 	}
 
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('TEACHER')")
 	@DeleteMapping(PATH_ID)
-	public boolean deleteSubject(@PathVariable String id) throws FieldNotFoundException {
+	public boolean deleteGrade(@PathVariable String id) throws FieldNotFoundException {
 
-		if (!this.subjectService.existsById(id))
+		if (!this.gradeService.existsById(id))
 			throw new FieldNotFoundException("Id");
 
-		return this.subjectService.deleteSubject(id);
+		return this.gradeService.deleteGrade(id);
 	}
 }
 

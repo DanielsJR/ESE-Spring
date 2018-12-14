@@ -2,7 +2,10 @@ package nx.ESE.services.data;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
 
@@ -11,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -18,12 +22,17 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import nx.ESE.documents.Avatar;
 import nx.ESE.documents.Commune;
 import nx.ESE.documents.Gender;
+import nx.ESE.documents.Preferences;
 import nx.ESE.documents.Role;
+import nx.ESE.documents.Theme;
 import nx.ESE.documents.User;
+import nx.ESE.dtos.UserDto;
 import nx.ESE.repositories.CourseRepository;
+import nx.ESE.repositories.GradeRepository;
 import nx.ESE.repositories.PreferencesRepository;
 import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
+import nx.ESE.utils.UtilBase64Image;
 
 @Service
 public class DatabaseSeederService {
@@ -39,16 +48,22 @@ public class DatabaseSeederService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PreferencesRepository preferencesRepository;
-	
+
 	@Autowired
 	private CourseRepository courseRepository;
-	
+
 	@Autowired
 	private SubjectRepository subjectRepository;
 	
+	@Autowired
+	private GradeRepository gradeRepository;
+
+	@Autowired
+	private MongoTemplate mongoTemplate;
+
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseSeederService.class);
 
 	@PostConstruct
@@ -57,6 +72,7 @@ public class DatabaseSeederService {
 			this.deleteAllAndCreateAdmin();
 			try {
 				this.seedDatabase(ymlFileName.get());
+				this.setAvatars();
 			} catch (IOException e) {
 				logger.error("File " + ymlFileName + " doesn't exist or can't be opened");
 			}
@@ -75,17 +91,21 @@ public class DatabaseSeederService {
 		if (dbGraph.getUserList() != null) {
 			this.userRepository.saveAll(dbGraph.getUserList());
 		}
-		
+
 		if (dbGraph.getPreferencesList() != null) {
 			this.preferencesRepository.saveAll(dbGraph.getPreferencesList());
 		}
-		
+
 		if (dbGraph.getCoursesList() != null) {
 			this.courseRepository.saveAll(dbGraph.getCoursesList());
 		}
-		
+
 		if (dbGraph.getSubjectsList() != null) {
 			this.subjectRepository.saveAll(dbGraph.getSubjectsList());
+		}
+		
+		if (dbGraph.getGradesList() != null) {
+			this.gradeRepository.saveAll(dbGraph.getGradesList());
 		}
 
 		logger.warn("------------------------- Seed: " + ymlFileName + "-----------");
@@ -94,8 +114,9 @@ public class DatabaseSeederService {
 	public void deleteAllAndCreateAdmin() {
 		logger.warn("------------------------- delete All And Create Admin-----------");
 		// Delete Repositories
-		this.userRepository.deleteAll();
-		this.preferencesRepository.deleteAll();
+		// this.userRepository.deleteAll();
+		// this.preferencesRepository.deleteAll();
+		mongoTemplate.getDb().drop();
 		this.createAdminIfNotExist();
 	}
 
@@ -106,10 +127,30 @@ public class DatabaseSeederService {
 			user.setLastName("Rubio Parra");
 			user.setGender(Gender.HOMBRE);
 			user.setAvatar(new Avatar("admin.png", "image/png", Avatar.SERVER_AVATAR_PATH + "admin.png"));
-			user.setRoles(new Role[] { Role.ADMIN, Role.MANAGER });
-			user.setCommune(Commune.CERRO_NAVIA);
+			user.setRoles(new Role[] { Role.ADMIN });
+			user.setCommune(Commune.QUINTA_NORMAL);
 			this.userRepository.save(user);
+
+			Theme theme = new Theme("indigo-pink-dark", true, "#3F51B5");
+			Preferences preference = new Preferences(user, theme);
+			this.preferencesRepository.insert(preference);
 		}
+	}
+
+	public void setAvatars() {
+		logger.warn("------------------------- setting avatars-----------");
+		List<User> users = userRepository.findAll();
+		Iterator<User> it = users.iterator();
+		while (it.hasNext()) {
+			User user = it.next();
+			if (user.getAvatar() != null) {
+				String path = Avatar.SERVER_AVATAR_PATH + user.getAvatar().getName();
+				String avatarBase64 = UtilBase64Image.encoder(path);
+				user.getAvatar().setData(avatarBase64);
+                userRepository.save(user); 
+			}
+		}
+		
 	}
 
 }

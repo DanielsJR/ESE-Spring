@@ -1,5 +1,6 @@
 package nx.ESE.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nx.ESE.documents.User;
@@ -7,14 +8,14 @@ import nx.ESE.documents.core.Course;
 import nx.ESE.documents.core.CourseName;
 
 public class CourseDto {
-	
+
 	private String id;
 
 	private CourseName name;
 
-	private User chiefTeacher;
+	private UserDto chiefTeacher;
 
-	private List<User> students;
+	private List<UserDto> students;
 
 	private int year;
 
@@ -23,7 +24,7 @@ public class CourseDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CourseDto(String id, CourseName name, User chiefTeacher, List<User> students, int year) {
+	public CourseDto(String id, CourseName name, UserDto chiefTeacher, List<UserDto> students, int year) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -31,17 +32,25 @@ public class CourseDto {
 		this.students = students;
 		this.year = year;
 	}
-	
-	//output
+
+	// output
 	public CourseDto(Course course) {
 		super();
 		this.id = course.getId();
 		this.name = course.getName();
-		this.chiefTeacher = course.getChiefTeacher();
-		this.students = course.getStudents();
+		this.chiefTeacher = new UserDto(course.getChiefTeacher());
+		this.students = this.usersList(course);
 		this.year = course.getYear();
 	}
 
+	public List<UserDto> usersList(Course course) {
+		List<UserDto> usersList = new ArrayList<>();
+		for (User user : course.getStudents()) {
+			usersList.add(new UserDto(user));
+		}
+
+		return usersList;
+	}
 
 	public CourseName getName() {
 		return name;
@@ -51,19 +60,19 @@ public class CourseDto {
 		this.name = name;
 	}
 
-	public User getChiefTeacher() {
+	public UserDto getChiefTeacher() {
 		return chiefTeacher;
 	}
 
-	public void setChiefTeacher(User chiefTeacher) {
+	public void setChiefTeacher(UserDto chiefTeacher) {
 		this.chiefTeacher = chiefTeacher;
 	}
 
-	public List<User> getStudents() {
+	public List<UserDto> getStudents() {
 		return students;
 	}
 
-	public void setStudents(List<User> students) {
+	public void setStudents(List<UserDto> students) {
 		this.students = students;
 	}
 
@@ -84,7 +93,5 @@ public class CourseDto {
 		return "CourseDto [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
 				+ ", year=" + year + "]";
 	}
-	
-	
 
 }

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import nx.ESE.documents.User;
+import nx.ESE.dtos.UserDto;
 
 @Document
 public class Course {

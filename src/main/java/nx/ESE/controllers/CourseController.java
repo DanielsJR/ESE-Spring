@@ -27,10 +27,13 @@ import nx.ESE.services.UserService;
 public class CourseController {
 
 	public static final String COURSE = "/courses";
+	public static final String NAME = "/name";
 	public static final String YEAR = "/year";
 	public static final String TEACHER_NAME = "/teacherName";
 
+	
 	public static final String PATH_ID = "/{id}";
+	public static final String PATH_NAME = "/{name}";
 	public static final String PATH_USERNAME = "/{username}";
 	public static final String PATH_TEACHER_NAME = "/{teacherName}";
 	public static final String PATH_YEAR = "/{year}";
@@ -49,7 +52,7 @@ public class CourseController {
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping(PATH_TEACHER_NAME + PATH_YEAR)
+	@GetMapping(TEACHER_NAME + PATH_TEACHER_NAME + PATH_YEAR)
 	public CourseDto getCourseByChiefTeacherName(@PathVariable String teacherName, @PathVariable int year)
 			throws DocumentNotFoundException, FieldNotFoundException {
 
@@ -57,6 +60,15 @@ public class CourseController {
 			throw new FieldNotFoundException("Username");
 		
 		return this.courseService.getCourseByChiefTeacherNameQdsl(teacherName, year)
+				.orElseThrow(() -> new DocumentNotFoundException("Course"));
+	}
+	
+	@PreAuthorize("hasRole('MANAGER')")
+	@GetMapping(NAME + PATH_NAME + PATH_YEAR)
+	public CourseDto getCourseByName(@PathVariable String name, @PathVariable int year)
+			throws DocumentNotFoundException{
+	
+		return this.courseService.getCourseByName(name, year)
 				.orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 
