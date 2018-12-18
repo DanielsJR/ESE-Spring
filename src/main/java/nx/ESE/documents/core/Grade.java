@@ -33,7 +33,7 @@ public class Grade {
 	private Date date;
 
 	@CreatedBy
-	private String user;
+	private String createdBy;
 
 	@CreatedDate
 	private Date createdDate;
@@ -57,6 +57,23 @@ public class Grade {
 		this.title = title;
 		this.type = type;
 		this.date = date;
+	}
+	
+	
+
+	public Grade(String title, String type, User student, double grade, Subject subject, Date date, String createdBy,
+			Date createdDate, String lastModifiedUser, Date lastModifiedDate) {
+		super();
+		this.title = title;
+		this.type = type;
+		this.student = student;
+		this.grade = grade;
+		this.subject = subject;
+		this.date = date;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.lastModifiedUser = lastModifiedUser;
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	public User getStudent() {
@@ -110,12 +127,46 @@ public class Grade {
 	public String getId() {
 		return id;
 	}
+	
+	
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public void setLastModifiedUser(String lastModifiedUser) {
+		this.lastModifiedUser = lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
 
 	@Override
 	public String toString() {
 
 		return "Grade [id=" + id + ", title=" + title + ", type=" + type + ", student=" + student + ", subject="
-				+ subject + ", grade=" + grade + ", date=" + date + ", user=" + user + ", createdDate=" + createdDate
+				+ subject + ", grade=" + grade + ", date=" + date + ", createdBy=" + createdBy + ", createdDate=" + createdDate
 				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lastModifiedDate + "]";
 
 	}
