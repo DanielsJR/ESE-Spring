@@ -1,8 +1,13 @@
 package nx.ESE.documents.core;
 
+import java.time.Instant;
 import java.util.Date;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,26 +19,33 @@ public class Grade {
 
 	@Id
 	private String id;
+	
+	private String title;
+	
+	private String type;
 
-	//@ManyToOne
-	// @Column(nullable = false)
 	@DBRef
 	private User student;
-
-	//@Column(nullable = false)
-	private double grade;
-
-	//@ManyToOne
-	// @Column(nullable = false)
+	
 	@DBRef
 	private Subject subject;
 
-	//@Column(nullable = false)
-	private String title;
+	private double grade;
 
-	//@Column(nullable = false)
-	//@Temporal(TemporalType.DATE)
+	
 	private Date date;
+	
+	@CreatedBy
+	private String user;
+
+	@CreatedDate
+	private Date createdDate;
+
+	@LastModifiedBy
+	private String lastModifiedUser;
+
+	@LastModifiedDate
+	private Date lastModifiedDate;
 
 	public Grade() {
 		super();
@@ -95,10 +107,13 @@ public class Grade {
 		return id;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "Grade [id=" + id + ", student=" + student + ", grade=" + grade + ", subject=" + subject + ", title="
-				+ title + ", date=" + date + "]";
+		return "Grade [id=" + id + ", title=" + title + ", type=" + type + ", student=" + student + ", subject="
+				+ subject + ", grade=" + grade + ", date=" + date + ", user=" + user + ", createdDate=" + createdDate
+				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lastModifiedDate + "]";
 	}
 
 	@Override
