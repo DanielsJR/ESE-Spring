@@ -1,7 +1,8 @@
 package nx.ESE.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -27,73 +28,78 @@ public class SubjectService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private CourseRepository courseRepository;
 
-	@Autowired
-	private CourseService courseService;
-
-	public void setSubjectFromDto(Subject subject, SubjectDto subjectDto) {
+	private Subject setSubjectFromDto(Subject subject, SubjectDto subjectDto) {
 		subject.setName(subjectDto.getName());
-		subject.setTeacher(setTeacher(subjectDto));
-		subject.setCourse(setCourse(subjectDto));
+		subject.setTeacher(setTeacher(subjectDto).get());
+		subject.setCourse(setCourse(subjectDto).get());
+		return subject;
 	}
 
-	private User setTeacher(SubjectDto subjectDto) {
-		User teacher = userRepository.findById(subjectDto.getTeacher().getId()).get();
-		if (teacher != null)
-			userService.setUserFromDto(teacher, subjectDto.getTeacher());
-		return teacher;
-
+	private Optional<User> setTeacher(SubjectDto subjectDto) {
+		Optional<User> teacher = userRepository.findById(subjectDto.getTeacher().getId());
+		if (teacher.isPresent())
+			return teacher;
+		return Optional.empty();
 	}
 
-	private Course setCourse(SubjectDto subjectDto) {
-		Course course = courseRepository.findById(subjectDto.getCourse().getId()).get();
-		if (course != null)
-			courseService.setCourseFromDto(course, subjectDto.getCourse());
-		return course;
-
+	private Optional<Course> setCourse(SubjectDto subjectDto) {
+		Optional<Course> course = courseRepository.findById(subjectDto.getCourse().getId());
+		if (course.isPresent())
+			return course;
+		return Optional.empty();
 	}
 
+	// Exceptions*********************
 	public boolean existsById(String id) {
 		return subjectRepository.existsById(id);
 	}
 
 	// CRUD******************************
-	public List<SubjectDto> getFullSubjects() {
-		List<SubjectDto> listSubjects = new ArrayList<>();
+	public Optional<List<SubjectDto>> getFullSubjects() {
+		List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
+				.stream()
+				.map(s -> new SubjectDto(s))
+				.parallel()
+				.sorted((s1,s2) -> s1.getName().toString().compareTo(s2.getName().toString()))
+				.collect(Collectors.toList());
+		if (list.isEmpty())
+			return Optional.empty();
+		//list.forEach(s-> System.out.println(s.getName()));
+		return Optional.of(list);
 
-		for (Subject subject : subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name"))) {
-			listSubjects.add(new SubjectDto(subject));
-		}
-		return listSubjects;
 	}
 
-	public SubjectDto getSubjectById(String id) {
-		Subject subject = subjectRepository.findById(id).get();
-		return new SubjectDto(subject);
+	public Optional<SubjectDto> getSubjectById(String id) {
+		Optional<Subject> subject = subjectRepository.findById(id);
+		if (subject.isPresent())
+			return Optional.of(new SubjectDto(subject.get()));
+		return Optional.empty();
 	}
 
 	public SubjectDto createSubject(@Valid SubjectDto subjectDto) {
 		Subject subject = new Subject();
-		setSubjectFromDto(subject, subjectDto);
-		subjectRepository.insert(subject);
+		subjectRepository.insert(setSubjectFromDto(subject, subjectDto));
 		return new SubjectDto(subjectRepository.findById(subject.getId()).get());
 	}
 
-	public SubjectDto modifySubject(String id, @Valid SubjectDto subjectDto) {
-		Subject subject = subjectRepository.findById(id).get();
-		setSubjectFromDto(subject, subjectDto);
-		subjectRepository.save(subject);
-		return new SubjectDto(subjectRepository.findById(subject.getId()).get());
+	public Optional<SubjectDto> modifySubject(String id, @Valid SubjectDto subjectDto) {
+		Optional<Subject> subject = subjectRepository.findById(id);
+		if (subject.isPresent()) {
+			subjectRepository.save(setSubjectFromDto(subject.get(), subjectDto));
+			return Optional.of(new SubjectDto(subjectRepository.findById(id).get()));
+		}
+		return Optional.empty();
 	}
 
-	public boolean deleteSubject(String id) {
-		Subject subject = subjectRepository.findById(id).get();
-		subjectRepository.delete(subject);
-		return true;
+	public Optional<SubjectDto> deleteSubject(String id) {
+		Optional<Subject> subject = subjectRepository.findById(id);
+		if (subject.isPresent()) {
+			subjectRepository.deleteById(id);
+			return Optional.of(new SubjectDto(subject.get()));
+		}
+		return Optional.empty();
 	}
 
 }

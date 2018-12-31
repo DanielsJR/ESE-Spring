@@ -7,10 +7,16 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 	TokenControllerFunctionalTesting.class,
-	UserControllerFuntionalTesting.class,
+	
 	UserManagerControllerFuntionalTesting.class,
 	UserTeacherControllerFuntionalTesting.class,
-	UserStudentControllerFuntionalTesting.class
+	UserStudentControllerFuntionalTesting.class,
+	
+	CourseControllerFuntionalTesting.class,
+	SubjectControllerFuntionalTesting.class,
+	GradeControllerFuntionalTesting.class,
+	
+	
 })
 public class AllControllersFunctionalTests {
 

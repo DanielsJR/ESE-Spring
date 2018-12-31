@@ -1,7 +1,9 @@
 package nx.ESE.dtos;
 
-import java.text.DecimalFormat;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -20,15 +22,26 @@ public class GradeDto {
 	private String title;
 
 	private String type;
-
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date date;
+	
+	private String createdBy;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private String lastModifiedUser;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
 
 	public GradeDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+	// input
 	public GradeDto(String id, UserDto student, double grade, SubjectDto subject, String title, String type,
 			Date date) {
 		super();
@@ -41,6 +54,7 @@ public class GradeDto {
 		this.date = date;
 	}
 
+	// output
 	public GradeDto(Grade grade) {
 		this.id = grade.getId();
 		this.student = new UserDto(grade.getStudent());
@@ -49,6 +63,10 @@ public class GradeDto {
 		this.title = grade.getTitle();
 		this.type = grade.getType();
 		this.date = grade.getDate();
+		this.createdBy = grade.getCreatedBy();
+		this.createdDate = grade.getCreatedDate();
+		this.lastModifiedUser = grade.getLastModifiedUser();
+		this.lastModifiedDate = grade.getLastModifiedDate();
 	}
 
 	public String getId() {
@@ -102,5 +120,46 @@ public class GradeDto {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	
+	
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	@Override
+	public String toString() {
+		
+		String fDate = "null";
+		if (this.date != null)
+			fDate = new SimpleDateFormat("dd-MMM-yyyy").format(date.getTime());
+		
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+		
+		return "GradeDto [id=" + id + ", student=" + student + ", grade=" + grade + ", subject=" + subject + ", title="
+				+ title + ", type=" + type + ", date=" + fDate + ", createdBy=" + createdBy + ", createdDate="
+				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified
+				+ "]";
+	}
+
+	
+	
 
 }

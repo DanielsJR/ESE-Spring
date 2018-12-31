@@ -59,8 +59,16 @@ public class UserDto {
 
 	private boolean active;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private Date createdAt;
+	private String createdBy;
+
+	private Date createdDate;
+
+	private String lastModifiedUser;
+
+	private Date lastModifiedDate;
+
+	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	// private Date createdAt;
 
 	public UserDto() {
 		super();
@@ -86,12 +94,12 @@ public class UserDto {
 		this.setCommune(commune);
 		this.roles = roles;
 		this.active = active;
-		this.createdAt = createdAt;
+		// this.createdAt = createdAt;
 	}
 
 	public UserDto(String usernamePass) {
-		this(null, usernamePass, usernamePass + "@ESE1", null, null, null, null, null, null, null, null, null, null, null,
-				true, null);
+		this(null, usernamePass, usernamePass + "@ESE1", null, null, null, null, null, null, null, null, null, null,
+				null, true, null);
 	}
 
 	// output
@@ -111,7 +119,10 @@ public class UserDto {
 		this.commune = user.getCommune();
 		this.roles = user.getRoles();
 		this.active = user.isActive();
-		this.createdAt = user.getCreatedAt();
+		this.createdBy = user.getCreatedBy();
+		this.createdDate = user.getCreatedDate();
+		this.lastModifiedUser = user.getLastModifiedUser();
+		this.lastModifiedDate = user.getLastModifiedDate();
 	}
 
 	public String getId() {
@@ -246,7 +257,6 @@ public class UserDto {
 	public void setCommune(Commune commune) {
 		this.commune = commune;
 	}
-	
 
 	public Role[] getRoles() {
 		return roles;
@@ -264,31 +274,43 @@ public class UserDto {
 		this.active = active;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
 	@Override
 	public String toString() {
 
 		String birthdayF = "null";
-		if (this.birthday != null) {
+		if (this.birthday != null)
 			birthdayF = new SimpleDateFormat("dd/MM/yyyy").format(birthday.getTime());
-		}
 
-		String date = "null";
-		if (createdAt != null) {
-			date = new SimpleDateFormat("dd/MM/yyyy").format(createdAt.getTime());
-		}
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+
 		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender
 				+ ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
-				+ ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdAt="
-				+ date + "]";
+				+ ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
+				+ createdBy + ", createdDate=" + cDate + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
+				+ lModified + "]";
 	}
 
 }

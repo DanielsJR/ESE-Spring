@@ -23,7 +23,7 @@ public interface CourseRepository extends MongoRepository<Course, String>,Course
 	public List<CourseDto> findByYear(int year);
 	
 	//@Query()
-	//public List<CourseDto> findCoursesFullAll();
+	//public List<CourseDto> findAll();
 	
 	
 

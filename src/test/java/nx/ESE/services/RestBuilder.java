@@ -1,4 +1,4 @@
-package nx.ESE.controllers;
+package nx.ESE.services;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +24,6 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import nx.ESE.documents.LoginUser;
-import nx.ESE.services.data.UserDetailsServiceImpl;
 
 
 

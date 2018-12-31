@@ -1,5 +1,6 @@
 package nx.ESE.documents.core;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -58,23 +59,6 @@ public class Grade {
 		this.type = type;
 		this.date = date;
 	}
-	
-	
-
-	public Grade(String title, String type, User student, double grade, Subject subject, Date date, String createdBy,
-			Date createdDate, String lastModifiedUser, Date lastModifiedDate) {
-		super();
-		this.title = title;
-		this.type = type;
-		this.student = student;
-		this.grade = grade;
-		this.subject = subject;
-		this.date = date;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.lastModifiedUser = lastModifiedUser;
-		this.lastModifiedDate = lastModifiedDate;
-	}
 
 	public User getStudent() {
 		return student;
@@ -127,47 +111,37 @@ public class Grade {
 	public String getId() {
 		return id;
 	}
-	
-	
 
 	public String getCreatedBy() {
 		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
 	}
 
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
 	public String getLastModifiedUser() {
 		return lastModifiedUser;
-	}
-
-	public void setLastModifiedUser(String lastModifiedUser) {
-		this.lastModifiedUser = lastModifiedUser;
 	}
 
 	public Date getLastModifiedDate() {
 		return lastModifiedDate;
 	}
 
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
 	@Override
 	public String toString() {
 
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+
 		return "Grade [id=" + id + ", title=" + title + ", type=" + type + ", student=" + student + ", subject="
-				+ subject + ", grade=" + grade + ", date=" + date + ", createdBy=" + createdBy + ", createdDate=" + createdDate
-				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lastModifiedDate + "]";
+				+ subject + ", grade=" + grade + ", date=" + date + ", createdBy=" + createdBy + ", createdDate="
+				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
 
 	}
 

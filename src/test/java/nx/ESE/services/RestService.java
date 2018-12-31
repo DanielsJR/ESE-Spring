@@ -1,4 +1,4 @@
-package nx.ESE.controllers;
+package nx.ESE.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 
 import nx.ESE.controllers.AuthenticationController;
 import nx.ESE.documents.AuthToken;
-import nx.ESE.documents.Commune;
-import nx.ESE.documents.Gender;
-import nx.ESE.dtos.UserDto;
+
 
 @Service
 public class RestService {

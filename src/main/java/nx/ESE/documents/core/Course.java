@@ -1,8 +1,14 @@
 package nx.ESE.documents.core;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -24,6 +30,18 @@ public class Course {
 	private List<User> students;
 
 	private int year;
+	
+	@CreatedBy
+	private String createdBy;
+
+	@CreatedDate
+	private Date createdDate;
+
+	@LastModifiedBy
+	private String lastModifiedUser;
+
+	@LastModifiedDate
+	private Date lastModifiedDate;
 
 	public Course() {
 		super();
@@ -74,6 +92,24 @@ public class Course {
 	public String getId() {
 		return id;
 	}
+	
+	
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
 
 	@Override
 	public int hashCode() {
@@ -108,8 +144,18 @@ public class Course {
 
 	@Override
 	public String toString() {
+		
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+		
 		return "Course [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
-				+ ", year=" + year + "]";
+				+ ", year=" + year + ", createdBy=" + createdBy + ", createdDate=" + cDate
+				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
 	}
 
 	

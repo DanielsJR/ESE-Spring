@@ -1,24 +1,45 @@
 package nx.ESE.documents.core;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class QuizStudent {
 
+	@Id
 	private int id;
 
 	private Date date;
 
 	private Grade grade;
 
-	// @ManyToOne
 	private Quiz quiz;
 
 	private Map<String, String> multipleSelectionIitemAnswers = new HashMap<String, String>();
 	private Map<String, Boolean> trueFalseItemAnswers = new HashMap<String, Boolean>();
 	private Map<String, Map<String, String>> correspondItemAnswers = new HashMap<String, Map<String, String>>();
 	private Map<String, String> incompleteTextItemAnswers = new HashMap<String, String>();
+
+	@CreatedBy
+	private String createdBy;
+
+	@CreatedDate
+	private Date createdDate;
+
+	@LastModifiedBy
+	private String lastModifiedUser;
+
+	@LastModifiedDate
+	private Date lastModifiedDate;
 
 	public QuizStudent() {
 		super();
@@ -98,12 +119,39 @@ public class QuizStudent {
 		return id;
 	}
 
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
 	@Override
 	public String toString() {
+
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+
 		return "QuizStudent [id=" + id + ", date=" + date + ", grade=" + grade + ", quiz=" + quiz
 				+ ", multipleSelectionIitemAnswers=" + multipleSelectionIitemAnswers + ", trueFalseItemAnswers="
 				+ trueFalseItemAnswers + ", correspondItemAnswers=" + correspondItemAnswers
-				+ ", incompleteTextItemAnswers=" + incompleteTextItemAnswers + "]";
+				+ ", incompleteTextItemAnswers=" + incompleteTextItemAnswers + ", createdBy=" + createdBy
+				+ ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate="
+				+ lModified + "]";
 	}
 
 	@Override
@@ -127,7 +175,5 @@ public class QuizStudent {
 			return false;
 		return true;
 	}
-	
-	
 
 }

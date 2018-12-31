@@ -476,7 +476,67 @@ gradesList:
     date: 2018-6-11
     student: *u030
     subject: *s01
-    createdBy: 111
-    createdDate: 2018-6-11
-    lastModifiedUser: 111
-    lastModifiedDate: 2018-6-11
+    
+  - &g02
+    title: prueba-02
+    type: prueba
+    grade: 6.0
+    date: 2018-6-20
+    student: *u030
+    subject: *s01
+    
+  - &g03
+    title: prueba-03
+    type: prueba
+    grade: 4.8
+    date: 2018-7-12
+    student: *u030
+    subject: *s01            
+    
+  - &g04
+    title: prueba-01
+    type: prueba
+    grade: 5.5
+    date: 2018-6-11
+    student: *u031
+    subject: *s01
+    
+  - &g05
+    title: prueba-02
+    type: prueba
+    grade: 6.2
+    date: 2018-6-20
+    student: *u031
+    subject: *s01
+    
+  - &g06
+    title: prueba-03
+    type: prueba
+    grade: 5.8
+    date: 2018-7-12
+    student: *u031
+    subject: *s01
+    
+  - &g07
+    title: prueba-01
+    type: prueba
+    grade: 4.5
+    date: 2018-6-11
+    student: *u032
+    subject: *s01
+    
+  - &g08
+    title: prueba-02
+    type: prueba
+    grade: 2.3
+    date: 2018-6-20
+    student: *u032
+    subject: *s01
+    
+  - &g09
+    title: prueba-03
+    type: prueba
+    grade: 3.8
+    date: 2018-7-12
+    student: *u032
+    subject: *s01    

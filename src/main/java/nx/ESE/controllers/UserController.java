@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.documents.Role;
@@ -93,6 +95,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(MANAGERS)
+	@ResponseStatus(HttpStatus.CREATED)
 	public UserDto createManager(@Valid @RequestBody UserDto userDto)
 			throws FieldAlreadyExistException, FieldNullException {
 
@@ -222,6 +225,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping(TEACHERS)
+	@ResponseStatus(HttpStatus.CREATED)
 	public UserDto createTeacher(@Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException, FieldNullException {
 		
@@ -344,6 +348,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping(STUDENTS)
+	@ResponseStatus(HttpStatus.CREATED)
 	public UserDto createStudent(@Valid @RequestBody UserDto userDto)
 			throws ForbiddenException, FieldAlreadyExistException, FieldNullException {
 		

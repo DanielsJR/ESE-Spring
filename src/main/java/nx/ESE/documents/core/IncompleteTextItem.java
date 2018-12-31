@@ -1,10 +1,36 @@
 package nx.ESE.documents.core;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class IncompleteTextItem {
 
+	@Id
 	private int id;
+	
 	private String sentence;
+	
 	private String answer;
+
+	@CreatedBy
+	private String createdBy;
+
+	@CreatedDate
+	private Date createdDate;
+
+	@LastModifiedBy
+	private String lastModifiedUser;
+
+	@LastModifiedDate
+	private Date lastModifiedDate;
 
 	public IncompleteTextItem() {
 		super();
@@ -39,7 +65,18 @@ public class IncompleteTextItem {
 
 	@Override
 	public String toString() {
-		return "IncompleteTextItem [id=" + id + ", sentence=" + sentence + ", answer=" + answer + "]";
+
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+
+		return "IncompleteTextItem [id=" + id + ", sentence=" + sentence + ", answer=" + answer + ", createdBy="
+				+ createdBy + ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser
+				+ ", lastModifiedDate=" + lModified + "]";
 	}
 
 	@Override

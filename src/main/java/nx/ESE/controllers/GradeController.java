@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.dtos.GradeDto;
+import nx.ESE.exceptions.DocumentNotFoundException;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.services.GradeService;
 
@@ -40,17 +41,13 @@ public class GradeController {
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(PATH_ID)
 	public GradeDto getGradeById(@PathVariable String id) throws FieldNotFoundException {
-
-		if (!this.gradeService.existsById(id))
-			throw new FieldNotFoundException("Id");
-
-		return this.gradeService.getGradeById(id);
+		return this.gradeService.getGradeById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping()
-	public List<GradeDto> getFullGrades() {
-		return this.gradeService.getFullGrades();
+	public List<GradeDto> getFullGrades() throws DocumentNotFoundException {
+		return this.gradeService.getFullGrades().orElseThrow(() -> new DocumentNotFoundException("Grade"));
 	}
 	
 	@PreAuthorize("hasRole('TEACHER')")
@@ -64,20 +61,13 @@ public class GradeController {
 	public GradeDto modifyGrade(@PathVariable String id, @Valid @RequestBody GradeDto gradeDto)
 			throws FieldNotFoundException {
 
-		if (!this.gradeService.existsById(id))
-			throw new FieldNotFoundException("Id");
-
-		return this.gradeService.modifyGrade(id, gradeDto);
+		return this.gradeService.modifyGrade(id, gradeDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
 	@PreAuthorize("hasRole('TEACHER')")
 	@DeleteMapping(PATH_ID)
-	public boolean deleteGrade(@PathVariable String id) throws FieldNotFoundException {
-
-		if (!this.gradeService.existsById(id))
-			throw new FieldNotFoundException("Id");
-
-		return this.gradeService.deleteGrade(id);
+	public GradeDto deleteGrade(@PathVariable String id) throws FieldNotFoundException {
+		return this.gradeService.deleteGrade(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 }
 

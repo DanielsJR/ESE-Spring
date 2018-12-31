@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
 
@@ -26,7 +25,6 @@ import nx.ESE.documents.Preferences;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Theme;
 import nx.ESE.documents.User;
-import nx.ESE.dtos.UserDto;
 import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.GradeRepository;
 import nx.ESE.repositories.PreferencesRepository;
@@ -112,10 +110,7 @@ public class DatabaseSeederService {
 	}
 
 	public void deleteAllAndCreateAdmin() {
-		logger.warn("------------------------- delete All And Create Admin-----------");
-		// Delete Repositories
-		// this.userRepository.deleteAll();
-		// this.preferencesRepository.deleteAll();
+		logger.warn("------------------------- delete DB and Create Admin-----------");
 		mongoTemplate.getDb().drop();
 		this.createAdminIfNotExist();
 	}

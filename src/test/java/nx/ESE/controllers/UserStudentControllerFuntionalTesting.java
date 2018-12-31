@@ -16,11 +16,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import nx.ESE.controllers.UserController;
 import nx.ESE.dtos.UserDto;
+import nx.ESE.services.HttpMatcher;
+import nx.ESE.services.RestService;
+import nx.ESE.services.UserRestService;
 import nx.ESE.services.data.DatabaseSeederService;
 
 @RunWith(SpringRunner.class)
@@ -34,141 +38,74 @@ public class UserStudentControllerFuntionalTesting {
 	@Autowired
 	private RestService restService;
 
-	private UserDto userDto;
-	private UserDto userDto2;
-	
-	@Value("${nx.test.userDto.username}")
-	private String userDtoUsername;
-
-	@Value("${nx.test.userDto.password}")
-	private String userDtoPassword;
-	
-	@Value("${nx.test.userDto2.username}")
-	private String userDto2Username;
-
-	@Value("${nx.test.userDto2.password}")
-	private String userDto2Password;
-
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseSeederService.class);
+	@Autowired
+	private UserRestService userRestService;
 
 	@Before
 	public void before() {
-		this.userDto = new UserDto(userDtoUsername);
-		this.userDto2 = new UserDto(userDto2Username);
+		userRestService.createUserDtos();
 	}
 
 	@After
 	public void delete() {
-		logger.warn("*********************************DELETING_DB**************************************************");
-		this.restService.loginManager();
-
-		try {
-			this.restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-					.path(UserController.PATH_USERNAME).expand(userDto.getUsername())
-					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
-		} catch (Exception e) {
-			logger.warn("error: " + e.getMessage() + "DTO1 nothing to delete");
-		}
-
-		try {
-			this.restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-					.path(UserController.PATH_USERNAME).expand(userDto2.getUsername())
-					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
-		} catch (Exception e) {
-			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
-		}
-		logger.warn("***********************************************************************************************");
-	}
-
-	private UserDto getStudentByID(String id) {
-		return userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-				.path(UserController.USERS).path(UserController.STUDENTS).path(UserController.ID).path(UserController.PATH_ID)
-				.expand(id).get().bearerAuth(restService.getAuthToken().getToken()).build();
-	}
-
-	private UserDto getStudentByUsername(String username) {
-		return userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-				.path(UserController.USERS).path(UserController.STUDENTS).path(UserController.USER_NAME)
-				.path(UserController.PATH_USERNAME).expand(username).bearerAuth(restService.getAuthToken().getToken())
-				.get().build();
-	}
-
-	private void postStudent() {
-		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-				.path(UserController.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(userDto).post()
-				.build();
-	}
-
-	private void postStudent2() {
-		userDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-				.path(UserController.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(userDto2).post()
-				.build();
-	}
-
-	private void putStudent(UserDto dto) {
-		userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-				.path(UserController.STUDENTS).path(UserController.PATH_USERNAME).expand(dto.getUsername())
-				.bearerAuth(restService.getAuthToken().getToken()).body(dto).put().build();
-	}
-
-	private void patchStudentResetPass(String username, String resetedPass) {
-		restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.STUDENTS)
-				.path(UserController.PASS).path(UserController.PATH_USERNAME).expand(username)
-				.bearerAuth(restService.getAuthToken().getToken()).body(resetedPass).patch().build();
-
+		this.userRestService.deleteStudents();
 	}
 
 	// POST--------------------------------------------
+	@Test
 	public void testPostStudent() {
 		restService.loginManager();
-		this.postStudent();
+		userRestService.postStudent();
+
 	}
 
 	@Test
 	public void testPostStudentUsernameUnique() {
-		restService.loginAdmin();
-		userDto.setUsername("u006");
-		this.postStudent();
-		userDto2.setUsername("u006");
-		this.postStudent2();
-		Assert.assertNotEquals(userDto2.getUsername(), userDto.getUsername());
+		restService.loginManager();
+		userRestService.getStudentDto().setUsername("u006");
+		userRestService.postStudent();
+		userRestService.getStudentDto2().setUsername("u006");
+		userRestService.postStudent2();
+		Assert.assertNotEquals(userRestService.getStudentDto2().getUsername(),
+				userRestService.getStudentDto().getUsername());
 	}
 
 	@Test
 	public void testPostStudentDniFieldAlreadyExistException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setDni("14130268-k");
-		userDto2.setDni("14130268-k");
-		this.postStudent();
-		this.postStudent2();
+		userRestService.getStudentDto().setDni("14130268-k");
+		userRestService.getStudentDto2().setDni("14130268-k");
+		userRestService.postStudent();
+		userRestService.postStudent2();
 	}
 
 	@Test
 	public void testPostStudentEmailFieldAlreadyExistException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setEmail(userDtoUsername + "@email.com");
-		userDto2.setEmail(userDtoUsername + "@email.com");
-		this.postStudent();
-		this.postStudent2();
+		userRestService.getStudentDto().setEmail(userRestService.getStudentDtoUsername() + "@email.com");
+		userRestService.getStudentDto2().setEmail(userRestService.getStudentDtoUsername() + "@email.com");
+		userRestService.postStudent();
+		userRestService.postStudent2();
 	}
 
 	@Test
 	public void testPostMangerMobiledFieldAlreadyExistException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setMobile("123456789");
-		userDto2.setMobile("123456789");
-		this.postStudent();
-		this.postStudent2();
+		userRestService.getStudentDto().setMobile("123456789");
+		userRestService.getStudentDto2().setMobile("123456789");
+		userRestService.postStudent();
+		userRestService.postStudent2();
 	}
 
 	@Test
 	public void testPostStudentNoBearerAuth() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).body(userDto).post().build();
+		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
+				.body(userRestService.getStudentDto()).post().build();
 	}
 
 	@Test
@@ -176,14 +113,14 @@ public class UserStudentControllerFuntionalTesting {
 		restService.loginStudent();// PreAuthorize("hasRole('Manager')")
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-				.bearerAuth(restService.getAuthToken().getToken()).body(userDto).post().build();
+				.bearerAuth(restService.getAuthToken().getToken()).body(userRestService.getStudentDto()).post().build();
 	}
 
 	@Test
 	public void testPostStudentWithoutUser() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setUsername(null);
+		userRestService.getStudentDto().setUsername(null);
 		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
 				.bearerAuth(restService.getAuthToken().getToken()).post().build();
 	}
@@ -192,56 +129,56 @@ public class UserStudentControllerFuntionalTesting {
 	public void testPostStudentUsernameNull() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setUsername(null);
-		this.postStudent();
+		userRestService.getStudentDto().setUsername(null);
+		userRestService.postStudent();
 	}
 
 	@Test
 	public void testPostStudentPassNull() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setPassword(null);
-		this.postStudent();
+		userRestService.getStudentDto().setPassword(null);
+		userRestService.postStudent();
 	}
 
 	@Test
 	public void testPostStudentBadUsername() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setUsername("lu");
-		this.postStudent();
+		userRestService.getStudentDto().setUsername("lu");
+		userRestService.postStudent();
 	}
 
 	@Test
 	public void testPostStudentUnsafePassword() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setPassword("password");
-		this.postStudent();
+		userRestService.getStudentDto().setPassword("password");
+		userRestService.postStudent();
 	}
 
 	@Test
 	public void testPostStudentBadDni() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setDni("14130268-1");
-		this.postStudent();
+		userRestService.getStudentDto().setDni("14130268-1");
+		userRestService.postStudent();
 	}
 
 	@Test
 	public void testPostStudentBadMobile() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setMobile("12t678a");
-		this.postStudent();
+		userRestService.getStudentDto().setMobile("12t678a");
+		userRestService.postStudent();
 	}
 
 	@Test
 	public void testPostStudentBadEmail() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setMobile(userDtoUsername + "SinArroba.com");
-		this.postStudent();
+		userRestService.getStudentDto().setMobile(userRestService.getStudentDtoUsername() + "SinArroba.com");
+		userRestService.postStudent();
 	}
 
 	// PUT--------------------------------------------
@@ -249,76 +186,78 @@ public class UserStudentControllerFuntionalTesting {
 	@Test
 	public void testPutStudent() {
 		restService.loginManager();
-		this.postStudent();
-		userDto.setEmail(userDtoUsername + "@email.com");
-		this.putStudent(userDto);
-		assertEquals(userDtoUsername + "@email.com", userDto.getEmail());
+		userRestService.postStudent();
+		userRestService.getStudentDto().setEmail(userRestService.getStudentDtoUsername() + "@email.com");
+		userRestService.putStudent(userRestService.getStudentDto());
+		assertEquals(userRestService.getStudentDtoUsername() + "@email.com",
+				userRestService.getStudentDto().getEmail());
 	}
 
 	@Test
 	public void testPutStudentUsernameNotFoundException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		userDto.setUsername("fdfdgd");
-		this.putStudent(userDto);
+		userRestService.getStudentDto().setUsername("fdfdgd");
+		userRestService.putStudent(userRestService.getStudentDto());
 	}
 
 	@Test
 	public void testPutStudentUsernameFieldAlreadyExistException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setUsername("u006");
-		this.postStudent();
-		this.postStudent2();
-		userDto2.setUsername("u006");
-		this.putStudent(userDto2);
+		userRestService.getStudentDto().setUsername("u006");
+		userRestService.postStudent();
+		userRestService.postStudent2();
+		userRestService.getStudentDto2().setUsername("u006");
+		userRestService.putStudent(userRestService.getStudentDto2());
 	}
 
 	@Test
 	public void testPutStudentDniFieldAlreadyExistException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setDni("14130268-k");
-		this.postStudent();
-		this.postStudent2();
-		userDto2.setDni("14130268-k");
-		this.putStudent(userDto2);
+		userRestService.getStudentDto().setDni("14130268-k");
+		userRestService.postStudent();
+		userRestService.postStudent2();
+		userRestService.getStudentDto2().setDni("14130268-k");
+		userRestService.putStudent(userRestService.getStudentDto2());
 	}
 
 	@Test
 	public void testPutStudentMobileFieldAlreadyExistException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setMobile("123456789");
-		this.postStudent();
-		this.postStudent2();
-		userDto2.setMobile("123456789");
-		this.putStudent(userDto2);
+		userRestService.getStudentDto().setMobile("123456789");
+		userRestService.postStudent();
+		userRestService.postStudent2();
+		userRestService.getStudentDto2().setMobile("123456789");
+		userRestService.putStudent(userRestService.getStudentDto2());
 	}
 
 	@Test
 	public void testPutStudentEmailFieldAlreadyExistException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userDto.setEmail(userDtoUsername + "@email.com");
-		this.postStudent();
-		this.postStudent2();
-		userDto2.setEmail(userDtoUsername + "@email.com");
-		this.putStudent(userDto2);
+		userRestService.getStudentDto().setEmail(userRestService.getStudentDtoUsername() + "@email.com");
+		userRestService.postStudent();
+		userRestService.postStudent2();
+		userRestService.getStudentDto2().setEmail(userRestService.getStudentDtoUsername() + "@email.com");
+		userRestService.putStudent(userRestService.getStudentDto2());
 	}
 
 	@Test
 	public void testPutStudentNoBearerAuth() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).body(userDto).put().build();
+		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
+				.body(userRestService.getStudentDto()).put().build();
 	}
 
 	@Test
 	public void testPutStudentPreAuthorize() {
 		restService.loginStudent();// PreAuthorize("hasRole('MANAGER')")
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		this.putStudent(userDto);
+		userRestService.putStudent(userRestService.getStudentDto());
 	}
 
 	// GET---------------------------
@@ -326,64 +265,66 @@ public class UserStudentControllerFuntionalTesting {
 	@Test
 	public void testGetStudentById() {
 		restService.loginManager();
-		this.postStudent();
-		assertEquals(userDtoUsername, this.getStudentByID(userDto.getId()).getUsername());
+		userRestService.postStudent();
+		assertEquals(userRestService.getStudentDtoUsername(),
+				userRestService.getStudentByID(userRestService.getStudentDto().getId()).getUsername());
 	}
 
 	@Test
 	public void testGetStudentByUsername() {
 		restService.loginManager();
-		this.postStudent();
-		assertEquals(userDtoUsername, this.getStudentByUsername(userDtoUsername).getUsername());
+		userRestService.postStudent();
+		assertEquals(userRestService.getStudentDtoUsername(),
+				userRestService.getStudentByUsername(userRestService.getStudentDtoUsername()).getUsername());
 	}
 
 	@Test
 	public void testGetStudentNoBearerAuth() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		this.postStudent();
+		userRestService.postStudent();
 		restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).path(UserController.PATH_ID)
-				.expand(userDto.getId()).get().build();
+				.expand(userRestService.getStudentDto().getId()).get().build();
 	}
 
 	@Test
 	public void testGetStudentPreAuthorize() {
 		restService.loginStudent();// PreAuthorize("hasRole('MANAGER')")
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		this.postStudent();
-		this.getStudentByID(userDto.getId());
+		userRestService.postStudent();
+		userRestService.getStudentByID(userRestService.getStudentDto().getId());
 	}
 
 	@Test
 	public void testGetStudentIdNotFoundException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		this.getStudentByID("u64563456");
+		userRestService.getStudentByID("u64563456");
 	}
 
 	@Test
 	public void testGetStudentUsernameNotFoundException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		this.getStudentByUsername("rupertina");
+		userRestService.getStudentByUsername("rupertina");
 	}
 
 	// PATCH-----------------------------
 	@Test
 	public void testPatchStudentResetPass() {
 		restService.loginManager();
-		this.postStudent();
-		this.patchStudentResetPass(userDto.getUsername(), userDto.getUsername() + "@ESE2");
-		restService.loginUser(userDto.getUsername(), userDto.getUsername() + "@ESE2");
+		userRestService.postStudent();
+		userRestService.patchStudentResetPass(userRestService.getStudentDto().getUsername(),
+				userRestService.getStudentDto().getUsername() + "@ESE2");
+		restService.loginUser(userRestService.getStudentDto().getUsername(),
+				userRestService.getStudentDto().getUsername() + "@ESE2");
 	}
 
 	@Test
 	public void testPatchStudentResetPassUsernameNotFoundException() {
 		restService.loginManager();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		this.patchStudentResetPass("rupertina", userDto.getUsername() + "@ESE2");
+		userRestService.patchStudentResetPass("rupertina", userRestService.getStudentDto().getUsername() + "@ESE2");
 	}
-
-
 
 }

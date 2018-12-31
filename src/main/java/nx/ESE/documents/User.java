@@ -4,10 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 
 @Document
@@ -17,8 +24,10 @@ public class User {
 	private String id;
 
 	@Indexed(unique = true)
+	@NotNull
 	private String username;
 
+	@NotNull
 	private String password;
 	
 	private String firstName;
@@ -41,15 +50,25 @@ public class User {
 
 	private Commune commune;
 
+	@NotNull
 	private Role[] roles;
 
 	private boolean active;
+	
+	@CreatedBy
+	private String createdBy;
 
-	private Date createdAt;
+	@CreatedDate
+	private Date createdDate;
+
+	@LastModifiedBy
+	private String lastModifiedUser;
+
+	@LastModifiedDate
+	private Date lastModifiedDate;
 
 	public User() {
 		active = true;
-		createdAt = new Date();
 	}
 
 	public User(String username, String password, String firstName, String lastName, String dni, Date birthday, Gender gender,
@@ -190,12 +209,21 @@ public class User {
 		this.active = active;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
+
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
 	public String getId() {
@@ -209,14 +237,21 @@ public class User {
 		if (this.birthday != null) {
 			birthdayF = new SimpleDateFormat("dd-MMM-yyyy").format(birthday.getTime());
 		}
-		String date = "null";
-		if (createdAt != null) {
-			date = new SimpleDateFormat("dd-MMM-yyyy").format(createdAt.getTime());
-		}
+		
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+		
+		
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender + ", mobile="
 				+ mobile +", avatar=" + avatar + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
-				+ Arrays.toString(roles)  + ", active=" + active + ", createdAt=" + date + "]";
+				+ Arrays.toString(roles)  + ", active=" + active + ", createdBy=" + createdBy + ", createdDate=" + cDate
+				+ ", lastModifiedBy=" + lastModifiedUser  + ", lastModifiedDate=" + lModified + "]";
 	}
 
 	@Override

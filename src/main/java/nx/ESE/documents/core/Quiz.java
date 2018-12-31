@@ -1,39 +1,53 @@
 package nx.ESE.documents.core;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import nx.ESE.documents.User;
 
+@Document
 public class Quiz {
-	
 
+	@Id
 	private int id;
 
 	private String title;
 
-	
-	//@Column(name = "content_evaluate")
 	private String description;
 
-	//@ManyToOne
 	private User author;
 
 	private Date date;
 
 	private SubjectName subjectName;
 
-	//@OneToMany // (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CorrespondItem> correspondItems;
 
-	//@OneToMany // (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<IncompleteTextItem> incompleteTextItems;
 
-	//@OneToMany // (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<TrueFalseItem> trueFalseItems;
 
-	//@OneToMany // (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<MultipleSelectionItem> multipleSelectionItems;
+
+	@CreatedBy
+	private String createdBy;
+
+	@CreatedDate
+	private Date createdDate;
+
+	@LastModifiedBy
+	private String lastModifiedUser;
+
+	@LastModifiedDate
+	private Date lastModifiedDate;
 
 	public String getTitle() {
 		return title;
@@ -111,8 +125,60 @@ public class Quiz {
 		return id;
 	}
 
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-	
-	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	@Override
+	public String toString() {
+
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+
+		return "Quiz [id=" + id + ", title=" + title + ", description=" + description + ", author=" + author + ", date="
+				+ date + ", subjectName=" + subjectName + ", correspondItems=" + correspondItems
+				+ ", incompleteTextItems=" + incompleteTextItems + ", trueFalseItems=" + trueFalseItems
+				+ ", multipleSelectionItems=" + multipleSelectionItems + ", createdBy=" + createdBy + ", createdDate="
+				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Quiz other = (Quiz) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
 
 }

@@ -17,6 +17,9 @@ import nx.ESE.controllers.AuthenticationController;
 import nx.ESE.controllers.UserController;
 import nx.ESE.documents.Role;
 import nx.ESE.dtos.UserDto;
+import nx.ESE.services.HttpMatcher;
+import nx.ESE.services.RestBuilder;
+import nx.ESE.services.RestService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -59,9 +62,8 @@ public class TokenControllerFunctionalTesting {
 	@Test
 	public void testLoginNoUserAndPass() {
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		restService.restBuilder().path(AuthenticationController.TOKEN).path(AuthenticationController.GENERATE_TOKEN).post()
-				.build();
+		restService.restBuilder().path(AuthenticationController.TOKEN).path(AuthenticationController.GENERATE_TOKEN)
+				.post().build();
 	}
-
 
 }

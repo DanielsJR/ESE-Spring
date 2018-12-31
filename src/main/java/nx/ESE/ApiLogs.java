@@ -1,8 +1,13 @@
 package nx.ESE;
 
+import java.util.Calendar;
+
+import org.apache.logging.log4j.LogManager;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -46,5 +51,15 @@ public class ApiLogs {
 				+ exception.getMessage();
 		LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName()).error(log);
 	}
+	
+    @Around("allResources()")
+    public Object processTimeLog(ProceedingJoinPoint pjp) throws Throwable {
+        Calendar before = Calendar.getInstance();
+        Object obj = pjp.proceed();
+        Calendar now = Calendar.getInstance();
+        LogManager.getLogger(pjp.getSignature().getDeclaringTypeName())
+                .info("Processing time: " + (now.getTimeInMillis() - before.getTimeInMillis()) + "ms");
+        return obj;
+    }
 
 }

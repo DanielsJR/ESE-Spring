@@ -1,7 +1,11 @@
 package nx.ESE.dtos;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
@@ -18,12 +22,23 @@ public class CourseDto {
 	private List<UserDto> students;
 
 	private int year;
+	
+	private String createdBy;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private String lastModifiedUser;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
 
 	public CourseDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+	//input
 	public CourseDto(String id, CourseName name, UserDto chiefTeacher, List<UserDto> students, int year) {
 		super();
 		this.id = id;
@@ -41,6 +56,10 @@ public class CourseDto {
 		this.chiefTeacher = new UserDto(course.getChiefTeacher());
 		this.students = this.usersList(course);
 		this.year = course.getYear();
+		this.createdBy = course.getCreatedBy();
+		this.createdDate = course.getCreatedDate();
+		this.lastModifiedUser = course.getLastModifiedUser();
+		this.lastModifiedDate = course.getLastModifiedDate();
 	}
 
 	public List<UserDto> usersList(Course course) {
@@ -87,11 +106,39 @@ public class CourseDto {
 	public String getId() {
 		return id;
 	}
+	
+	
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public String getLastModifiedUser() {
+		return lastModifiedUser;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
 
 	@Override
 	public String toString() {
+		
+		String cDate = "null";
+		if (this.createdDate != null)
+			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+
+		String lModified = "null";
+		if (this.lastModifiedDate != null)
+			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
+		
 		return "CourseDto [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
-				+ ", year=" + year + "]";
+				+ ", year=" + year + ", createdBy=" + createdBy + ", createdDate=" + cDate
+				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
 	}
 
 }

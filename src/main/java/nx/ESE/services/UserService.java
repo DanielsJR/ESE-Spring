@@ -2,6 +2,7 @@ package nx.ESE.services;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,10 @@ public class UserService {
 			boolean useLetters = false;
 			boolean useNumbers = true;
 			String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
-			System.out.println(generatedString);
+			//System.out.println("generatedString::::::::::::::::::::::::::::::::::::" + generatedString);
 			newUsername += generatedString;
 		}
-		System.out.println("NEW_USERNAME::::::::::::::::::::::::::::::::::::" + newUsername);
+		//System.out.println("newUsername::::::::::::::::::::::::::::::::::::" + newUsername);
 		return newUsername;
 
 	}
@@ -51,7 +52,7 @@ public class UserService {
 		// System.out.println("userToString:::::: " + user.toString());
 		return user;
 	}
-
+	
 	// Exceptions*********************
 	public boolean isPassNull(UserDto userDto) {
 		return userDto.getPassword() == null;
@@ -124,7 +125,11 @@ public class UserService {
 	}
 
 	public List<UserDto> getFullUsers(Role role) {
-		return this.userRepository.findUsersFullAll(role);
+		return this.userRepository.findUsersFullAll(role)
+				.stream()
+				.parallel()
+				.sorted((u1,u2) -> u1.getFirstName().toString().compareTo(u2.getFirstName().toString()))
+				.collect(Collectors.toList());
 	}
 
 	public UserDto getUserById(String id) {
@@ -140,10 +145,11 @@ public class UserService {
 	}
 
 	public UserDto createUser(UserDto userDto, Role[] roles) {
-		User user = new User(userDto.getUsername(), userDto.getPassword());
-		user.setUsername(uniqueUsername(userDto.getUsername()));
+		User user = new User();
+		this.setUserFromDto(user, userDto);
+		user.setUsername(uniqueUsername(userDto.getUsername())); 
 		user.setRoles(roles);
-		this.userRepository.save(this.setUserFromDto(user, userDto));
+		this.userRepository.save(user);
 
 		return new UserDto(user);
 	}

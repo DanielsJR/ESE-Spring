@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.dtos.CourseDto;
@@ -31,7 +33,6 @@ public class CourseController {
 	public static final String YEAR = "/year";
 	public static final String TEACHER_NAME = "/teacherName";
 
-	
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_NAME = "/{name}";
 	public static final String PATH_USERNAME = "/{username}";
@@ -58,28 +59,35 @@ public class CourseController {
 
 		if (!this.userService.existsUserUsername(teacherName))
 			throw new FieldNotFoundException("Username");
-		
+
 		return this.courseService.getCourseByChiefTeacherNameQdsl(teacherName, year)
 				.orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
-	
+
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(NAME + PATH_NAME + PATH_YEAR)
 	public CourseDto getCourseByName(@PathVariable String name, @PathVariable int year)
-			throws DocumentNotFoundException{
-	
+			throws DocumentNotFoundException {
+
 		return this.courseService.getCourseByName(name, year)
 				.orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(YEAR + PATH_YEAR)
-	public List<CourseDto> getFullCoursesbyYear(@PathVariable int year) throws DocumentNotFoundException {
+	public List<CourseDto> getFullCoursesByYear(@PathVariable int year) throws DocumentNotFoundException {
 		return this.courseService.getFullCoursesByYear(year).orElseThrow(() -> new DocumentNotFoundException("Course"));
+	}
+	
+	@PreAuthorize("hasRole('MANAGER')")
+	@GetMapping()
+	public List<CourseDto> getFullCourses() throws DocumentNotFoundException {
+		return this.courseService.getFullCourses().orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
+	@ResponseStatus(HttpStatus.CREATED)
 	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) {
 		return this.courseService.createCourse(courseDto);
 	}
@@ -95,7 +103,6 @@ public class CourseController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(PATH_ID)
 	public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException {
-
 		return this.courseService.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
