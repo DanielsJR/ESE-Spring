@@ -1,15 +1,21 @@
 package nx.ESE.documents.core;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+
+import nx.ESE.utils.Capitalizer;
+
 public enum CourseName {
 	
-	PRIMERO_A("1A"), SEGUNDO_A("2A"), TERCERO_A("3A"), CUARTO_A("4A"), QUINTO_A("5A"),SEXTO_A("6A"),SEPTIMO_A("7A"),OCTAVO_A("8A"),
-	PRIMERO_B("1B"), SEGUNDO_B("2B"), TERCERO_B("3B"), CUARTO_B("4B"), QUINTO_B("5B"),SEXTO_B("6B"),SEPTIMO_B("7B"),OCTAVO_B("8B"),
-	PRIMERO_C("1C"), SEGUNDO_C("2C"), TERCERO_C("3C"), CUARTO_C("4C"), QUINTO_C("5C"),SEXTO_C("6C"),SEPTIMO_C("7C"),OCTAVO_C("8C"),
-	PRIMERO_D("1D"), SEGUNDO_D("2D"), TERCERO_D("3D"), CUARTO_D("4D"), QUINTO_D("5D"),SEXTO_D("6D"),SEPTIMO_D("7D"),OCTAVO_D("8D"),
-	PRIMERO_E("1E"), SEGUNDO_E("2E"), TERCERO_E("3E"), CUARTO_E("4E"), QUINTO_E("5E"),SEXTO_E("6E"),SEPTIMO_E("7E"),OCTAVO_E("8E"),
-	PRIMERO_F("1F"), SEGUNDO_F("2F"), TERCERO_F("3F"), CUARTO_F("4F"), QUINTO_F("5F"),SEXTO_F("6F"),SEPTIMO_F("7F"),OCTAVO_F("8F"),
-	PRIMERO_G("1G"), SEGUNDO_G("2G"), TERCERO_G("3G"), CUARTO_G("4G"), QUINTO_G("5G"),SEXTO_G("6G"),SEPTIMO_G("7G"),OCTAVO_G("8G"),
-	PRIMERO_H("1H"), SEGUNDO_H("2H"), TERCERO_H("3H"), CUARTO_H("4H"), QUINTO_H("5H"),SEXTO_H("6H"),SEPTIMO_H("7H"),OCTAVO_H("8A"),;
+	PRIMERO_A("1-A"), SEGUNDO_A("2-A"), TERCERO_A("3-A"), CUARTO_A("4-A"), QUINTO_A("5-A"),SEXTO_A("6-A"),SEPTIMO_A("7-A"),OCTAVO_A("8-A"),
+	PRIMERO_B("1-B"), SEGUNDO_B("2-B"), TERCERO_B("3-B"), CUARTO_B("4-B"), QUINTO_B("5-B"),SEXTO_B("6-B"),SEPTIMO_B("7-B"),OCTAVO_B("8-B"),
+	PRIMERO_C("1-C"), SEGUNDO_C("2-C"), TERCERO_C("3-C"), CUARTO_C("4-C"), QUINTO_C("5-C"),SEXTO_C("6-C"),SEPTIMO_C("7-C"),OCTAVO_C("8-C"),
+	PRIMERO_D("1-D"), SEGUNDO_D("2-D"), TERCERO_D("3-D"), CUARTO_D("4-D"), QUINTO_D("5-D"),SEXTO_D("6-D"),SEPTIMO_D("7-D"),OCTAVO_D("8-D"),
+	PRIMERO_E("1-E"), SEGUNDO_E("2-E"), TERCERO_E("3-E"), CUARTO_E("4-E"), QUINTO_E("5-E"),SEXTO_E("6-E"),SEPTIMO_E("7-E"),OCTAVO_E("8-E"),
+	PRIMERO_F("1-F"), SEGUNDO_F("2-F"), TERCERO_F("3-F"), CUARTO_F("4-F"), QUINTO_F("5-F"),SEXTO_F("6-F"),SEPTIMO_F("7-F"),OCTAVO_F("8-F"),
+	PRIMERO_G("1-G"), SEGUNDO_G("2-G"), TERCERO_G("3-G"), CUARTO_G("4-G"), QUINTO_G("5-G"),SEXTO_G("6-G"),SEPTIMO_G("7-G"),OCTAVO_G("8-G"),
+	PRIMERO_H("1-H"), SEGUNDO_H("2-H"), TERCERO_H("3-H"), CUARTO_H("4-H"), QUINTO_H("5-H"),SEXTO_H("6-H"),SEPTIMO_H("7-H"),OCTAVO_H("8-A"),;
 	
 	private final String cod;
 
@@ -19,6 +25,37 @@ public enum CourseName {
 
 	public String getCode() {
 		return cod;
+	}
+	
+	public static <T extends Enum<T>> T getEnumFromString(Class<T> enumClass, String value) {
+		if (enumClass == null) {
+			throw new IllegalArgumentException("EnumClass value can't be null.");
+		}
+
+		for (Enum<?> enumValue : enumClass.getEnumConstants()) {
+			if (enumValue.toString().equalsIgnoreCase(value) || ((CourseName) enumValue).getCode().equalsIgnoreCase(value)) {
+				return (T) enumValue;
+			}
+		}
+
+		// Construct an error message that indicates all possible values for the enum.
+		StringBuilder errorMessage = new StringBuilder();
+		boolean bFirstTime = true;
+		for (Enum<?> enumValue : enumClass.getEnumConstants()) {
+			errorMessage.append(bFirstTime ? "" : ", ").append(enumValue);
+			bFirstTime = false;
+		}
+		throw new IllegalArgumentException(value + " is invalid value. Supported values are " + errorMessage);
+	}
+
+	@JsonCreator
+	public static CourseName fromValue(String value) {
+		return getEnumFromString(CourseName.class, value);
+	}
+
+	@JsonValue
+	public String toJson() {
+		return getCode();
 	}
 	
 	

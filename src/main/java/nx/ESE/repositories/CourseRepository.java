@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import nx.ESE.documents.core.Course;
+import nx.ESE.documents.core.CourseName;
 import nx.ESE.dtos.CourseDto;
 
 
@@ -16,12 +17,13 @@ import nx.ESE.dtos.CourseDto;
 public interface CourseRepository extends MongoRepository<Course, String>,CourseRepositoryCustom, QuerydslPredicateExecutor<Course> {
 	
 		
-	public CourseDto findByNameAndYear(String id, int year);
+	public CourseDto findByNameAndYear(String name, int year);
 	
-	public Course findByChiefTeacherAndYear(String id, int year);
+	public CourseDto findByChiefTeacherAndYear(String id, int year);
 	
 	public List<CourseDto> findByYear(int year);
-	
+
+
 	//@Query()
 	//public List<CourseDto> findAll();
 	

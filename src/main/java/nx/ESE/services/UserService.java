@@ -145,7 +145,7 @@ public class UserService {
 	}
 
 	public UserDto createUser(UserDto userDto, Role[] roles) {
-		User user = new User();
+		User user = new User(userDto.getUsername(),userDto.getPassword());
 		this.setUserFromDto(user, userDto);
 		user.setUsername(uniqueUsername(userDto.getUsername())); 
 		user.setRoles(roles);

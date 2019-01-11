@@ -19,64 +19,53 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import nx.ESE.SpringSecurityAuditorAware;
 
 import javax.annotation.Resource;
+
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = true)
+// @EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableMongoAuditing //(auditorAwareRef = "auditorAware")
+@EnableMongoAuditing // (auditorAwareRef = "auditorAware")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
 	@Resource(name = "userDetailsService")
-    private UserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+	@Autowired
+	private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 
-    @Autowired
-    public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(encoder());
-    }
+	@Autowired
+	public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
+	}
 
-    @Bean
-    public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
-        return new JwtAuthenticationFilter();
-    }
+	@Bean
+	public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
+		return new JwtAuthenticationFilter();
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().
-                authorizeRequests()
-                .antMatchers("/token/*")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(unauthorizedHandler)
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/token/*").permitAll().anyRequest()
+				.authenticated().and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+	}
 
-    @Bean
-    public BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
-    
- /*   @Bean
-    public AuditorAware<String> auditorAware() {
-        return new SpringSecurityAuditorAware();
-    }
-    
-    */
+	@Bean
+	public BCryptPasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	/*
+	 * @Bean public AuditorAware<String> auditorAware() { return new
+	 * SpringSecurityAuditorAware(); }
+	 * 
+	 */
 
 }

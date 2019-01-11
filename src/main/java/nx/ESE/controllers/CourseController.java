@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.dtos.CourseDto;
 import nx.ESE.exceptions.DocumentNotFoundException;
+import nx.ESE.exceptions.FieldAlreadyExistException;
 import nx.ESE.exceptions.FieldNotFoundException;
+import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.services.CourseService;
 import nx.ESE.services.UserService;
 
@@ -88,7 +90,27 @@ public class CourseController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) {
+	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) throws FieldNullException, FieldAlreadyExistException {
+		
+		if (this.courseService.isNameNull(courseDto))
+			throw new FieldNullException("Name");
+		
+		if (this.courseService.isChiefTeacherNull(courseDto))
+			throw new FieldNullException("Chief Teacher");
+		
+		if (this.courseService.isYearNull(courseDto))
+			throw new FieldNullException("Year");
+		
+		if (this.courseService.nameRepeated(courseDto))
+			throw new FieldAlreadyExistException("Name");
+		
+		if (this.courseService.chiefTeacherRepeated(courseDto))
+			throw new FieldAlreadyExistException("Chief Teacher");
+		
+		
+		if (this.courseService.studentsRepeated(courseDto.getStudents()))
+			throw new FieldAlreadyExistException("Student");
+		
 		return this.courseService.createCourse(courseDto);
 	}
 

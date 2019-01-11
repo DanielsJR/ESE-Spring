@@ -65,5 +65,7 @@ public class TokenControllerFunctionalTesting {
 		restService.restBuilder().path(AuthenticationController.TOKEN).path(AuthenticationController.GENERATE_TOKEN)
 				.post().build();
 	}
+	
+	
 
 }

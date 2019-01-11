@@ -61,14 +61,15 @@ public class UserDto {
 
 	private String createdBy;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
 	private String lastModifiedUser;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	// private Date createdAt;
+
 
 	public UserDto() {
 		super();
@@ -94,7 +95,7 @@ public class UserDto {
 		this.setCommune(commune);
 		this.roles = roles;
 		this.active = active;
-		// this.createdAt = createdAt;
+
 	}
 
 	public UserDto(String usernamePass) {

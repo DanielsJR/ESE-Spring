@@ -106,7 +106,7 @@ public class Subject {
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
 
-		return "SubjectTeacher [id=" + id + ", name=" + name + ", teacher=" + teacher + ", course=" + course
+		return "Subject [id=" + id + ", name=" + name + ", teacher=" + teacher + ", course=" + course
 				+ ", createdBy=" + createdBy + ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser
 				+ ", lastModifiedDate=" + lModified + "]";
 	}
