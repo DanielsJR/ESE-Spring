@@ -20,7 +20,10 @@ import org.springframework.http.HttpStatus;
 
 import nx.ESE.dtos.SubjectDto;
 import nx.ESE.exceptions.DocumentNotFoundException;
+import nx.ESE.exceptions.FieldAlreadyExistException;
+import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
+import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.services.SubjectService;
 
 
@@ -55,14 +58,42 @@ public class SubjectController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto) throws FieldNotFoundException {
+	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto) throws FieldNotFoundException, FieldInvalidException, FieldNullException, FieldAlreadyExistException {
+		
+		if (!this.subjectService.isIdNull(subjectDto))
+			throw new FieldInvalidException("Id");
+		
+		if (this.subjectService.isNameNull(subjectDto))
+			throw new FieldNullException("Name");
+		
+		if (this.subjectService.isTeacherNull(subjectDto))
+			throw new FieldNullException("teacher");
+		
+		if (this.subjectService.isCourseNull(subjectDto))
+			throw new FieldNullException("course");
+		
+		if (this.subjectService.isSubjectRepeated(subjectDto))
+			throw new FieldAlreadyExistException("Subject");
+		
 		return this.subjectService.createSubject(subjectDto);
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@PutMapping(PATH_ID)
 	public SubjectDto modifySubject(@PathVariable String id, @Valid @RequestBody SubjectDto subjectDto)
-			throws FieldNotFoundException {
+			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException {
+		
+		if (this.subjectService.isNameNull(subjectDto))
+			throw new FieldNullException("Name");
+		
+		if (this.subjectService.isTeacherNull(subjectDto))
+			throw new FieldNullException("teacher");
+		
+		if (this.subjectService.isCourseNull(subjectDto))
+			throw new FieldNullException("course");
+		
+		if (this.subjectService.isSubjectRepeated(subjectDto))
+			throw new FieldAlreadyExistException("Subject");
 
 		return this.subjectService.modifySubject(id, subjectDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}

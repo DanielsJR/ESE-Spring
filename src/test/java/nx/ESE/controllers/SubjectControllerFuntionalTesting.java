@@ -15,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import nx.ESE.documents.core.CourseName;
+import nx.ESE.documents.core.SubjectName;
+import nx.ESE.services.CourseRestService;
 import nx.ESE.services.HttpMatcher;
 import nx.ESE.services.RestService;
 import nx.ESE.services.SubjectRestService;
@@ -35,13 +38,15 @@ public class SubjectControllerFuntionalTesting {
 	@Autowired
 	private UserRestService userRestService;
 
+	@Autowired
+	private CourseRestService courseRestService;
 	
 	@Autowired
 	private SubjectRestService subjectRestService;
 
 	@Before
 	public void before() {
-		subjectRestService.createSubjectDto();
+		subjectRestService.createSubjectsDto();
 	}
 
 	@After
@@ -54,7 +59,40 @@ public class SubjectControllerFuntionalTesting {
 	@Test
 	public void testPostSubject() {
 		subjectRestService.postSubject();
+		subjectRestService.postSubject2();
 	}
+	
+	@Test
+	public void testPostSubjectNameNull() {
+		subjectRestService.getSubjectDto().setName(null);
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.postSubject();
+	}
+	
+	@Test
+	public void testPostSubjectTeacherNull() {
+		subjectRestService.getSubjectDto().setTeacher(null);
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.postSubject();
+	}
+	
+	@Test
+	public void testPostSubjectCourseNull() {
+		subjectRestService.getSubjectDto().setCourse(null);
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.postSubject();
+	}
+	
+	@Test
+	public void testPostSubjectSubjectRepeated() {
+		subjectRestService.postSubject();
+		subjectRestService.getSubjectDto2().setName(subjectRestService.getSubjectDto().getName());
+		subjectRestService.getSubjectDto2().setCourse(subjectRestService.getSubjectDto().getCourse());
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.postSubject2();
+	}
+	
+	
 	
 	// PUT******************************************
 	@Test
@@ -64,6 +102,42 @@ public class SubjectControllerFuntionalTesting {
 		subjectRestService.putSubject(subjectRestService.getSubjectDto().getId());
 		Assert.assertEquals(subjectRestService.getSubjectDto().getTeacher().getId(),userRestService.getTeacherDto().getId());
 	}
+	
+	
+	@Test
+	public void testPutSubjectNameNull() {
+		subjectRestService.postSubject();
+		subjectRestService.getSubjectDto().setName(null);
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.putSubject(subjectRestService.getSubjectDto().getId());
+	}
+	
+	@Test
+	public void testPutSubjectTeacherNull() {
+		subjectRestService.postSubject();
+		subjectRestService.getSubjectDto().setTeacher(null);
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.putSubject(subjectRestService.getSubjectDto().getId());
+	}
+	
+	@Test
+	public void testPutSubjectCourseNull() {
+		subjectRestService.postSubject();
+		subjectRestService.getSubjectDto().setCourse(null);
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.putSubject(subjectRestService.getSubjectDto().getId());
+	}
+	
+	@Test
+	public void testPutSubjectSubjectRepeated() {
+		subjectRestService.postSubject();
+		subjectRestService.postSubject2();
+		subjectRestService.getSubjectDto().setName(subjectRestService.getSubjectDto2().getName());
+		subjectRestService.getSubjectDto().setCourse(subjectRestService.getSubjectDto2().getCourse());
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		subjectRestService.putSubject(subjectRestService.getSubjectDto().getId());
+	}
+	
 	
 	
 	// PATCH*****************************************

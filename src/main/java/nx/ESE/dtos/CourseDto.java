@@ -21,7 +21,7 @@ public class CourseDto {
 
 	private List<UserDto> students;
 
-	private int year;
+	private String year;
 	
 	private String createdBy;
 
@@ -39,7 +39,7 @@ public class CourseDto {
 	}
 
 	//input
-	public CourseDto(String id, CourseName name, UserDto chiefTeacher, List<UserDto> students, int year) {
+	public CourseDto(String id, CourseName name, UserDto chiefTeacher, List<UserDto> students, String year) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -95,11 +95,11 @@ public class CourseDto {
 		this.students = students;
 	}
 
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import nx.ESE.documents.core.CourseName;
 import nx.ESE.services.CourseRestService;
 import nx.ESE.services.HttpMatcher;
 import nx.ESE.services.RestService;
@@ -38,7 +39,7 @@ public class CourseControllerFuntionalTesting {
 
 	@Before
 	public void before() {
-		courseRestService.createCourseDto();
+		courseRestService.createCoursesDto();
 	}
 
 	@After
@@ -50,20 +51,18 @@ public class CourseControllerFuntionalTesting {
 	@Test
 	public void testPostCourse() {
 		courseRestService.postCourse();
+		courseRestService.postCourse2();
 	}
 	
 	@Test
 	public void testPostCourseNameNull() {
-		courseRestService.postCourse();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		courseRestService.getCourseDto().setName(null);
 		courseRestService.postCourse();
-		
 	}
 	
 	@Test
 	public void testPostCourseChiefTeacherNull() {
-		courseRestService.postCourse();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		courseRestService.getCourseDto().setChiefTeacher(null);
 		courseRestService.postCourse();
@@ -71,30 +70,91 @@ public class CourseControllerFuntionalTesting {
 	
 	@Test
 	public void testPostCourseYearNull() {
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.getCourseDto().setYear(null);
 		courseRestService.postCourse();
 	}
 	
 	@Test
 	public void testPostCourseNameRepeated() {
 		courseRestService.postCourse();
+	    courseRestService.getCourseDto2().setName(courseRestService.getCourseDto().getName());
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.postCourse2();
 	}
 	
 	@Test
 	public void testPostCourseChiefTeacherRepeated() {
 		courseRestService.postCourse();
+	    courseRestService.getCourseDto2().setChiefTeacher(courseRestService.getCourseDto().getChiefTeacher());
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.postCourse2();
 	}
 	
 	@Test
 	public void testPostCourseStudentsRepeated() {
 		courseRestService.postCourse();
+	    courseRestService.getCourseDto2().setStudents(courseRestService.getCourseDto().getStudents());
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.postCourse2();
 	}
 
 	// PUT******************************************
 	@Test
 	public void testPutCourse() {
 		courseRestService.postCourse();
-		userRestService.postTeacher2();
-		courseRestService.getCourseDto().setChiefTeacher(userRestService.getTeacherDto2());
+		courseRestService.getCourseDto().setChiefTeacher(courseRestService.getCourseDto2().getChiefTeacher());
+		courseRestService.putCourse(courseRestService.getCourseDto().getId());
+	}
+	
+	@Test
+	public void testPutCourseNameNull() {
+		courseRestService.postCourse();
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.getCourseDto().setName(null);
+		courseRestService.putCourse(courseRestService.getCourseDto().getId());
+	}
+	
+	@Test
+	public void testPutCourseChiefTeacherNull() {
+		courseRestService.postCourse();
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.getCourseDto().setChiefTeacher(null);
+		courseRestService.putCourse(courseRestService.getCourseDto().getId());
+	}
+	
+	@Test
+	public void testPutCourseYearNull() {
+		courseRestService.postCourse();
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.getCourseDto().setYear(null);
+		courseRestService.putCourse(courseRestService.getCourseDto().getId());
+	}
+	
+	@Test
+	public void testPutCourseNameRepeated() {
+		courseRestService.postCourse();
+		courseRestService.postCourse2();
+	    courseRestService.getCourseDto().setName(courseRestService.getCourseDto2().getName());
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.putCourse(courseRestService.getCourseDto().getId());
+	}
+	
+	@Test
+	public void testPutCourseChiefTeacherRepeated() {
+		courseRestService.postCourse();
+		courseRestService.postCourse2();
+	    courseRestService.getCourseDto().setChiefTeacher(courseRestService.getCourseDto2().getChiefTeacher());
+	    thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.putCourse(courseRestService.getCourseDto().getId());
+	}
+	
+	@Test
+	public void testPutCourseStudentsRepeated() {
+		courseRestService.postCourse();
+		courseRestService.postCourse2();
+	    courseRestService.getCourseDto().setStudents(courseRestService.getCourseDto2().getStudents());
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		courseRestService.putCourse(courseRestService.getCourseDto().getId());
 	}
 
@@ -121,7 +181,7 @@ public class CourseControllerFuntionalTesting {
 	@Test
 	public void testGetFullCoursesByYear() {
 		courseRestService.postCourse();
-		courseRestService.getFullCoursesByYear(2018);
+		courseRestService.getFullCoursesByYear("2018");
 		Assert.assertTrue(courseRestService.getListCoursesDto().size() > 0);
 	}
 

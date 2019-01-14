@@ -26,6 +26,8 @@ public class SubjectRestService {
 
 	private SubjectDto subjectDto;
 	
+	private SubjectDto subjectDto2;
+	
 	private List<SubjectDto> listSubjectDto;
 
 	private static final Logger logger = LoggerFactory.getLogger(SubjectRestService.class);
@@ -40,6 +42,14 @@ public class SubjectRestService {
 	
 	
 
+	public SubjectDto getSubjectDto2() {
+		return subjectDto2;
+	}
+
+	public void setSubjectDto2(SubjectDto subjectDto2) {
+		this.subjectDto2 = subjectDto2;
+	}
+
 	public List<SubjectDto> getListSubjectDto() {
 		return listSubjectDto;
 	}
@@ -48,17 +58,22 @@ public class SubjectRestService {
 		this.listSubjectDto = listSubjectDto;
 	}
 
-	public void createSubjectDto() {
+	public void createSubjectsDto() {
 		logger.warn(
-				"*********************************CREATING_SUBJECT**************************************************");
-		courseRestService.createCourseDto();
-		userRestService.postTeacher2();
+				"*********************************CREATING_SUBJECTS**************************************************");
+		courseRestService.createCoursesDto();
 		courseRestService.postCourse();
+		courseRestService.postCourse2();
 
 		this.subjectDto = new SubjectDto();
 		this.subjectDto.setName(SubjectName.MATEMATICAS);
 		this.subjectDto.setTeacher(userRestService.getTeacherDto2());
 		this.subjectDto.setCourse(courseRestService.getCourseDto());
+		
+		this.subjectDto2 = new SubjectDto();
+		this.subjectDto2.setName(SubjectName.LENGUAJE);
+		this.subjectDto2.setTeacher(userRestService.getTeacherDto());
+		this.subjectDto2.setCourse(courseRestService.getCourseDto2());
 		
 		logger.warn("***********************************************************************************************");
 
@@ -76,6 +91,14 @@ public class SubjectRestService {
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "subjectDto: nothing to delete");
 		}
+		
+		try {
+			String id = this.subjectDto2.getId();
+			this.restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand(id)
+					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
+		} catch (Exception e) {
+			logger.warn("error: " + e.getMessage() + "subjectDto2: nothing to delete");
+		}
 
 		this.courseRestService.deleteCourses();
 
@@ -88,6 +111,13 @@ public class SubjectRestService {
 		return	subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
 				.path(SubjectController.SUBJECT)
 				.bearerAuth(restService.getAuthToken().getToken()).body(subjectDto)
+				.post().build();
+	}
+	
+	public SubjectDto postSubject2() {
+		return	subjectDto2 = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
+				.path(SubjectController.SUBJECT)
+				.bearerAuth(restService.getAuthToken().getToken()).body(subjectDto2)
 				.post().build();
 	}
 	

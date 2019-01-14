@@ -29,6 +29,8 @@ public class GradeRestService {
 
 	private GradeDto gradeDto;
 	
+	//private GradeDto gradeDto2;
+	
 	private List<GradeDto> listGradeDto;
 
 	private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
@@ -52,11 +54,12 @@ public class GradeRestService {
 		this.listGradeDto = listGradeDto;
 	}
 
-	public void createGradeDto() {
+	public void createGradesDto() {
 		logger.warn(
-				"*********************************CREAING_GRADE**************************************************");
-		subjectRestService.createSubjectDto();
+				"*********************************CREAING_GRADES**************************************************");
+		subjectRestService.createSubjectsDto();
 		subjectRestService.postSubject();
+		//subjectRestService.postSubject2();
 
 		this.gradeDto = new GradeDto();
 		this.gradeDto.setType("prueba");

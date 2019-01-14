@@ -56,10 +56,7 @@ public class GradeService {
 		return Optional.empty();
 	}
 	
-	// Exceptions*********************
-	public boolean existsById(String id) {
-		return gradeRepository.existsById(id);
-	}
+
 
 	// CRUD******************************
 	public Optional<List<GradeDto>> getFullGrades() {
@@ -103,6 +100,31 @@ public class GradeService {
 			return Optional.of(new GradeDto(grade.get()));
 		}
 		return Optional.empty();
+	}
+	
+	// Exceptions*********************
+	public boolean existsById(String id) {
+		return gradeRepository.existsById(id);
+	}
+
+	public boolean isIdNull(@Valid GradeDto gradeDto) {
+		return gradeDto.getId() == null;
+	}
+
+	public boolean isTitleNull(@Valid GradeDto gradeDto) {
+		return gradeDto.getTitle() == null;
+	}
+
+	public boolean isTypeNull(@Valid GradeDto gradeDto) {
+		return gradeDto.getType() == null;
+	}
+
+	public boolean isStudentNull(@Valid GradeDto gradeDto) {
+		return gradeDto.getStudent() == null;
+	}
+
+	public boolean isSubjectNull(@Valid GradeDto gradeDto) {
+		return gradeDto.getSubject() == null;
 	}
 
 }

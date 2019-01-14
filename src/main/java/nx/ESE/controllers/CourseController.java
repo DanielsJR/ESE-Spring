@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import nx.ESE.dtos.CourseDto;
 import nx.ESE.exceptions.DocumentNotFoundException;
 import nx.ESE.exceptions.FieldAlreadyExistException;
+import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.services.CourseService;
@@ -56,7 +57,7 @@ public class CourseController {
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(TEACHER_NAME + PATH_TEACHER_NAME + PATH_YEAR)
-	public CourseDto getCourseByChiefTeacherName(@PathVariable String teacherName, @PathVariable int year)
+	public CourseDto getCourseByChiefTeacherName(@PathVariable String teacherName, @PathVariable String year)
 			throws DocumentNotFoundException, FieldNotFoundException {
 
 		if (!this.userService.existsUserUsername(teacherName))
@@ -68,7 +69,7 @@ public class CourseController {
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(NAME + PATH_NAME + PATH_YEAR)
-	public CourseDto getCourseByName(@PathVariable String name, @PathVariable int year)
+	public CourseDto getCourseByName(@PathVariable String name, @PathVariable String year)
 			throws DocumentNotFoundException {
 
 		return this.courseService.getCourseByName(name, year)
@@ -77,7 +78,7 @@ public class CourseController {
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(YEAR + PATH_YEAR)
-	public List<CourseDto> getFullCoursesByYear(@PathVariable int year) throws DocumentNotFoundException {
+	public List<CourseDto> getFullCoursesByYear(@PathVariable String year) throws DocumentNotFoundException {
 		return this.courseService.getFullCoursesByYear(year).orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 	
@@ -90,7 +91,10 @@ public class CourseController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) throws FieldNullException, FieldAlreadyExistException {
+	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) throws FieldNullException, FieldAlreadyExistException, FieldInvalidException {
+		
+		if (!this.courseService.isIdNull(courseDto))
+			throw new FieldInvalidException("Id");
 		
 		if (this.courseService.isNameNull(courseDto))
 			throw new FieldNullException("Name");
@@ -106,9 +110,8 @@ public class CourseController {
 		
 		if (this.courseService.chiefTeacherRepeated(courseDto))
 			throw new FieldAlreadyExistException("Chief Teacher");
-		
-		
-		if (this.courseService.studentsRepeated(courseDto.getStudents()))
+			
+		if (this.courseService.studentsRepeated(courseDto))
 			throw new FieldAlreadyExistException("Student");
 		
 		return this.courseService.createCourse(courseDto);
@@ -117,7 +120,25 @@ public class CourseController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PutMapping(PATH_ID)
 	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
-			throws FieldNotFoundException {
+			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException {
+		
+		if (this.courseService.isNameNull(courseDto))
+			throw new FieldNullException("Name");
+		
+		if (this.courseService.isChiefTeacherNull(courseDto))
+			throw new FieldNullException("Chief Teacher");
+		
+		if (this.courseService.isYearNull(courseDto))
+			throw new FieldNullException("Year");
+		
+		if (this.courseService.nameRepeated(courseDto))
+			throw new FieldAlreadyExistException("Name");
+		
+		if (this.courseService.chiefTeacherRepeated(courseDto))
+			throw new FieldAlreadyExistException("Chief Teacher");
+			
+		if (this.courseService.studentsRepeated(courseDto))
+			throw new FieldAlreadyExistException("Student");
 
 		return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}

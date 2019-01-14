@@ -213,7 +213,7 @@ public class UserRestService {
 		this.studentDto2Password = studentDto2Password;
 	}
 
-	public void createUserDtos() {
+	public void createUsersDto() {
 		logger.warn(
 				"*********************************CREATING_USERS**************************************************");
 		

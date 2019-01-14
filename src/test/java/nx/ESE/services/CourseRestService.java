@@ -21,6 +21,8 @@ public class CourseRestService {
 
 	private CourseDto courseDto;
 	
+	private CourseDto courseDto2;
+	
 	private List<CourseDto> listCoursesDto;
 
 	@Autowired
@@ -38,6 +40,14 @@ public class CourseRestService {
 	
 	
 
+	public CourseDto getCourseDto2() {
+		return courseDto2;
+	}
+
+	public void setCourseDto2(CourseDto courseDto2) {
+		this.courseDto2 = courseDto2;
+	}
+
 	public List<CourseDto> getListCoursesDto() {
 		return listCoursesDto;
 	}
@@ -46,26 +56,36 @@ public class CourseRestService {
 		this.listCoursesDto = listCoursesDto;
 	}
 
-	public void createCourseDto() {
+	public void createCoursesDto() {
 		logger.warn(
-				"*********************************CREATING_COURSE**************************************************");
+				"*********************************CREATING_COURSES**************************************************");
 		
 		restService.loginManager();
 
-		userRestService.createUserDtos();
+		userRestService.createUsersDto();
 		userRestService.postTeacher();
+		userRestService.postTeacher2();
+		
 		userRestService.postStudent();
 		userRestService.postStudent2();
 
 		List<UserDto> students = new ArrayList<>();
 		students.add(userRestService.getStudentDto());
-		students.add(userRestService.getStudentDto2());
+		
+		List<UserDto> students2 = new ArrayList<>();
+		students2.add(userRestService.getStudentDto2());
 
 		this.courseDto = new CourseDto();
 		this.courseDto.setName(CourseName.PRIMERO_H);
-		this.courseDto.setYear(2018);
+		this.courseDto.setYear("2018");
 		this.courseDto.setChiefTeacher(userRestService.getTeacherDto());
 		this.courseDto.setStudents(students);
+		
+		this.courseDto2 = new CourseDto();
+		this.courseDto2.setName(CourseName.PRIMERO_G);
+		this.courseDto2.setYear("2018");
+		this.courseDto2.setChiefTeacher(userRestService.getTeacherDto2());
+		this.courseDto2.setStudents(students2);
 		
 		logger.warn(
 				"***********************************************************************************************");
@@ -84,6 +104,14 @@ public class CourseRestService {
 			} catch (Exception e) {
 				logger.warn("error: " + e.getMessage() + "courseDto: nothing to delete");
 			}
+			
+			try {
+				this.restService.restBuilder().path(CourseController.COURSE).path(CourseController.PATH_ID)
+						.expand(this.courseDto2.getId()).bearerAuth(restService.getAuthToken().getToken()).delete()
+						.build();
+			} catch (Exception e) {
+				logger.warn("error: " + e.getMessage() + "courseDto2: nothing to delete");
+			}
 
 			this.userRestService.deleteTeachers();
 			this.userRestService.deleteStudents();
@@ -99,6 +127,12 @@ public class CourseRestService {
 	public void postCourse() {
 		courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
 				.path(CourseController.COURSE).bearerAuth(restService.getAuthToken().getToken()).body(courseDto).post()
+				.build();
+	}
+	
+	public void postCourse2() {
+		courseDto2 = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
+				.path(CourseController.COURSE).bearerAuth(restService.getAuthToken().getToken()).body(courseDto2).post()
 				.build();
 	}
 
@@ -119,7 +153,7 @@ public class CourseRestService {
 	}
 
 	// GET********************************
-	public CourseDto getCourseByName(CourseName name, int year) {
+	public CourseDto getCourseByName(CourseName name, String year) {
 		return courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
 				.path(CourseController.COURSE).path(CourseController.NAME).path(CourseController.PATH_NAME).expand(name)
 				.path(CourseController.PATH_YEAR).expand(year).bearerAuth(restService.getAuthToken().getToken()).get()
@@ -136,7 +170,7 @@ public class CourseRestService {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<CourseDto> getFullCoursesByYear(int year) {
+	public List<CourseDto> getFullCoursesByYear(String year) {
 	    return  listCoursesDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
 				.path(CourseController.COURSE)
 				.path(CourseController.YEAR).path(CourseController.PATH_YEAR).expand(year)

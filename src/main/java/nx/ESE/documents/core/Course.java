@@ -29,7 +29,7 @@ public class Course {
 	@DBRef(lazy = true)
 	private List<User> students;
 
-	private int year;
+	private String year;
 	
 	@CreatedBy
 	private String createdBy;
@@ -48,7 +48,7 @@ public class Course {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Course(CourseName name, User chiefTeacher, List<User> students, int year) {
+	public Course(CourseName name, User chiefTeacher, List<User> students, String year) {
 		super();
 		this.name = name;
 		this.chiefTeacher = chiefTeacher;
@@ -81,11 +81,11 @@ public class Course {
 	}
 
 
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 
@@ -111,13 +111,13 @@ public class Course {
 		return lastModifiedDate;
 	}
 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + year;
+		result = prime * result + ((year == null) ? 0 : year.hashCode());
 		return result;
 	}
 
@@ -130,14 +130,12 @@ public class Course {
 		if (getClass() != obj.getClass())
 			return false;
 		Course other = (Course) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
 		if (name != other.name)
 			return false;
-		if (year != other.year)
+		if (year == null) {
+			if (other.year != null)
+				return false;
+		} else if (!year.equals(other.year))
 			return false;
 		return true;
 	}

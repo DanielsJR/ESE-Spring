@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
 import nx.ESE.documents.core.Subject;
+import nx.ESE.dtos.CourseDto;
 import nx.ESE.dtos.SubjectDto;
 import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.SubjectRepository;
@@ -51,10 +52,7 @@ public class SubjectService {
 		return Optional.empty();
 	}
 
-	// Exceptions*********************
-	public boolean existsById(String id) {
-		return subjectRepository.existsById(id);
-	}
+
 
 	// CRUD******************************
 	public Optional<List<SubjectDto>> getFullSubjects() {
@@ -100,6 +98,37 @@ public class SubjectService {
 			return Optional.of(new SubjectDto(subject.get()));
 		}
 		return Optional.empty();
+	}
+	
+	// Exceptions*********************
+	public boolean existsById(String id) {
+		return subjectRepository.existsById(id);
+	}
+
+	public boolean isIdNull(@Valid SubjectDto subjectDto) {
+		return subjectDto.getId() == null;
+	}
+
+	public boolean isNameNull(@Valid SubjectDto subjectDto) {
+		return subjectDto.getName() == null;
+	}
+
+	public boolean isTeacherNull(@Valid SubjectDto subjectDto) {
+		return subjectDto.getTeacher() == null;
+	}
+
+	public boolean isCourseNull(@Valid SubjectDto subjectDto) {
+		return subjectDto.getCourse() == null;
+	}
+	
+	
+	public boolean isSubjectRepeated(@Valid SubjectDto subjectDto) {
+		if (this.isNameNull(subjectDto) || this.isCourseNull(subjectDto)) {
+			return false;
+		}
+		SubjectDto subjectDB = this.subjectRepository.findByNameAndCourse(subjectDto.getName().toString(),
+				subjectDto.getCourse().getId());
+		return subjectDB != null && !subjectDB.getId().equals(subjectDto.getId());
 	}
 
 }

@@ -41,7 +41,7 @@ public class UserTeacherControllerFuntionalTesting {
 
 	@Before
 	public void before() {
-		userRestService.createUserDtos();
+		userRestService.createUsersDto();
 	}
 
 	@After

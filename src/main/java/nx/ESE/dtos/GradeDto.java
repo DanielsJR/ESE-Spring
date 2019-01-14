@@ -4,6 +4,7 @@ package nx.ESE.dtos;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -19,6 +20,7 @@ public class GradeDto {
 
 	private SubjectDto subject;
 
+	//@NotNull
 	private String title;
 
 	private String type;

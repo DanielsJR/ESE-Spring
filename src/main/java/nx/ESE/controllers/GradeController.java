@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.dtos.GradeDto;
 import nx.ESE.exceptions.DocumentNotFoundException;
+import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
+import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.services.GradeService;
 
 
@@ -52,14 +54,42 @@ public class GradeController {
 	
 	@PreAuthorize("hasRole('TEACHER')")
 	@PostMapping()
-	public GradeDto createGrade(@Valid @RequestBody GradeDto gradeDto) throws FieldNotFoundException {
+	public GradeDto createGrade(@Valid @RequestBody GradeDto gradeDto) throws FieldNotFoundException, FieldInvalidException, FieldNullException {
+		
+		if (!this.gradeService.isIdNull(gradeDto))
+			throw new FieldInvalidException("Id");
+		
+		if (this.gradeService.isTitleNull(gradeDto))
+			throw new FieldNullException("Title");
+		
+		if (this.gradeService.isTypeNull(gradeDto))
+			throw new FieldNullException("Type");
+		
+		if (this.gradeService.isStudentNull(gradeDto))
+			throw new FieldNullException("Student");
+		
+		if (this.gradeService.isSubjectNull(gradeDto))
+			throw new FieldNullException("Subject");
+		
 		return this.gradeService.createGrade(gradeDto);
 	}
 
 	@PreAuthorize("hasRole('TEACHER')")
 	@PutMapping(PATH_ID)
 	public GradeDto modifyGrade(@PathVariable String id, @Valid @RequestBody GradeDto gradeDto)
-			throws FieldNotFoundException {
+			throws FieldNotFoundException, FieldNullException {
+		
+		if (this.gradeService.isTitleNull(gradeDto))
+			throw new FieldNullException("Title");
+		
+		if (this.gradeService.isTypeNull(gradeDto))
+			throw new FieldNullException("Type");
+		
+		if (this.gradeService.isStudentNull(gradeDto))
+			throw new FieldNullException("Student");
+		
+		if (this.gradeService.isSubjectNull(gradeDto))
+			throw new FieldNullException("Subject");
 
 		return this.gradeService.modifyGrade(id, gradeDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}

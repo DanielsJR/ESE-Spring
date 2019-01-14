@@ -49,10 +49,8 @@ public class CourseService {
 				.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 	}
 
-	// Exceptions*********************
-	public boolean existCourseById(String id) {
-		return courseRepository.existsById(id);
-	}
+
+
 
 	// CRUD******************************
 	public Optional<CourseDto> getCourseById(String id) {
@@ -70,7 +68,7 @@ public class CourseService {
 		return Optional.of(list);
 	}
 
-	public Optional<List<CourseDto>> getFullCoursesByYear(int year) {
+	public Optional<List<CourseDto>> getFullCoursesByYear(String year) {
 		List<CourseDto> list = courseRepository.findByYear(year).stream().parallel()
 				.sorted((c1, c2) -> c1.getName().toString().compareTo(c2.getName().toString()))
 				.collect(Collectors.toList());
@@ -104,14 +102,14 @@ public class CourseService {
 
 	}
 
-	public Optional<CourseDto> getCourseByName(String name, int year) {
+	public Optional<CourseDto> getCourseByName(String name, String year) {
 		CourseDto courseDto = courseRepository.findByNameAndYear(name, year);
 		if (courseDto != null)
 			return Optional.of(courseDto);
 		return Optional.empty();
 	}
 
-	public Optional<CourseDto> getCourseByChiefTeacherName(String username, int year) {
+	public Optional<CourseDto> getCourseByChiefTeacherName(String username, String year) {
 		CourseDto course = courseRepository.findByChiefTeacherAndYear(userRepository.findByUsername(username).getId(),
 				year);
 		if (course != null)
@@ -119,7 +117,7 @@ public class CourseService {
 		return Optional.empty();
 	}
 
-	public Optional<CourseDto> getCourseByChiefTeacherNameQdsl(String username, int year) {
+	public Optional<CourseDto> getCourseByChiefTeacherNameQdsl(String username, String year) {
 		QCourse qCourse = QCourse.course;
 		Predicate predicate = qCourse.chiefTeacher.eq(userRepository.findByUsername(username))
 				.and(qCourse.year.eq(year));
@@ -130,6 +128,14 @@ public class CourseService {
 	}
 
 	// Exceptions*********************
+	
+	public boolean existCourseById(String id) {
+		return courseRepository.existsById(id);
+	}
+
+	public boolean isIdNull(@Valid CourseDto courseDto) {
+		return courseDto.getId() == null;
+	}
 
 	public boolean isNameNull(@Valid CourseDto courseDto) {
 		return courseDto.getName() == null;
@@ -144,14 +150,14 @@ public class CourseService {
 	}
 
 	public boolean isYearNull(@Valid CourseDto courseDto) {
-		return courseDto.getYear() == 0;
+		return courseDto.getYear() == null;
 	}
 
 	public boolean nameRepeated(@Valid CourseDto courseDto) {
-		if (this.isNameNull(courseDto)) {
+		if (this.isNameNull(courseDto) || this.isYearNull(courseDto)) {
 			return false;
 		}
-		CourseDto courseDB = this.courseRepository.findByNameAndYear(courseDto.getName().getCode(),
+		CourseDto courseDB = this.courseRepository.findByNameAndYear(courseDto.getName().toString(),
 				courseDto.getYear());
 		return courseDB != null && !courseDB.getId().equals(courseDto.getId());
 	}
@@ -165,44 +171,38 @@ public class CourseService {
 		return courseDB != null && !courseDB.getId().equals(courseDto.getId());
 	}
 
-	public boolean chiefStudentRepeated(@Valid CourseDto courseDto) {
-		if (this.isListStudentsNull(courseDto)) {
-			return false;
-		}
-		CourseDto courseDB = this.courseRepository.findByChiefTeacherAndYear(courseDto.getChiefTeacher().getId(),
-				courseDto.getYear());
-		return courseDB != null && !courseDB.getId().equals(courseDto.getId());
-	}
 
-	private boolean isStudentInACourse(UserDto student, List<User> students) {
+	private boolean isStudentInACourse(UserDto student, Course course) {
 		Boolean[] found = { false };
-		students.stream().forEach(s -> found[0] = (s.getId() == student.getId()) ? true : false);
+		course.getStudents().stream().forEach(s -> found[0] = (s.getId().equals(student.getId())) ? true : false);
+		
+		System.out.println("----------------------------------------isStudentInACourse "+ found[0]);
 		return found[0];
 	}
 
-	private boolean isStudentInCourses(UserDto student, List<Course> courses) {
+	private boolean isStudentInCourses(UserDto student, String courseIdExclude, List<Course> courses) {
 		Boolean[] found = { false };
-		courses.stream().forEach(c -> {
-			if (this.isStudentInACourse(student, c.getStudents()))
-				found[0] = true;
-
+		courses.stream().forEach(c -> { 
+			if(this.isStudentInACourse(student, c) && !c.getId().equals(courseIdExclude)) found[0] = true;
+		
 		});
+		System.out.println("----------------------------------------isStudentInCourses "+ found[0]);
 		return found[0];
 
 	}
 
-	public boolean studentsRepeated(List<UserDto> students) {
+	public boolean studentsRepeated(CourseDto course) {
 		Boolean[] found = { false };
 		List<Course> courses;
 		if (!courseRepository.findAll().isEmpty()) {
 			courses = courseRepository.findAll();
-			students.stream().forEach(s -> {
-				if (this.isStudentInCourses(s, courses))
-					found[0] = true;
-			});
+			course.getStudents().stream().forEach(s -> found[0] = (this.isStudentInCourses(s ,course.getId(), courses)));
 		}
+		System.out.println("----------------------------------------studentsRepeated "+ found[0]);
 		return found[0];
 
 	}
+	
+
 
 }
