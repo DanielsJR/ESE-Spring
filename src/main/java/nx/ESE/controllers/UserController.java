@@ -230,7 +230,7 @@ public class UserController {
 			throws ForbiddenException, FieldAlreadyExistException, FieldNullException {
 		
 		if (this.userService.isPassNull(userDto))
-			throw new FieldNullException("Password");
+		throw new FieldNullException("Password");
 
 		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");
@@ -353,7 +353,7 @@ public class UserController {
 			throws ForbiddenException, FieldAlreadyExistException, FieldNullException {
 		
 		if (this.userService.isPassNull(userDto))
-			throw new FieldNullException("Password");
+		throw new FieldNullException("Password");
 
 		if (this.userService.dniRepeated(userDto))
 			throw new FieldAlreadyExistException("RUT");

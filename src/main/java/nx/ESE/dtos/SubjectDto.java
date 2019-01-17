@@ -3,6 +3,8 @@ package nx.ESE.dtos;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import nx.ESE.documents.core.Subject;
@@ -12,10 +14,13 @@ public class SubjectDto {
 
 	private String id;
 
+	@NotNull
 	private SubjectName name;
 
+	@NotNull
 	private UserDto teacher;
 
+	@NotNull
 	private CourseDto course;
 	
 	private String createdBy;

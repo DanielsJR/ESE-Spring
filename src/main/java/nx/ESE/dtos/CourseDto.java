@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import nx.ESE.documents.User;
@@ -15,12 +17,15 @@ public class CourseDto {
 
 	private String id;
 
+	@NotNull
 	private CourseName name;
 
+	@NotNull
 	private UserDto chiefTeacher;
 
 	private List<UserDto> students;
 
+	@NotNull
 	private String year;
 	
 	private String createdBy;

@@ -63,17 +63,8 @@ public class SubjectController {
 		if (!this.subjectService.isIdNull(subjectDto))
 			throw new FieldInvalidException("Id");
 		
-		if (this.subjectService.isNameNull(subjectDto))
-			throw new FieldNullException("Name");
-		
-		if (this.subjectService.isTeacherNull(subjectDto))
-			throw new FieldNullException("teacher");
-		
-		if (this.subjectService.isCourseNull(subjectDto))
-			throw new FieldNullException("course");
-		
 		if (this.subjectService.isSubjectRepeated(subjectDto))
-			throw new FieldAlreadyExistException("Subject");
+			throw new FieldAlreadyExistException("Asignatura");
 		
 		return this.subjectService.createSubject(subjectDto);
 	}
@@ -83,17 +74,8 @@ public class SubjectController {
 	public SubjectDto modifySubject(@PathVariable String id, @Valid @RequestBody SubjectDto subjectDto)
 			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException {
 		
-		if (this.subjectService.isNameNull(subjectDto))
-			throw new FieldNullException("Name");
-		
-		if (this.subjectService.isTeacherNull(subjectDto))
-			throw new FieldNullException("teacher");
-		
-		if (this.subjectService.isCourseNull(subjectDto))
-			throw new FieldNullException("course");
-		
 		if (this.subjectService.isSubjectRepeated(subjectDto))
-			throw new FieldAlreadyExistException("Subject");
+			throw new FieldAlreadyExistException("Asignatura");
 
 		return this.subjectService.modifySubject(id, subjectDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}

@@ -31,8 +31,10 @@ public class UserDto {
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.PASSWORD)
 	private String password;
 
+	@NotNull
 	private String firstName;
 
+	@NotNull
 	private String lastName;
 
 	@RUTValid
@@ -98,8 +100,9 @@ public class UserDto {
 
 	}
 
+	//test
 	public UserDto(String usernamePass) {
-		this(null, usernamePass, usernamePass + "@ESE1", null, null, null, null, null, null, null, null, null, null,
+		this(null, usernamePass, usernamePass + "@ESE1", usernamePass, usernamePass, null, null, null, null, null, null, null, null,
 				null, true, null);
 	}
 
@@ -313,5 +316,32 @@ public class UserDto {
 				+ createdBy + ", createdDate=" + cDate + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
 				+ lModified + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserDto other = (UserDto) obj;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
+	
+	
 
 }

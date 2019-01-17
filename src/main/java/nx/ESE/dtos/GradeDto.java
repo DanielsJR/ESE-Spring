@@ -14,15 +14,18 @@ public class GradeDto {
 
 	private String id;
 
+	@NotNull
 	private UserDto student;
 
 	private double grade;
 
+	@NotNull
 	private SubjectDto subject;
 
-	//@NotNull
+	@NotNull
 	private String title;
 
+	@NotNull
 	private String type;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")

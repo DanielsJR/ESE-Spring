@@ -59,18 +59,6 @@ public class GradeController {
 		if (!this.gradeService.isIdNull(gradeDto))
 			throw new FieldInvalidException("Id");
 		
-		if (this.gradeService.isTitleNull(gradeDto))
-			throw new FieldNullException("Title");
-		
-		if (this.gradeService.isTypeNull(gradeDto))
-			throw new FieldNullException("Type");
-		
-		if (this.gradeService.isStudentNull(gradeDto))
-			throw new FieldNullException("Student");
-		
-		if (this.gradeService.isSubjectNull(gradeDto))
-			throw new FieldNullException("Subject");
-		
 		return this.gradeService.createGrade(gradeDto);
 	}
 
@@ -79,18 +67,6 @@ public class GradeController {
 	public GradeDto modifyGrade(@PathVariable String id, @Valid @RequestBody GradeDto gradeDto)
 			throws FieldNotFoundException, FieldNullException {
 		
-		if (this.gradeService.isTitleNull(gradeDto))
-			throw new FieldNullException("Title");
-		
-		if (this.gradeService.isTypeNull(gradeDto))
-			throw new FieldNullException("Type");
-		
-		if (this.gradeService.isStudentNull(gradeDto))
-			throw new FieldNullException("Student");
-		
-		if (this.gradeService.isSubjectNull(gradeDto))
-			throw new FieldNullException("Subject");
-
 		return this.gradeService.modifyGrade(id, gradeDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 

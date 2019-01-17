@@ -96,23 +96,14 @@ public class CourseController {
 		if (!this.courseService.isIdNull(courseDto))
 			throw new FieldInvalidException("Id");
 		
-		if (this.courseService.isNameNull(courseDto))
-			throw new FieldNullException("Name");
-		
-		if (this.courseService.isChiefTeacherNull(courseDto))
-			throw new FieldNullException("Chief Teacher");
-		
-		if (this.courseService.isYearNull(courseDto))
-			throw new FieldNullException("Year");
-		
 		if (this.courseService.nameRepeated(courseDto))
-			throw new FieldAlreadyExistException("Name");
+			throw new FieldAlreadyExistException("Curso");
 		
 		if (this.courseService.chiefTeacherRepeated(courseDto))
-			throw new FieldAlreadyExistException("Chief Teacher");
+			throw new FieldAlreadyExistException("Profesor Jefe");
 			
 		if (this.courseService.studentsRepeated(courseDto))
-			throw new FieldAlreadyExistException("Student");
+			throw new FieldAlreadyExistException("Estudiante");
 		
 		return this.courseService.createCourse(courseDto);
 	}
@@ -122,23 +113,14 @@ public class CourseController {
 	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
 			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException {
 		
-		if (this.courseService.isNameNull(courseDto))
-			throw new FieldNullException("Name");
-		
-		if (this.courseService.isChiefTeacherNull(courseDto))
-			throw new FieldNullException("Chief Teacher");
-		
-		if (this.courseService.isYearNull(courseDto))
-			throw new FieldNullException("Year");
-		
 		if (this.courseService.nameRepeated(courseDto))
-			throw new FieldAlreadyExistException("Name");
+			throw new FieldAlreadyExistException("Curso");
 		
 		if (this.courseService.chiefTeacherRepeated(courseDto))
-			throw new FieldAlreadyExistException("Chief Teacher");
+			throw new FieldAlreadyExistException("Profesor Jefe");
 			
 		if (this.courseService.studentsRepeated(courseDto))
-			throw new FieldAlreadyExistException("Student");
+			throw new FieldAlreadyExistException("Estudiante");
 
 		return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
