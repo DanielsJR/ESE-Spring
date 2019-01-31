@@ -1,92 +1,62 @@
 package nx.ESE.documents.core;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 public class CorrespondItem {
 
-	@Id
-	private int id;
+	private String item;
 	
-	private String value1;
-	
-	private String value2;
+	private String correspond;
 
-	@CreatedBy
-	private String createdBy;
-
-	@CreatedDate
-	private Date createdDate;
-
-	@LastModifiedBy
-	private String lastModifiedUser;
-
-	@LastModifiedDate
-	private Date lastModifiedDate;
 
 	public CorrespondItem() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CorrespondItem(String value1, String value2) {
+
+	public CorrespondItem(String item, String correspond) {
 		super();
-		this.value1 = value1;
-		this.value2 = value2;
+		this.item = item;
+		this.correspond = correspond;
 	}
 
-	public String getValue1() {
-		return value1;
+
+	public String getItem() {
+		return item;
 	}
 
-	public void setValue1(String value1) {
-		this.value1 = value1;
+
+	public void setItem(String item) {
+		this.item = item;
 	}
 
-	public String getValue2() {
-		return value2;
+
+	public String getCorrespond() {
+		return correspond;
 	}
 
-	public void setValue2(String value2) {
-		this.value2 = value2;
+
+	public void setCorrespond(String correspond) {
+		this.correspond = correspond;
 	}
 
-	public int getId() {
-		return id;
-	}
 
 	@Override
 	public String toString() {
-
-		String cDate = "null";
-		if (this.createdDate != null)
-			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
-
-		String lModified = "null";
-		if (this.lastModifiedDate != null)
-			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-
-		return "CorrespondItem [id=" + id + ", value1=" + value1 + ", value2=" + value2 + ", createdBy=" + createdBy
-				+ ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate="
-				+ lModified + "]";
+		return "CorrespondItem [item=" + item + ", correspond=" + correspond + "]";
 	}
+
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + ((correspond == null) ? 0 : correspond.hashCode());
+		result = prime * result + ((item == null) ? 0 : item.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -97,9 +67,19 @@ public class CorrespondItem {
 		if (getClass() != obj.getClass())
 			return false;
 		CorrespondItem other = (CorrespondItem) obj;
-		if (id != other.id)
+		if (correspond == null) {
+			if (other.correspond != null)
+				return false;
+		} else if (!correspond.equals(other.correspond))
+			return false;
+		if (item == null) {
+			if (other.item != null)
+				return false;
+		} else if (!item.equals(other.item))
 			return false;
 		return true;
 	}
+
+
 
 }

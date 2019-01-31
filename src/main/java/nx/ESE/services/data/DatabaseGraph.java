@@ -6,6 +6,8 @@ import nx.ESE.documents.Preferences;
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
 import nx.ESE.documents.core.Grade;
+import nx.ESE.documents.core.Quiz;
+import nx.ESE.documents.core.QuizStudent;
 import nx.ESE.documents.core.Subject;
 
 public class DatabaseGraph {
@@ -19,6 +21,10 @@ public class DatabaseGraph {
 	private List<Subject> subjectsList;
 	
 	private List<Grade> gradesList;
+	
+	private List<Quiz> quizesList;
+	
+	private List<QuizStudent> quizesStudentList;
 
 	public DatabaseGraph() {
 		// Empty for framework
@@ -63,6 +69,24 @@ public class DatabaseGraph {
 	public void setGradesList(List<Grade> gradesList) {
 		this.gradesList = gradesList;
 	}
+
+	public List<Quiz> getQuizesList() {
+		return quizesList;
+	}
+
+	public void setQuizesList(List<Quiz> quizesList) {
+		this.quizesList = quizesList;
+	}
+
+	public List<QuizStudent> getQuizesStudentList() {
+		return quizesStudentList;
+	}
+
+	public void setQuizesStudentList(List<QuizStudent> quizesStudentList) {
+		this.quizesStudentList = quizesStudentList;
+	}
+	
+	
 	
 	
 

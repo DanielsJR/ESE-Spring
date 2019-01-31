@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import nx.ESE.documents.LoginUser;
 import nx.ESE.services.AuthenticationService;
 
-//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(AuthenticationController.TOKEN)
 public class AuthenticationController {

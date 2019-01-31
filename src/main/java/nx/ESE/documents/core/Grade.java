@@ -26,6 +26,9 @@ public class Grade {
 	@DBRef
 	private User student;
 
+	@DBRef
+	private QuizStudent quizStudent;
+
 	private double grade;
 
 	@DBRef
@@ -50,13 +53,24 @@ public class Grade {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Grade(User student, double grade, Subject subject, String title, String type, Date date) {
+	public Grade(String title, String type, QuizStudent quizStudent, Date date) {
 		super();
+		this.title = title;
+		this.type = type;
+		this.student = quizStudent.getStudent();
+		this.grade = quizStudent.getGrade();
+		this.quizStudent = quizStudent;
+		this.subject = quizStudent.getSubject();
+		this.date = date;
+	}
+
+	public Grade(String title, String type, User student, double grade, Subject subject, Date date) {
+		super();
+		this.title = title;
+		this.type = type;
 		this.student = student;
 		this.grade = grade;
 		this.subject = subject;
-		this.title = title;
-		this.type = type;
 		this.date = date;
 	}
 
@@ -108,6 +122,14 @@ public class Grade {
 		this.type = type;
 	}
 
+	public QuizStudent getQuizStudent() {
+		return quizStudent;
+	}
+
+	public void setQuizStudent(QuizStudent quizStudent) {
+		this.quizStudent = quizStudent;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -140,8 +162,9 @@ public class Grade {
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
 
 		return "Grade [id=" + id + ", title=" + title + ", type=" + type + ", student=" + student + ", subject="
-				+ subject + ", grade=" + grade + ", date=" + date + ", createdBy=" + createdBy + ", createdDate="
-				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
+				+ subject + ", grade=" + grade + ", quizStudent=" + quizStudent + ", date=" + date + ", createdBy="
+				+ createdBy + ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser
+				+ ", lastModifiedDate=" + lModified + "]";
 
 	}
 

@@ -28,6 +28,8 @@ import nx.ESE.documents.User;
 import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.GradeRepository;
 import nx.ESE.repositories.PreferencesRepository;
+import nx.ESE.repositories.QuizRepository;
+import nx.ESE.repositories.QuizStudentRepository;
 import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
 import nx.ESE.utils.UtilBase64Image;
@@ -58,6 +60,12 @@ public class DatabaseSeederService {
 	
 	@Autowired
 	private GradeRepository gradeRepository;
+	
+	@Autowired
+	private QuizRepository quizRepository;
+	
+	@Autowired
+	private QuizStudentRepository quizStudentRepository;
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -100,6 +108,15 @@ public class DatabaseSeederService {
 
 		if (dbGraph.getSubjectsList() != null) {
 			this.subjectRepository.saveAll(dbGraph.getSubjectsList());
+		}
+	
+		
+		if (dbGraph.getQuizesList() != null) {
+			this.quizRepository.saveAll(dbGraph.getQuizesList());
+		}
+		
+		if (dbGraph.getQuizesStudentList() != null) {
+			this.quizStudentRepository.saveAll(dbGraph.getQuizesStudentList());
 		}
 		
 		if (dbGraph.getGradesList() != null) {

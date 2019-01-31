@@ -1,34 +1,37 @@
-package nx.ESE.documents.core;
+package nx.ESE.dtos;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.validation.constraints.NotNull;
 
-import nx.ESE.documents.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Document
-public class Quiz {
+import nx.ESE.documents.core.CorrespondItem;
+import nx.ESE.documents.core.IncompleteTextItem;
+import nx.ESE.documents.core.MultipleSelectionItem;
+import nx.ESE.documents.core.Quiz;
+import nx.ESE.documents.core.SubjectName;
+import nx.ESE.documents.core.TrueFalseItem;
 
-	@Id
+public class QuizDto {
+
 	private String id;
 
+	@NotNull
 	private String title;
 
 	private String description;
 
-	@DBRef
-	private User author;
+	@NotNull
+	private UserDto author;
 
+	@NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date date;
 
+	@NotNull
 	private SubjectName subjectName;
 
 	private List<CorrespondItem> correspondItems;
@@ -39,17 +42,56 @@ public class Quiz {
 
 	private List<MultipleSelectionItem> multipleSelectionItems;
 
-	@CreatedBy
 	private String createdBy;
 
-	@CreatedDate
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
-	@LastModifiedBy
 	private String lastModifiedUser;
 
-	@LastModifiedDate
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
+
+	public QuizDto() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	//input
+	public QuizDto(String id, String title, String description, UserDto author, Date date, SubjectName subjectName,
+			List<CorrespondItem> correspondItems, List<IncompleteTextItem> incompleteTextItems,
+			List<TrueFalseItem> trueFalseItems, List<MultipleSelectionItem> multipleSelectionItems) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.author = author;
+		this.date = date;
+		this.subjectName = subjectName;
+		this.correspondItems = correspondItems;
+		this.incompleteTextItems = incompleteTextItems;
+		this.trueFalseItems = trueFalseItems;
+		this.multipleSelectionItems = multipleSelectionItems;
+
+	}
+
+	//output
+	public QuizDto(Quiz quiz) {
+		this.id = quiz.getId();
+		this.title = quiz.getTitle();
+		this.description = quiz.getDescription();
+		this.author = new UserDto(quiz.getAuthor());
+		this.date = quiz.getDate();
+		this.subjectName = quiz.getSubjectName();
+		this.correspondItems = quiz.getCorrespondItems();
+		this.incompleteTextItems = quiz.getIncompleteTextItems();
+		this.trueFalseItems = quiz.getTrueFalseItems();
+		this.multipleSelectionItems = quiz.getMultipleSelectionItems();
+		this.createdBy = quiz.getCreatedBy();
+		this.createdDate = quiz.getCreatedDate();
+		this.lastModifiedUser = quiz.getLastModifiedUser();
+		this.lastModifiedDate = quiz.getLastModifiedDate();
+	}
 
 	public String getTitle() {
 		return title;
@@ -67,11 +109,11 @@ public class Quiz {
 		this.description = description;
 	}
 
-	public User getAuthor() {
+	public UserDto getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(User author) {
+	public void setAuthor(UserDto author) {
 		this.author = author;
 	}
 
@@ -145,7 +187,10 @@ public class Quiz {
 
 	@Override
 	public String toString() {
-
+		String fDate = "null";
+		if (this.date != null)
+			fDate = new SimpleDateFormat("dd-MMM-yyyy").format(date.getTime());
+		
 		String cDate = "null";
 		if (this.createdDate != null)
 			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
@@ -153,39 +198,15 @@ public class Quiz {
 		String lModified = "null";
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-
-		return "Quiz [id=" + id + ", title=" + title + ", description=" + description + ", author=" + author + ", date="
-				+ date + ", subjectName=" + subjectName + ", correspondItems=" + correspondItems
+		
+		return "QuizDto [id=" + id + ", title=" + title + ", description=" + description + ", author=" + author
+				+ ", date=" + fDate + ", subjectName=" + subjectName + ", correspondItems=" + correspondItems
 				+ ", incompleteTextItems=" + incompleteTextItems + ", trueFalseItems=" + trueFalseItems
 				+ ", multipleSelectionItems=" + multipleSelectionItems + ", createdBy=" + createdBy + ", createdDate="
-				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
+				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified
+				+ "]";
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Quiz other = (Quiz) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-
-
+	
+	
 
 }

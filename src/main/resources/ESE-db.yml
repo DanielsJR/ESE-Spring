@@ -467,15 +467,112 @@ subjectsList:
     
               
                  
+quizesList:
+
+  - &q01
+    title: prueba-01
+    description: prueba de diagnostico matematica-01
+    author: *u020
+    date: 2018-6-11
+    subjectName: MATEMATICAS
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '2'
+      - sentence: '2*2'
+        alternativeA: '3'
+        alternativeB: '6'
+        alternativeC: '4'
+        alternativeD: '8'
+        answer: '4'   
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+      - sentence: '8/0=8'
+        answer: false
+    correspondItems:
+      - item: area de un triangulo
+        correspond: 'A=(B*H)/2'
+      - item: area de un rectangulo
+        correspond: 'A=B*H'
+    incompleteTextItems:
+      - sentence: un cuadrado es 
+        answer: cuadrado
+      - sentence: un circulo es 
+        answer: circular
+       
+quizesStudentList:
+
+  - &qs01
+    date: 2018-6-10
+    grade: 5.0
+    student: *u030
+    subject: *s01
+    quiz: *q01
+    multipleSelectionIitemAnswers:
+      - 1
+      - 8
+    trueFalseItemAnswers:
+      - true
+      - true
+    correspondItemAnswers:
+      - 'A=(B*H)/2'
+      - 'A=B*H'
+    incompleteTextItemAnswers:
+      - cuadrado
+      - triangular
+      
+  - &qs02
+    date: 2018-6-10
+    grade: 6.0
+    student: *u031
+    subject: *s01
+    quiz: *q01
+    multipleSelectionIitemAnswers:
+      - 2
+      - 8
+    trueFalseItemAnswers:
+      - false
+      - false
+    correspondItemAnswers:
+      - 'A=B*H'
+      - 'A=(B*H)/2'
+    incompleteTextItemAnswers:
+      - cuadrado
+      - triangular
+
+  - &qs03
+    date: 2018-6-10
+    grade: 4.8
+    student: *u032
+    subject: *s01
+    quiz: *q01
+    multipleSelectionIitemAnswers:
+      - 3
+      - 4
+    trueFalseItemAnswers:
+      - false
+      - true
+    correspondItemAnswers:
+      - 'A=(B*H)/2'
+      - 'A=B*H'
+    incompleteTextItemAnswers:
+      - cuadrado
+      - triangular            
+
 gradesList:   
 
   - &g01
     title: prueba-01
     type: prueba
-    grade: 5.0
+    grade: 6.0
     date: 2018-6-11
     student: *u030
     subject: *s01
+    quizStudent: *qs01
     
   - &g02
     title: prueba-02
@@ -539,4 +636,4 @@ gradesList:
     grade: 3.8
     date: 2018-7-12
     student: *u032
-    subject: *s01    
+    subject: *s01              
