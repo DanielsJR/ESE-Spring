@@ -472,7 +472,7 @@ quizesList:
   - &q01
     title: prueba-01
     description: prueba de diagnostico matematica-01
-    author: *u020
+    author: *u022
     date: 2018-6-11
     subjectName: MATEMATICAS
     multipleSelectionItems:
@@ -503,6 +503,41 @@ quizesList:
         answer: cuadrado
       - sentence: un circulo es 
         answer: circular
+        
+  - &q02
+    title: prueba-02
+    description: prueba de diagnostico historia-01
+    author: *u022
+    date: 2018-6-16
+    subjectName: HISTORIA
+    multipleSelectionItems:
+      - sentence: 'Quien descubrio America'
+        alternativeA: 'Carlo Magno'
+        alternativeB: 'Cristobal Colón'
+        alternativeC: 'Rey Felipe II'
+        alternativeD: 'El Papa IV'
+        answer: 'Cristobal Colón'
+      - sentence: 'El Paleolítico es un periodo de la historia de la Humanidad que se inició hace'
+        alternativeA: '10,5 millones de años'
+        alternativeB: '2,85 millones de años'
+        alternativeC: '100 mil años'
+        alternativeD: '10,5 billones de años'
+        answer: '2,85 millones de años'   
+    trueFalseItems:
+      - sentence: '¿Roma se construyo en un dia?'
+        answer: false
+      - sentence: '¿Muere espartaco al final?'
+        answer: true
+    correspondItems:
+      - item: Grecia
+        correspond: 'griegos'
+      - item: Esparta
+        correspond: 'espartanos'
+    incompleteTextItems:
+      - sentence: esparta la polis 
+        answer: militar
+      - sentence: los aztecas estaban en 
+        answer: mexico      
        
 quizesStudentList:
 
