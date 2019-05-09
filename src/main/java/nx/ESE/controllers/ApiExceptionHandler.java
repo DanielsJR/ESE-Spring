@@ -16,6 +16,8 @@ import nx.ESE.exceptions.FieldAlreadyExistException;
 import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FileException;
+import nx.ESE.exceptions.ForbiddenChangeRoleException;
+import nx.ESE.exceptions.ForbiddenDeleteException;
 import nx.ESE.exceptions.ForbiddenException;
 import nx.ESE.exceptions.PasswordNotMatchException;
 
@@ -49,6 +51,8 @@ public class ApiExceptionHandler {
     	ForbiddenException.class,
     	AccessDeniedException.class,
     	PasswordNotMatchException.class,
+    	ForbiddenChangeRoleException.class,
+    	ForbiddenDeleteException.class,
     	})
     @ResponseBody
     public ErrorMessage forbiddenRequest(Exception exception) {

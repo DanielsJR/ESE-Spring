@@ -271,10 +271,10 @@ public class UserRestService {
 
 	}
 
-	public UserDto patchManagerSetRole(String username, Role[] roles) {
+	public UserDto patchManagerSetRole(UserDto userDto) {
 		return	managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
 				.path(UserController.MANAGERS).path(UserController.ROLE).path(UserController.PATH_USERNAME)
-				.expand(username).bearerAuth(restService.getAuthToken().getToken()).body(roles).patch().build();
+				.expand(userDto.getUsername()).bearerAuth(restService.getAuthToken().getToken()).body(userDto).patch().build();
 	}
 
 	public void deleteManagers() {
@@ -341,10 +341,10 @@ public class UserRestService {
 
 	}
 
-	public UserDto patchTeacherSetRole(String username, Role[] roles) {
+	public UserDto patchTeacherSetRole(UserDto userDto) {
 		return	teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
 				.path(UserController.TEACHERS).path(UserController.ROLE).path(UserController.PATH_USERNAME)
-				.expand(username).bearerAuth(restService.getAuthToken().getToken()).body(roles).patch().build();
+				.expand(userDto.getUsername()).bearerAuth(restService.getAuthToken().getToken()).body(userDto).patch().build();
 	}
 
 	public void deleteTeachers() {

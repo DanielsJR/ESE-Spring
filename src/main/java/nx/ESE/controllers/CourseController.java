@@ -76,7 +76,7 @@ public class CourseController {
 				.orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(YEAR + PATH_YEAR)
 	public List<CourseDto> getFullCoursesByYear(@PathVariable String year) throws DocumentNotFoundException {
 		return this.courseService.getFullCoursesByYear(year).orElseThrow(() -> new DocumentNotFoundException("Course"));

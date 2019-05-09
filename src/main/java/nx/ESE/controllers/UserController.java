@@ -24,6 +24,7 @@ import nx.ESE.dtos.UserMinDto;
 import nx.ESE.exceptions.FieldAlreadyExistException;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FieldNullException;
+import nx.ESE.exceptions.ForbiddenChangeRoleException;
 import nx.ESE.exceptions.ForbiddenException;
 import nx.ESE.exceptions.PasswordNotMatchException;
 import nx.ESE.services.UserService;
@@ -171,16 +172,22 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping(MANAGERS + ROLE + PATH_USERNAME)
-	public UserDto setRoleManager(@PathVariable String username, @RequestBody Role[] roles)
-			throws ForbiddenException, FieldNotFoundException {
+	public UserDto setRoleManager(@PathVariable String username, @RequestBody UserDto userDto)
+			throws ForbiddenException, FieldNotFoundException, ForbiddenChangeRoleException {
 
 		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
 		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
+		
+		if (this.userService.isChiefTeacher(userDto))
+			throw new ForbiddenChangeRoleException("Docente es Profesor Jefe");
+		
+		if (this.userService.isTeacherInSubject(userDto))
+			throw new ForbiddenChangeRoleException("Docente imparte asignatura(s)");
 
-		return this.userService.setRoleUser(username, roles);
+		return this.userService.setRoleUser(userDto);
 	}
 
 	// TEACHERS************************************
@@ -211,7 +218,7 @@ public class UserController {
 		return this.userService.getUserByUsername(username);
 	}
 
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	@GetMapping(TEACHERS)
 	public List<UserDto> getFullTeachers() {
 		return this.userService.getFullUsers(Role.TEACHER);
@@ -300,16 +307,22 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping(TEACHERS + ROLE + PATH_USERNAME)
-	public UserDto setRoleTeacher(@PathVariable String username, @RequestBody Role[] roles)
-			throws ForbiddenException, FieldNotFoundException {
+	public UserDto setRoleTeacher(@PathVariable String username, @RequestBody UserDto userDto)
+			throws ForbiddenException, FieldNotFoundException, ForbiddenChangeRoleException {
 
 		if (!this.userService.existsUserUsername(username))
 			throw new FieldNotFoundException("Username");
 
 		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
 			throw new ForbiddenException();
+		
+		if (this.userService.isChiefTeacher(userDto))
+			throw new ForbiddenChangeRoleException("Docente es Profesor Jefe");
+		
+		if (this.userService.isTeacherInSubject(userDto))
+			throw new ForbiddenChangeRoleException("Docente imparte asignatura(s)");
 
-		return this.userService.setRoleUser(username, roles);
+		return this.userService.setRoleUser(userDto);
 	}
 
 	// STUDENTS************************************

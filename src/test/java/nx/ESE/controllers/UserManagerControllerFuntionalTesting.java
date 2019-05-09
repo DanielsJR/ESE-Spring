@@ -24,9 +24,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import nx.ESE.controllers.UserController;
 import nx.ESE.documents.Role;
 import nx.ESE.dtos.UserDto;
+import nx.ESE.services.CourseRestService;
 import nx.ESE.services.HttpMatcher;
 import nx.ESE.services.RestBuilder;
 import nx.ESE.services.RestService;
+import nx.ESE.services.SubjectRestService;
 import nx.ESE.services.UserRestService;
 import nx.ESE.services.data.DatabaseSeederService;
 
@@ -44,6 +46,12 @@ public class UserManagerControllerFuntionalTesting {
 	@Autowired
 	private UserRestService userRestService;
 
+	@Autowired
+	private CourseRestService courseRestService;
+
+	@Autowired
+	private SubjectRestService subjectRestService;
+
 	@Before
 	public void before() {
 		userRestService.createUsersDto();
@@ -52,6 +60,8 @@ public class UserManagerControllerFuntionalTesting {
 	@After
 	public void delete() {
 		userRestService.deleteManagers();
+		courseRestService.deleteCourses();
+		subjectRestService.deleteSubjects();
 	}
 
 	// POST--------------------------------------------
@@ -372,10 +382,53 @@ public class UserManagerControllerFuntionalTesting {
 		restService.loginAdmin();
 		userRestService.postManager();
 		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
-		userRestService.patchManagerSetRole(userRestService.getManagerDto().getUsername(), newRoles);
+		userRestService.getManagerDto().setRoles(newRoles);
+		userRestService.patchManagerSetRole(userRestService.getManagerDto());
 		Assert.assertArrayEquals(
 				userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername()).getRoles(),
 				newRoles);
+	}
+
+	@Test
+	public void testPatchManagerSetRoleForbiddenChangeRoleFoundExceptionChiefTeacher() {
+		restService.loginAdmin();
+		userRestService.postManager();
+		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
+		userRestService.getManagerDto().setRoles(newRoles);
+		userRestService.patchManagerSetRole(userRestService.getManagerDto());
+
+		UserDto managerTeacherDto = userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername());
+
+		courseRestService.createCoursesDto();
+		courseRestService.getCourseDto().setChiefTeacher(managerTeacherDto);
+		courseRestService.postCourse();
+
+		restService.loginAdmin();
+		newRoles = new Role[] { Role.MANAGER };
+		managerTeacherDto.setRoles(newRoles);
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.patchManagerSetRole(managerTeacherDto);
+	}
+
+	@Test
+	public void testPatchManagerSetRoleForbiddenChangeRoleFoundExceptionSubject() {
+		restService.loginAdmin();
+		userRestService.postManager();
+		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
+		userRestService.getManagerDto().setRoles(newRoles);
+		userRestService.patchManagerSetRole(userRestService.getManagerDto());
+
+		UserDto managerTeacherDto = userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername());
+
+		subjectRestService.createSubjectsDto();
+		subjectRestService.getSubjectDto().setTeacher(managerTeacherDto);
+		subjectRestService.postSubject();
+
+		restService.loginAdmin();
+		newRoles = new Role[] { Role.MANAGER };
+		managerTeacherDto.setRoles(newRoles);
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.patchManagerSetRole(managerTeacherDto);
 	}
 
 	@Test
@@ -383,15 +436,16 @@ public class UserManagerControllerFuntionalTesting {
 		restService.loginAdmin();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
 		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
-		userRestService.patchManagerSetRole("rupertina", newRoles);
-	}
+		userRestService.getManagerDto().setRoles(newRoles);
+		userRestService.patchManagerSetRole(userRestService.getManagerDto2());
+	} 
 
-	@Test
-	public void testPatchManagerSetRoleHasUserGreaterPrivileges() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
-		userRestService.patchManagerSetRole("111", newRoles);
-	}
+	/*
+	 * @Test public void testPatchManagerSetRoleHasUserGreaterPrivileges() {
+	 * restService.loginAdmin(); thrown.expect(new
+	 * HttpMatcher(HttpStatus.FORBIDDEN)); Role[] newRoles = new Role[] {
+	 * Role.MANAGER, Role.TEACHER };
+	 * //userRestService.patchManagerSetRole(userRestService.); }
+	 */
 
 }
