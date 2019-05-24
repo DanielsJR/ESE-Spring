@@ -1,9 +1,12 @@
 package nx.ESE.services;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.validation.Valid;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
+import nx.ESE.dtos.CourseDto;
 import nx.ESE.dtos.UserDto;
 import nx.ESE.dtos.UserMinDto;
 import nx.ESE.repositories.CourseRepository;
@@ -66,6 +70,11 @@ public class UserService {
 	}
 
 	// Exceptions*********************
+	
+	public boolean isIdNull(UserDto userDto) {
+		return userDto.getId() == null;
+	}
+	
 	public boolean isPassNull(UserDto userDto) {
 		return userDto.getPassword() == null;
 	}
@@ -121,6 +130,7 @@ public class UserService {
 		return true;
 	}
 
+
 	public boolean passMatch(String username, String pass) {
 		if (pass == null) {
 			return false;
@@ -128,6 +138,69 @@ public class UserService {
 
 		User user = this.userRepository.findByUsername(username);
 		return user != null && new BCryptPasswordEncoder().matches(pass, user.getPassword());
+	}
+
+	public boolean isChiefTeacher(String username) {
+		User user = this.userRepository.findByUsername(username);
+		return courseRepository.findFirstByChiefTeacher(user.getId()) != null;
+
+	}
+
+	public boolean isChiefTeacherSetRoles(UserDto userDto) {
+		Boolean[] found = { false };
+
+		Stream.of(userDto.getRoles()).forEach(r -> {
+			if (r.toString() == "TEACHER") {
+				found[0] = true;
+			}
+		});
+
+		if ((!found[0]) && (this.courseRepository.findFirstByChiefTeacher(userDto.getId()) != null)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public boolean isTeacherInSubject(String username) {
+		User user = this.userRepository.findByUsername(username);
+		return this.subjectRepository.findFirstByTeacher(user.getId()) != null;
+	}
+
+	public boolean isTeacherInSubjectSetRoles(UserDto userDto) {
+		Boolean[] found = { false };
+
+		Stream.of(userDto.getRoles()).forEach(r -> {
+			if (r.toString() == "TEACHER") {
+				found[0] = true;
+			}
+		});
+
+		if ((!found[0]) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public boolean isStudentInACourse(String username) {
+		Boolean[] found = { false };
+
+		List<Course> courses;
+		if (!courseRepository.findAll().isEmpty()) {
+			courses = courseRepository.findAll();
+
+			courses.stream().map(c -> c.getStudents()).forEach(sts -> sts.forEach(s -> {
+				if (s.getUsername().equals(username)) {
+					found[0] = true;
+				}
+			}));
+		}
+
+		System.out.println("----------------------------------------isStudentInACourse " + found[0]);
+		return found[0];
 	}
 
 	// CRUD***********************************
@@ -178,42 +251,8 @@ public class UserService {
 		return true;
 	}
 
-	public boolean isChiefTeacher(UserDto userDto) {
-
-		Boolean[] found = { false };
-
-		Stream.of(userDto.getRoles()).forEach(r -> {
-			if (r.toString() == "TEACHER") {
-				found[0] = true;
-			}
-		});
-
-		if ((!found[0]) && (this.courseRepository.findByChiefTeacherAndYear(userDto.getId(), "2018") != null)) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
-	public boolean isTeacherInSubject(UserDto userDto) {
-		Boolean[] found = { false };
-
-		Stream.of(userDto.getRoles()).forEach(r -> {
-			if (r.toString() == "TEACHER") {
-				found[0] = true;
-			}
-		});
-
-		if ((!found[0]) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null)) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
 	public UserDto setRoleUser(UserDto userDto) {
+
 		User user = this.userRepository.findByUsername(userDto.getUsername());
 		user.setRoles(userDto.getRoles());
 		user.setAvatar(userDto.getAvatar());

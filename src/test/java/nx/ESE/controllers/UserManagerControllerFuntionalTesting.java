@@ -2,6 +2,8 @@ package nx.ESE.controllers;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,11 +12,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
@@ -24,13 +22,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import nx.ESE.controllers.UserController;
 import nx.ESE.documents.Role;
 import nx.ESE.dtos.UserDto;
-import nx.ESE.services.CourseRestService;
 import nx.ESE.services.HttpMatcher;
-import nx.ESE.services.RestBuilder;
 import nx.ESE.services.RestService;
-import nx.ESE.services.SubjectRestService;
 import nx.ESE.services.UserRestService;
-import nx.ESE.services.data.DatabaseSeederService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -46,37 +40,55 @@ public class UserManagerControllerFuntionalTesting {
 	@Autowired
 	private UserRestService userRestService;
 
-	@Autowired
-	private CourseRestService courseRestService;
-
-	@Autowired
-	private SubjectRestService subjectRestService;
-
 	@Before
 	public void before() {
+		restService.loginAdmin();
 		userRestService.createUsersDto();
 	}
 
 	@After
 	public void delete() {
 		userRestService.deleteManagers();
-		courseRestService.deleteCourses();
-		subjectRestService.deleteSubjects();
 	}
 
 	// POST--------------------------------------------
 
 	@Test
 	public void testPostManager() {
-		restService.loginAdmin();
+		userRestService.postManager();
+
+		UserDto uDto = userRestService.getManagerByUsername(userRestService.getManagerDtoUsername());
+		assertEquals(uDto, userRestService.getManagerDto());
+	}
+
+	@Test
+	public void testPostManagerPreAuthorize() {
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		userRestService.postManager();
 	}
 
 	@Test
+	public void testPostManagerNoBearerAuth() {
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
+				.body(userRestService.getManagerDto()).post().build();
+	}
+
+	@Test
+	public void testPostManagerFieldInvalidExceptionId() {
+		userRestService.postManager();
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		userRestService.postManager();// it goes with Id
+	}
+
+	@Test
 	public void testPostManagerUsernameUnique() {
-		restService.loginAdmin();
 		userRestService.getManagerDto().setUsername("u006");
 		userRestService.postManager();
+
 		userRestService.getManagerDto2().setUsername("u006");
 		userRestService.postManager2();
 		Assert.assertNotEquals(userRestService.getManagerDto2().getUsername(),
@@ -85,53 +97,37 @@ public class UserManagerControllerFuntionalTesting {
 
 	@Test
 	public void testPostManagerDniFieldAlreadyExistException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setDni("14130268-k");
-		userRestService.getManagerDto2().setDni("14130268-k");
 		userRestService.postManager();
+
+		userRestService.getManagerDto2().setDni("14130268-k");
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager2();
 	}
 
 	@Test
 	public void testPostManagerEmailFieldAlreadyExistException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setEmail(userRestService.getManagerDtoUsername() + "@email.com");
-		userRestService.getManagerDto2().setEmail(userRestService.getManagerDtoUsername() + "@email.com");
 		userRestService.postManager();
+
+		userRestService.getManagerDto2().setEmail(userRestService.getManagerDtoUsername() + "@email.com");
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager2();
 	}
 
 	@Test
 	public void testPostMangerMobiledFieldAlreadyExistException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setMobile("123456789");
-		userRestService.getManagerDto2().setMobile("123456789");
 		userRestService.postManager();
+
+		userRestService.getManagerDto2().setMobile("123456789");
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager2();
 	}
 
 	@Test
-	public void testPostManagerNoBearerAuth() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
-				.body(userRestService.getManagerDto()).post().build();
-	}
-
-	@Test
-	public void testPostManagerPreAuthorize() {
-		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
-				.bearerAuth(restService.getAuthToken().getToken()).body(userRestService.getManagerDto()).post().build();
-	}
-
-	@Test
 	public void testPostManagerWithoutUser() {
-		restService.loginAdmin();
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setUsername(null);
 		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
@@ -140,232 +136,201 @@ public class UserManagerControllerFuntionalTesting {
 
 	@Test
 	public void testPostManagerUsernameNull() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setUsername(null);
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
 	@Test
 	public void testPostManagerPassNull() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setPassword(null);
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
 	@Test
 	public void testPostManagerBadUsername() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setUsername("lu");
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
 	@Test
 	public void testPostManagerUnsafePassword() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setPassword("password");
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
 	@Test
 	public void testPostManagerBadDni() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setDni("14130268-1");
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
 	@Test
 	public void testPostManagerBadMobile() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setMobile("12t678a");
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
 	@Test
 	public void testPostManagerBadEmail() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.getManagerDto().setMobile(userRestService.getManagerDtoUsername() + "SinArroba.com");
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
 	// PUT--------------------------------------------
-
 	@Test
 	public void testPutManager() {
-		restService.loginAdmin();
 		userRestService.postManager();
-		userRestService.getManagerDto().setEmail(userRestService.getManagerDtoUsername() + "@email.com");
-		userRestService.putManager(userRestService.getManagerDto());
-		assertEquals(userRestService.getManagerDtoUsername() + "@email.com",
-				userRestService.getManagerDto().getEmail());
+
+		String newEmail = userRestService.getManagerDtoUsername() + "@email.com";
+		userRestService.getManagerDto().setEmail(newEmail);
+		userRestService.putManager();
+
+		UserDto uDto = userRestService.getManagerByUsername(userRestService.getManagerDtoUsername());
+		assertEquals(uDto.getEmail(), userRestService.getManagerDto().getEmail());
 	}
 
 	@Test
-	public void testPutManagerUsernameNotFoundException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		userRestService.getManagerDto().setUsername("fdfdgd");
-		userRestService.putManager(userRestService.getManagerDto());
-	}
-
-	@Test
-	public void testPutManagerUsernameFieldAlreadyExistException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.getManagerDto().setUsername("u006");
+	public void testPutManagerPreAuthorize() {
 		userRestService.postManager();
-		userRestService.postManager2();
-		userRestService.getManagerDto2().setUsername("u006");
-		userRestService.putManager(userRestService.getManagerDto2());
-	}
 
-	@Test
-	public void testPutManagerDniFieldAlreadyExistException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.getManagerDto().setDni("14130268-k");
-		userRestService.postManager();
-		userRestService.postManager2();
-		userRestService.getManagerDto2().setDni("14130268-k");
-		userRestService.putManager(userRestService.getManagerDto2());
-	}
-
-	@Test
-	public void testPutManagerMobileFieldAlreadyExistException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.getManagerDto().setMobile("123456789");
-		userRestService.postManager();
-		userRestService.postManager2();
-		userRestService.getManagerDto2().setMobile("123456789");
-		userRestService.putManager(userRestService.getManagerDto2());
-	}
-
-	@Test
-	public void testPutManagerEmailFieldAlreadyExistException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.getManagerDto().setEmail(userRestService.getManagerDtoUsername() + "@email.com");
-		userRestService.postManager();
-		userRestService.postManager2();
-		userRestService.getManagerDto2().setEmail(userRestService.getManagerDtoUsername() + "@email.com");
-		userRestService.putManager(userRestService.getManagerDto2());
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.putManager();
 	}
 
 	@Test
 	public void testPutManagerNoBearerAuth() {
-		restService.loginAdmin();
+		userRestService.postManager();
+
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
 		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
 				.body(userRestService.getManagerDto()).put().build();
 	}
 
 	@Test
-	public void testPutManagerPreAuthorize() {
-		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		userRestService.putManager(userRestService.getManagerDto());
+	public void testPutManagerUsernameNotFoundException() {
+		userRestService.getManagerDto().setUsername("fdfdgd");
+
+		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+		userRestService.putManager();
+	}
+
+	@Test
+	public void testPutManagerUsernameFieldAlreadyExistException() {
+		userRestService.postManager();
+
+		userRestService.getManagerDto2().setUsername("u006");
+		userRestService.postManager2();
+
+		userRestService.getManagerDto().setUsername(userRestService.getManagerDto2().getUsername());
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		userRestService.putManager();
+	}
+
+	@Test
+	public void testPutManagerDniFieldAlreadyExistException() {
+		userRestService.postManager();
+
+		userRestService.getManagerDto2().setDni("14130268-k");
+		userRestService.postManager2();
+
+		userRestService.getManagerDto().setDni(userRestService.getManagerDto2().getDni());
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		userRestService.putManager();
+	}
+
+	@Test
+	public void testPutManagerMobileFieldAlreadyExistException() {
+		userRestService.postManager();
+
+		userRestService.getManagerDto2().setMobile("123456789");
+		userRestService.postManager2();
+
+		userRestService.getManagerDto().setMobile(userRestService.getManagerDto2().getMobile());
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		userRestService.putManager();
+	}
+
+	@Test
+	public void testPutManagerEmailFieldAlreadyExistException() {
+		userRestService.postManager();
+
+		userRestService.getManagerDto2().setEmail(userRestService.getManagerDto2Username() + "@email.com");
+		userRestService.postManager2();
+
+		userRestService.getManagerDto().setEmail(userRestService.getManagerDto2().getEmail());
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		userRestService.putManager();
 	}
 
 	@Test
 	public void testPutManagerHasUserGreaterPrivileges() {
+		restService.loginMegaUser();
+
+		UserDto uDto = userRestService.getUserByUsernameSecure("megauser");
+		uDto.setEmail("admin@email.com");
+
+		restService.loginAdmin();
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		restService.loginAdmin();
-		userRestService.setManagerDto(restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-				.path(UserController.USERS).path(UserController.PATH_USERNAME).expand("111")
-				.bearerAuth(restService.getAuthToken().getToken()).get().build());
-		userRestService.getManagerDto().setEmail("admin@email.com");
-		userRestService.putManager(userRestService.getManagerDto());
-	}
-
-	// GET---------------------------
-
-	@Test
-	public void testGetManagerById() {
-		restService.loginAdmin();
-		userRestService.postManager();
-		assertEquals(userRestService.getManagerDtoUsername(),
-				userRestService.getManagerByID(userRestService.getManagerDto().getId()).getUsername());
-	}
-
-	@Test
-	public void testGetManagerByUsername() {
-		restService.loginAdmin();
-		userRestService.postManager();
-		assertEquals(userRestService.getManagerDtoUsername(),
-				userRestService.getManagerByUsername(userRestService.getManagerDtoUsername()).getUsername());
-	}
-
-	@Test
-	public void testGetManagerNoBearerAuth() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		userRestService.postManager();
-		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.PATH_ID)
-				.expand(userRestService.getManagerDto().getId()).get().build();
-	}
-
-	@Test
-	public void testGetManagerPreAuthorize() {
-		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		userRestService.postManager();
-		userRestService.getManagerByID(userRestService.getManagerDto().getId());
-	}
-
-	@Test
-	public void testGetManagerIdNotFoundException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		userRestService.getManagerByID("u64563456");
-	}
-
-	@Test
-	public void testGetManagerUsernameNotFoundException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		userRestService.getManagerByUsername("rupertina");
-	}
-
-	@Test
-	public void testGetManagerHasUserGreaterPrivilegesByUsername() {
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		restService.loginAdmin();
-		userRestService.getManagerByUsername("111");
-	}
-
-	@Test
-	public void testGetManagerHasUserGreaterPrivilegesById() {
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		restService.loginAdmin();
-		userRestService.setManagerDto(
-				restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-						.path(UserController.MANAGERS).path(UserController.USER_NAME).path(UserController.PATH_USERNAME)
-						.expand("111").bearerAuth(restService.getAuthToken().getToken()).get().build());
-		userRestService.getManagerByID(userRestService.getManagerDto().getId());
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
+				.path(UserController.PATH_USERNAME).expand(uDto.getUsername())
+				.bearerAuth(restService.getAuthToken().getToken()).body(uDto).put().build();
 	}
 
 	// PATCH-----------------------------
-
 	@Test
 	public void testPatchManagerResetPass() {
-		restService.loginAdmin();
 		userRestService.postManager();
-		userRestService.patchManagerResetPass(userRestService.getManagerDto().getUsername(),
-				userRestService.getManagerDto().getUsername() + "@ESE2");
-		restService.loginUser(userRestService.getManagerDto().getUsername(),
-				userRestService.getManagerDto().getUsername() + "@ESE2");
+
+		String newPass = "newPass@ESE1";
+		userRestService.patchManagerResetPass(userRestService.getManagerDto().getUsername(), newPass);
+
+		restService.loginUser(userRestService.getManagerDto().getUsername(), newPass);
+	}
+
+	@Test
+	public void testPatchManagerResetPassPreAuthorize() {
+		userRestService.postManager();
+
+		String newPass = userRestService.getManagerDto().getUsername() + "@ESE2";
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.patchManagerResetPass(userRestService.getManagerDto().getUsername(), newPass);
+
+	}
+
+	@Test
+	public void testPatchManagerResetPassNoBearerAuth() {
+		userRestService.postManager();
+
+		String newPass = "newPass@ESE1";
+
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.PASS)
+				.path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername()).body(newPass)
+				.patch().build();
 	}
 
 	@Test
 	public void testPatchManagerResetPassUsernameNotFoundException() {
-		restService.loginAdmin();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
 		userRestService.patchManagerResetPass("rupertina", userRestService.getManagerDto().getUsername() + "@ESE2");
 	}
@@ -373,79 +338,269 @@ public class UserManagerControllerFuntionalTesting {
 	@Test
 	public void testPatchManagerResetPassHasUserGreaterPrivileges() {
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		restService.loginAdmin();
-		userRestService.patchManagerResetPass("111", userRestService.getManagerDto().getUsername() + "@ESE2");
+		userRestService.patchManagerResetPass("megauser", "newPass@ESE1");
 	}
 
+	//
 	@Test
 	public void testPatchManagerSetRole() {
-		restService.loginAdmin();
 		userRestService.postManager();
+
 		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
 		userRestService.getManagerDto().setRoles(newRoles);
 		userRestService.patchManagerSetRole(userRestService.getManagerDto());
-		Assert.assertArrayEquals(
-				userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername()).getRoles(),
-				newRoles);
+
+		UserDto uDto = userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername());
+		Assert.assertArrayEquals(uDto.getRoles(), newRoles);
+
+		Role[] restartRoles = new Role[] { Role.TEACHER };
+		userRestService.getManagerDto().setRoles(restartRoles);
+		userRestService.patchManagerSetRole(userRestService.getManagerDto());
+
+		uDto = userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername());
+		Assert.assertArrayEquals(uDto.getRoles(), restartRoles);
+
+	}
+
+	@Test
+	public void testPatchManagerSetRolePreAuthorize() {
+		userRestService.postManager();
+
+		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
+		userRestService.getManagerDto().setRoles(newRoles);
+
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.patchManagerSetRole(userRestService.getManagerDto());
+
+	}
+
+	@Test
+	public void testPatchManagerSetRoleNoBearerAuth() {
+		userRestService.postManager();
+
+		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
+		userRestService.getManagerDto().setRoles(newRoles);
+
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.ROLE)
+				.path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername())
+				.body(userRestService.getManagerDto()).patch().build();
 	}
 
 	@Test
 	public void testPatchManagerSetRoleForbiddenChangeRoleFoundExceptionChiefTeacher() {
-		restService.loginAdmin();
-		userRestService.postManager();
-		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
-		userRestService.getManagerDto().setRoles(newRoles);
-		userRestService.patchManagerSetRole(userRestService.getManagerDto());
+		UserDto managerTeacherDto = userRestService.getManagerByUsername("u012");// ChiefTeacher
 
-		UserDto managerTeacherDto = userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername());
-
-		courseRestService.createCoursesDto();
-		courseRestService.getCourseDto().setChiefTeacher(managerTeacherDto);
-		courseRestService.postCourse();
-
-		restService.loginAdmin();
-		newRoles = new Role[] { Role.MANAGER };
+		Role[] newRoles = new Role[] { Role.MANAGER };
 		managerTeacherDto.setRoles(newRoles);
+
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		userRestService.patchManagerSetRole(managerTeacherDto);
 	}
 
 	@Test
 	public void testPatchManagerSetRoleForbiddenChangeRoleFoundExceptionSubject() {
-		restService.loginAdmin();
-		userRestService.postManager();
-		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
-		userRestService.getManagerDto().setRoles(newRoles);
-		userRestService.patchManagerSetRole(userRestService.getManagerDto());
+		UserDto managerTeacherDto = userRestService.getManagerByUsername("u010");// Subject
 
-		UserDto managerTeacherDto = userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername());
-
-		subjectRestService.createSubjectsDto();
-		subjectRestService.getSubjectDto().setTeacher(managerTeacherDto);
-		subjectRestService.postSubject();
-
-		restService.loginAdmin();
-		newRoles = new Role[] { Role.MANAGER };
+		Role[] newRoles = new Role[] { Role.MANAGER };
 		managerTeacherDto.setRoles(newRoles);
+
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		userRestService.patchManagerSetRole(managerTeacherDto);
 	}
 
 	@Test
 	public void testPatchManagerSetRoleUsernameNotFoundException() {
-		restService.loginAdmin();
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
 		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
 		userRestService.getManagerDto().setRoles(newRoles);
-		userRestService.patchManagerSetRole(userRestService.getManagerDto2());
-	} 
 
-	/*
-	 * @Test public void testPatchManagerSetRoleHasUserGreaterPrivileges() {
-	 * restService.loginAdmin(); thrown.expect(new
-	 * HttpMatcher(HttpStatus.FORBIDDEN)); Role[] newRoles = new Role[] {
-	 * Role.MANAGER, Role.TEACHER };
-	 * //userRestService.patchManagerSetRole(userRestService.); }
-	 */
+		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+		userRestService.patchManagerSetRole(userRestService.getManagerDto());
+	}
+
+	@Test
+	public void testPatchManagerSetRoleHasUserGreaterPrivileges() {
+		restService.loginMegaUser();
+		UserDto uDto = userRestService.getUserByUsernameSecure("megauser");
+
+		Role[] newRoles = new Role[] { Role.MANAGER, Role.TEACHER };
+		uDto.setRoles(newRoles);
+
+		restService.loginAdmin();
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.patchManagerSetRole(uDto);
+	}
+
+	// DELETE----------------------------------
+	@Test
+	public void testDeleteManager() {
+		userRestService.postManager();
+
+		userRestService.deleteManager(userRestService.getManagerDto().getUsername());
+	}
+
+	@Test
+	public void testDeleteManagerPreAuthorize() {
+		userRestService.postManager();
+
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.deleteManager(userRestService.getManagerDto().getUsername());
+	}
+
+	@Test
+	public void testDeleteManagerNoBearerAuth() {
+		userRestService.postManager();
+
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
+				.path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername()).delete()
+				.build();
+	}
+
+	@Test
+	public void testDeleteManagerForbiddenDeleteExceptionChiefTeacher() {
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.deleteManager("u012");
+	}
+
+	@Test
+	public void testDeleteManagerForbiddenDeleteExceptionSubject() {
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.deleteManager("u010");
+	}
+
+	@Test
+	public void testDeleteManagerHasUserGreaterPrivileges() {
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.deleteManager("megauser");
+	}
+
+	// GET---------------------------
+	@Test
+	public void testGetManagerById() {
+		userRestService.postManager();
+
+		UserDto uDto = userRestService.getManagerByID(userRestService.getManagerDto().getId());
+		assertEquals(userRestService.getManagerDto(), uDto);
+	}
+
+	@Test
+	public void testGetManagerByIdPreAuthorize() {
+		userRestService.postManager();
+
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.getManagerByID(userRestService.getManagerDto().getId());
+	}
+
+	@Test
+	public void testGetManagerByIdNoBearerAuth() {
+		userRestService.postManager();
+
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.PATH_ID)
+				.expand(userRestService.getManagerDto().getId()).get().build();
+	}
+
+	@Test
+	public void testGetManagerByIdNotFoundException() {
+		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+		userRestService.getManagerByID("u64563456");
+	}
+
+	@Test
+	public void testGetManagerByIdHasUserGreaterPrivileges() {
+		restService.loginMegaUser();
+		UserDto uDto = userRestService.getUserByUsernameSecure("megauser");
+
+		restService.loginAdmin();
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.getManagerByID(uDto.getId());
+	}
+
+	//
+	@Test
+	public void testGetManagerByUsername() {
+		userRestService.postManager();
+
+		UserDto uDto = userRestService.getManagerByUsername(userRestService.getManagerDtoUsername());
+		assertEquals(userRestService.getManagerDto(), uDto);
+
+	}
+
+	@Test
+	public void testGetManagerByUsernamePreAuthorize() {
+		userRestService.postManager();
+
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.getManagerByUsername(userRestService.getManagerDto().getUsername());
+	}
+
+	@Test
+	public void testGetManagerByusernameNoBearerAuth() {
+		userRestService.postManager();
+
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
+				.path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername()).get().build();
+	}
+
+	@Test
+	public void testGetManagerUsernameNotFoundException() {
+		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+		userRestService.getManagerByUsername("rupertina");
+	}
+
+	@Test
+	public void testGetManagerByUsernameHasUserGreaterPrivilegesBy() {
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.getManagerByUsername("megauser");
+	}
+
+	//
+	@Test
+	public void testGetFullManagers() {
+		List<UserDto> uDtos = userRestService.getFullManagers();
+		assertEquals(uDtos.size() > 0, true);
+	}
+
+	@Test
+	public void testGetFullManagersPreAuthorize() {
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.getFullManagers();
+	}
+
+	@Test
+	public void testGetFullManagersNoBearerAuth() {
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).get().build();
+	}
+
+	//
+	@Test
+	public void testGetMinManagers() {
+		List<UserDto> uDtos = userRestService.getMinManagers();
+		assertEquals(uDtos.size() > 0, true);
+	}
+
+	@Test
+	public void testGetMinManagersPreAuthorize() {
+		restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
+
+		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+		userRestService.getMinManagers();
+	}
+
+	@Test
+	public void testGetMinManagersNoBearerAuth() {
+		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.USER_MIN)
+				.get().build();
+	}
 
 }

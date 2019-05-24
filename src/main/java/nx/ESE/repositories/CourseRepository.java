@@ -29,7 +29,10 @@ public interface CourseRepository extends MongoRepository<Course, String>,Course
 	@Query("{$and:[{'name':?0},{'year':?1}]}") // not necessary
 	public Course findByNameAndYear2(String name, String year);
 
-	public CourseDto findByNameAndYear(String name, String year);
+	public CourseDto findByNameAndYear(CourseName name, String year);
+	
+	//is chiefTeacher
+	public CourseDto findFirstByChiefTeacher(String TeacherId);
 	
 
 }

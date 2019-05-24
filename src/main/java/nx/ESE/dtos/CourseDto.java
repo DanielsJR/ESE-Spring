@@ -112,8 +112,6 @@ public class CourseDto {
 		return id;
 	}
 	
-	
-
 	public String getCreatedBy() {
 		return createdBy;
 	}

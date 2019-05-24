@@ -30,7 +30,6 @@ public class GradeService {
 	@Autowired
 	private SubjectRepository subjectRepository;
 
-
 	private Grade setGradeFromDto(Grade grade, @Valid GradeDto gradeDto) {
 		grade.setTitle(gradeDto.getTitle());
 		grade.setType(gradeDto.getType());
@@ -55,18 +54,14 @@ public class GradeService {
 			return subject;
 		return Optional.empty();
 	}
-	
-
 
 	// CRUD******************************
 	public Optional<List<GradeDto>> getFullGrades() {
-		List<GradeDto> list = gradeRepository.findAll(new Sort(Sort.Direction.ASC, "title"))
-				.stream()
-				.map(g -> new GradeDto(g))
-				.collect(Collectors.toList());
+		List<GradeDto> list = gradeRepository.findAll(new Sort(Sort.Direction.ASC, "title")).stream()
+				.map(g -> new GradeDto(g)).collect(Collectors.toList());
 		if (list.isEmpty())
 			return Optional.empty();
-		//list.forEach(g-> System.out.println(g.getStudent().getFirstName()));
+		// list.forEach(g-> System.out.println(g.getStudent().getFirstName()));
 		return Optional.of(list);
 	}
 
@@ -101,7 +96,7 @@ public class GradeService {
 		}
 		return Optional.empty();
 	}
-	
+
 	// Exceptions*********************
 	public boolean existsById(String id) {
 		return gradeRepository.existsById(id);
@@ -125,6 +120,20 @@ public class GradeService {
 
 	public boolean isSubjectNull(@Valid GradeDto gradeDto) {
 		return gradeDto.getSubject() == null;
+	}
+	
+	public boolean isDateNull(@Valid GradeDto gradeDto) {
+		return gradeDto.getDate() == null;
+	}
+
+	public boolean isGradeRepeated(@Valid GradeDto gradeDto) {
+		if (isTitleNull(gradeDto) || isTypeNull(gradeDto) || isStudentNull(gradeDto) || isSubjectNull(gradeDto) || isDateNull(gradeDto)) {
+			return false;
+		}
+
+		GradeDto gradeDB = gradeRepository.findByTitleAndTypeAndStudentAndSubjectAndDate(gradeDto.getTitle(),
+				gradeDto.getType(), gradeDto.getStudent().getId(), gradeDto.getSubject().getId(), gradeDto.getDate());
+		return gradeDB != null && !gradeDB.getId().equals(gradeDto.getId());
 	}
 
 }

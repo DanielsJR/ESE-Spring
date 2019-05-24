@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import nx.ESE.controllers.CourseController;
 import nx.ESE.documents.core.CourseName;
@@ -20,10 +21,8 @@ public class CourseRestService {
 	private RestService restService;
 
 	private CourseDto courseDto;
-	
+
 	private CourseDto courseDto2;
-	
-	private List<CourseDto> listCoursesDto;
 
 	@Autowired
 	private UserRestService userRestService;
@@ -37,8 +36,6 @@ public class CourseRestService {
 	public void setCourseDto(CourseDto courseDto) {
 		this.courseDto = courseDto;
 	}
-	
-	
 
 	public CourseDto getCourseDto2() {
 		return courseDto2;
@@ -48,30 +45,22 @@ public class CourseRestService {
 		this.courseDto2 = courseDto2;
 	}
 
-	public List<CourseDto> getListCoursesDto() {
-		return listCoursesDto;
-	}
-
-	public void setListCoursesDto(List<CourseDto> listCoursesDto) {
-		this.listCoursesDto = listCoursesDto;
-	}
-
 	public void createCoursesDto() {
 		logger.warn(
 				"*********************************CREATING_COURSES**************************************************");
-		
+
 		restService.loginManager();
 
 		userRestService.createUsersDto();
 		userRestService.postTeacher();
 		userRestService.postTeacher2();
-		
+
 		userRestService.postStudent();
 		userRestService.postStudent2();
 
 		List<UserDto> students = new ArrayList<>();
 		students.add(userRestService.getStudentDto());
-		
+
 		List<UserDto> students2 = new ArrayList<>();
 		students2.add(userRestService.getStudentDto2());
 
@@ -80,15 +69,14 @@ public class CourseRestService {
 		this.courseDto.setYear("2018");
 		this.courseDto.setChiefTeacher(userRestService.getTeacherDto());
 		this.courseDto.setStudents(students);
-		
+
 		this.courseDto2 = new CourseDto();
 		this.courseDto2.setName(CourseName.PRIMERO_G);
 		this.courseDto2.setYear("2018");
 		this.courseDto2.setChiefTeacher(userRestService.getTeacherDto2());
 		this.courseDto2.setStudents(students2);
-		
-		logger.warn(
-				"***********************************************************************************************");
+
+		logger.warn("***********************************************************************************************");
 	}
 
 	public void deleteCourses() {
@@ -98,17 +86,13 @@ public class CourseRestService {
 			this.restService.loginManager();
 
 			try {
-				this.restService.restBuilder().path(CourseController.COURSE).path(CourseController.PATH_ID)
-						.expand(this.courseDto.getId()).bearerAuth(restService.getAuthToken().getToken()).delete()
-						.build();
+				this.deleteCourse(this.courseDto.getId());
 			} catch (Exception e) {
 				logger.warn("error: " + e.getMessage() + "courseDto: nothing to delete");
 			}
-			
+
 			try {
-				this.restService.restBuilder().path(CourseController.COURSE).path(CourseController.PATH_ID)
-						.expand(this.courseDto2.getId()).bearerAuth(restService.getAuthToken().getToken()).delete()
-						.build();
+				this.deleteCourse(this.courseDto2.getId());
 			} catch (Exception e) {
 				logger.warn("error: " + e.getMessage() + "courseDto2: nothing to delete");
 			}
@@ -123,62 +107,68 @@ public class CourseRestService {
 
 	}
 
-	// POST********************************
+	// POST
 	public void postCourse() {
-		courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
-				.path(CourseController.COURSE).bearerAuth(restService.getAuthToken().getToken()).body(courseDto).post()
-				.build();
+		this.courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
+				.path(CourseController.COURSE).bearerAuth(restService.getAuthToken().getToken()).body(this.courseDto)
+				.post().build();
 	}
-	
+
 	public void postCourse2() {
-		courseDto2 = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
-				.path(CourseController.COURSE).bearerAuth(restService.getAuthToken().getToken()).body(courseDto2).post()
-				.build();
+		this.courseDto2 = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
+				.path(CourseController.COURSE).bearerAuth(restService.getAuthToken().getToken()).body(this.courseDto2)
+				.post().build();
 	}
 
-	// PUT********************************
-	public void putCourse(String id) {
-		courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
-				.path(CourseController.COURSE)
-				.path(CourseController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken()).body(courseDto).put()
-				.build();
+	// PUT
+	public void putCourse() {
+		this.courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
+				.path(CourseController.COURSE).path(CourseController.PATH_ID).expand(courseDto.getId())
+				.bearerAuth(restService.getAuthToken().getToken()).body(this.courseDto).put().build();
 
 	}
 
-	// PACH********************************
+	// PACH
 	public void patchCourse() {
 		// TODO Auto-generated method stub
 
 	}
 
-	// GET********************************
-	public CourseDto getCourseByName(CourseName name, String year) {
-		return courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
+	// DELETE
+	public void deleteCourse(String id) {
+		restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class).path(CourseController.COURSE)
+				.path(CourseController.PATH_ID).expand(id).bearerAuth(restService.getAuthToken().getToken()).delete()
+				.build();
+	}
+
+	// GET
+	public CourseDto getCourseByNameAndYear(CourseName name, String year) {
+		return restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
 				.path(CourseController.COURSE).path(CourseController.NAME).path(CourseController.PATH_NAME).expand(name)
 				.path(CourseController.PATH_YEAR).expand(year).bearerAuth(restService.getAuthToken().getToken()).get()
 				.build();
 	}
 
 	public CourseDto getCourseById(String id) {
-		return courseDto = restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
-				.path(CourseController.COURSE)
-				.path(CourseController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken()).get()
-				.build();
-		
+		return restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
+				.path(CourseController.COURSE).path(CourseController.PATH_ID).expand(id)
+				.bearerAuth(restService.getAuthToken().getToken()).get().build();
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<CourseDto> getFullCoursesByYear(String year) {
-	    return  listCoursesDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
-				.path(CourseController.COURSE)
+		return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(CourseController.COURSE)
 				.path(CourseController.YEAR).path(CourseController.PATH_YEAR).expand(year)
-				.bearerAuth(restService.getAuthToken().getToken()).get()
-				.build();
+				.bearerAuth(restService.getAuthToken().getToken()).get().build();
 	}
-	
-	
 
+	public CourseDto getCourseByChiefTeacherNameAndYear(String teacherName, String year) {
+		return restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
+				.path(CourseController.COURSE).path(CourseController.TEACHER_NAME)
+				.path(CourseController.PATH_TEACHER_NAME).expand(teacherName).path(CourseController.PATH_YEAR)
+				.expand(year).bearerAuth(restService.getAuthToken().getToken()).get().build();
+
+	}
 
 }

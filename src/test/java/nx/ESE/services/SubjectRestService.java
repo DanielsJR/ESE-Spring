@@ -11,7 +11,6 @@ import nx.ESE.controllers.SubjectController;
 import nx.ESE.documents.core.SubjectName;
 import nx.ESE.dtos.SubjectDto;
 
-
 @Service
 public class SubjectRestService {
 
@@ -25,10 +24,8 @@ public class SubjectRestService {
 	private CourseRestService courseRestService;
 
 	private SubjectDto subjectDto;
-	
+
 	private SubjectDto subjectDto2;
-	
-	private List<SubjectDto> listSubjectDto;
 
 	private static final Logger logger = LoggerFactory.getLogger(SubjectRestService.class);
 
@@ -39,8 +36,6 @@ public class SubjectRestService {
 	public void setSubjectDto(SubjectDto subjectDto) {
 		this.subjectDto = subjectDto;
 	}
-	
-	
 
 	public SubjectDto getSubjectDto2() {
 		return subjectDto2;
@@ -50,17 +45,11 @@ public class SubjectRestService {
 		this.subjectDto2 = subjectDto2;
 	}
 
-	public List<SubjectDto> getListSubjectDto() {
-		return listSubjectDto;
-	}
-
-	public void setListSubjectDto(List<SubjectDto> listSubjectDto) {
-		this.listSubjectDto = listSubjectDto;
-	}
-
 	public void createSubjectsDto() {
 		logger.warn(
 				"*********************************CREATING_SUBJECTS**************************************************");
+
+		restService.loginManager();
 		courseRestService.createCoursesDto();
 		courseRestService.postCourse();
 		courseRestService.postCourse2();
@@ -69,12 +58,12 @@ public class SubjectRestService {
 		this.subjectDto.setName(SubjectName.MATEMATICAS);
 		this.subjectDto.setTeacher(userRestService.getTeacherDto2());
 		this.subjectDto.setCourse(courseRestService.getCourseDto());
-		
+
 		this.subjectDto2 = new SubjectDto();
 		this.subjectDto2.setName(SubjectName.LENGUAJE);
 		this.subjectDto2.setTeacher(userRestService.getTeacherDto());
 		this.subjectDto2.setCourse(courseRestService.getCourseDto2());
-		
+
 		logger.warn("***********************************************************************************************");
 
 	}
@@ -85,17 +74,13 @@ public class SubjectRestService {
 		this.restService.loginManager();
 
 		try {
-			String id = this.subjectDto.getId();
-			this.restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand(id)
-					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
+			this.deleteSubject(this.subjectDto.getId());
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "subjectDto: nothing to delete");
 		}
-		
+
 		try {
-			String id = this.subjectDto2.getId();
-			this.restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand(id)
-					.bearerAuth(restService.getAuthToken().getToken()).delete().build();
+			this.deleteSubject(this.subjectDto2.getId());
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "subjectDto2: nothing to delete");
 		}
@@ -107,55 +92,51 @@ public class SubjectRestService {
 	}
 
 	// POST********************************
-	public SubjectDto postSubject() {
-		return	subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-				.path(SubjectController.SUBJECT)
-				.bearerAuth(restService.getAuthToken().getToken()).body(subjectDto)
+	public void postSubject() {
+		this.subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
+				.path(SubjectController.SUBJECT).bearerAuth(restService.getAuthToken().getToken()).body(subjectDto)
 				.post().build();
 	}
-	
-	public SubjectDto postSubject2() {
-		return	subjectDto2 = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-				.path(SubjectController.SUBJECT)
-				.bearerAuth(restService.getAuthToken().getToken()).body(subjectDto2)
+
+	public void postSubject2() {
+		this.subjectDto2 = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
+				.path(SubjectController.SUBJECT).bearerAuth(restService.getAuthToken().getToken()).body(subjectDto2)
 				.post().build();
 	}
-	
 
 	// PUT********************************
-	public SubjectDto putSubject(String id) {
-		return	subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-				.path(SubjectController.SUBJECT)
-				.path(SubjectController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken())
-				.body(subjectDto)
-				.put()
-				.build();
+	public void putSubject() {
+		this.subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
+				.path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand(subjectDto.getId())
+				.bearerAuth(restService.getAuthToken().getToken()).body(subjectDto).put().build();
 	}
 	// PACH********************************
-	
+
+	// DELETE******************************************
+	public void deleteSubject(String id) {
+		restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class).path(SubjectController.SUBJECT)
+				.path(SubjectController.PATH_ID).expand(id).bearerAuth(restService.getAuthToken().getToken()).delete()
+				.build();
+	}
 
 	// GET********************************
 	public SubjectDto getSubjectById(String id) {
-		return	subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-				.path(SubjectController.SUBJECT)
-				.path(SubjectController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken())
-				.body(subjectDto)
-				.get()
-				.build();
+		return restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
+				.path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand(id)
+				.bearerAuth(restService.getAuthToken().getToken()).get().build();
+	}
+
+	public SubjectDto getSubjectByNameAndCourse(SubjectName name, String courseId) {
+		return restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
+				.path(SubjectController.SUBJECT).path(SubjectController.PATH_NAME).expand(name)
+				.path(SubjectController.PATH_COURSE_ID).expand(courseId)
+				.bearerAuth(restService.getAuthToken().getToken()).get().build();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<SubjectDto> getFullSubjects() {
-		return	listSubjectDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
-				.path(SubjectController.SUBJECT)
-				.bearerAuth(restService.getAuthToken().getToken())
-				.body(subjectDto)
-				.get()
-				.build();
+		return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(SubjectController.SUBJECT)
+				.bearerAuth(restService.getAuthToken().getToken()).get().build();
 	}
-
-
 
 }

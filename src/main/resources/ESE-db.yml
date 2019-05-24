@@ -6,6 +6,27 @@
 userList:
 
 # Users u010-u019 MANAGER 
+
+  - &u019
+    username: megauser
+    password: megauser@ESE1
+    firstName: Mega Hyper
+    lastName: User
+    birthday: 1969-6-9
+    gender: HOMBRE
+    avatar:
+       name: punisher.jpg
+       type: image/jpg
+    mobile: 019000000
+    email: e019@email.com
+    address: Las Viñitas 019
+    commune: QUINTA_NORMAL
+    roles:
+      - ADMIN
+      - MANAGER
+      - TEACHER
+          
+      
   - &u010
     username: u010
     password: p010@ESE1
@@ -123,7 +144,23 @@ userList:
     roles:
       - TEACHER
     
-    
+  - &u023
+    username: u023
+    password: p023@ESE1
+    firstName: Son
+    lastName: Goku
+    dni: 16741340-4
+    birthday: 1981-3-4
+    gender: HOMBRE
+    avatar:
+       name: goku.png
+       type: image/png
+    mobile: 002333333
+    email: e023@email.com
+    address: Las Viñitas 023
+    commune: QUINTA_NORMAL
+    roles:
+      - TEACHER   
     
     
     
@@ -308,15 +345,15 @@ userList:
 preferencesList:
   - user: *u010
     theme:
-       name: indigo-pink-dark
-       isDark: true
-       color: '#3F51B5' 
+       name: grey-indigo
+       isDark: false
+       color: '#9E9E9E' 
     
   - user: *u011
     theme:
-       name: lime-pink
+       name: brown-orange
        isDark: false
-       color: '#CDDC39' 
+       color: '#795548' 
  
   - user: *u012
     theme:
@@ -326,9 +363,9 @@ preferencesList:
 
   - user: *u020
     theme:
-       name: indigo-pink-dark
+       name: pink-purple-dark
        isDark: true
-       color: '#3F51B5' 
+       color: '#E91E63' 
     
   - user: *u021
     theme:
@@ -338,9 +375,9 @@ preferencesList:
  
   - user: *u022
     theme:
-       name: blue-orange-dark
+       name: red-indigo-dark
        isDark: true
-       color: '#2196F3'  
+       color: '#F44336'  
 
   - user: *u030
     theme:
@@ -392,7 +429,7 @@ coursesList:
     
   - &c02
     name: TERCERO_C
-    chiefTeacher: *u021
+    chiefTeacher: *u012
     students:
       - *u033
       - *u034
@@ -464,6 +501,12 @@ subjectsList:
     name: MUSICA
     teacher: *u020
     course: *c03  
+    
+    
+  - &s10
+    name: ED_FISICA
+    teacher: *u023
+    course: *c03     
     
               
                  

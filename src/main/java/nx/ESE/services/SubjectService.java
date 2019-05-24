@@ -12,10 +12,13 @@ import org.springframework.stereotype.Controller;
 
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
+import nx.ESE.documents.core.Grade;
 import nx.ESE.documents.core.Subject;
+import nx.ESE.documents.core.SubjectName;
 import nx.ESE.dtos.CourseDto;
 import nx.ESE.dtos.SubjectDto;
 import nx.ESE.repositories.CourseRepository;
+import nx.ESE.repositories.GradeRepository;
 import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
 
@@ -30,6 +33,9 @@ public class SubjectService {
 
 	@Autowired
 	private CourseRepository courseRepository;
+
+	@Autowired
+	private GradeRepository gradeRepository;
 
 	private Subject setSubjectFromDto(Subject subject, SubjectDto subjectDto) {
 		subject.setName(subjectDto.getName());
@@ -52,19 +58,15 @@ public class SubjectService {
 		return Optional.empty();
 	}
 
-
-
 	// CRUD******************************
 	public Optional<List<SubjectDto>> getFullSubjects() {
-		List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
-				.stream()
-				.map(s -> new SubjectDto(s))
-				.parallel()
-				.sorted((s1,s2) -> s1.getName().toString().compareTo(s2.getName().toString()))
+		List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name")).stream()
+				.map(s -> new SubjectDto(s)).parallel()
+				.sorted((s1, s2) -> s1.getName().toString().compareTo(s2.getName().toString()))
 				.collect(Collectors.toList());
 		if (list.isEmpty())
 			return Optional.empty();
-		//list.forEach(s-> System.out.println(s.getName()));
+		// list.forEach(s-> System.out.println(s.getName()));
 		return Optional.of(list);
 
 	}
@@ -73,6 +75,13 @@ public class SubjectService {
 		Optional<Subject> subject = subjectRepository.findById(id);
 		if (subject.isPresent())
 			return Optional.of(new SubjectDto(subject.get()));
+		return Optional.empty();
+	}
+	
+	public Optional<SubjectDto> getSubjectByNameAndCourse(SubjectName name, String courseId) {
+		SubjectDto subjectDto = subjectRepository.findByNameAndCourse(name, courseId);
+		if (subjectDto != null)
+			return Optional.of(subjectDto);
 		return Optional.empty();
 	}
 
@@ -99,7 +108,7 @@ public class SubjectService {
 		}
 		return Optional.empty();
 	}
-	
+
 	// Exceptions*********************
 	public boolean existsById(String id) {
 		return subjectRepository.existsById(id);
@@ -120,15 +129,32 @@ public class SubjectService {
 	public boolean isCourseNull(@Valid SubjectDto subjectDto) {
 		return subjectDto.getCourse() == null;
 	}
-	
-	
+
 	public boolean isSubjectRepeated(@Valid SubjectDto subjectDto) {
 		if (this.isNameNull(subjectDto) || this.isCourseNull(subjectDto)) {
 			return false;
 		}
-		SubjectDto subjectDB = this.subjectRepository.findByNameAndCourse(subjectDto.getName().toString(),
+		SubjectDto subjectDB = this.subjectRepository.findByNameAndCourse(subjectDto.getName(),
 				subjectDto.getCourse().getId());
 		return subjectDB != null && !subjectDB.getId().equals(subjectDto.getId());
 	}
+
+	public boolean isSubjectInGrade(String subjectId) {
+		Boolean[] found = { false };
+
+		List<Grade> grades;
+		if (!courseRepository.findAll().isEmpty()) {
+			grades = gradeRepository.findAll();
+
+			grades.stream().forEach(g -> {
+				if (g.getSubject().getId().equals(subjectId))
+					found[0] = true;
+			});
+		}
+		System.out.println("----------------------------------------isSubjectInGrade " + found[0]);
+		return found[0];
+	}
+
+
 
 }

@@ -28,6 +28,7 @@ public class GradeDto {
 	@NotNull
 	private String type;
 	
+	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date date;
 	

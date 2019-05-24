@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import nx.ESE.documents.core.CourseName;
 import nx.ESE.dtos.CourseDto;
+import nx.ESE.exceptions.DocumentAlreadyExistException;
 import nx.ESE.exceptions.DocumentNotFoundException;
 import nx.ESE.exceptions.FieldAlreadyExistException;
 import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FieldNullException;
+import nx.ESE.exceptions.ForbiddenDeleteException;
 import nx.ESE.services.CourseService;
 import nx.ESE.services.UserService;
 
@@ -48,7 +51,58 @@ public class CourseController {
 	@Autowired
 	private UserService userService;
 
-	// CRUD******************************
+	// POST
+	@PreAuthorize("hasRole('MANAGER')")
+	@PostMapping()
+	@ResponseStatus(HttpStatus.CREATED)
+	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto)
+			throws FieldAlreadyExistException, FieldInvalidException, DocumentAlreadyExistException {
+
+		if (!this.courseService.isIdNull(courseDto))
+			throw new FieldInvalidException("Id");
+
+		if (this.courseService.nameAndYearRepeated(courseDto))
+			throw new DocumentAlreadyExistException("Curso");
+
+		if (this.courseService.chiefTeacherRepeated(courseDto))
+			throw new FieldAlreadyExistException("Profesor Jefe");
+
+		if (this.courseService.studentsRepeatedInCoursesByYear(courseDto))
+			throw new FieldAlreadyExistException("Estudiante");
+
+		return this.courseService.createCourse(courseDto);
+	}
+
+	// PUT
+	@PreAuthorize("hasRole('MANAGER')")
+	@PutMapping(PATH_ID)
+	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
+			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException, DocumentAlreadyExistException {
+
+		if (this.courseService.nameAndYearRepeated(courseDto))
+			throw new DocumentAlreadyExistException("Curso");
+
+		if (this.courseService.chiefTeacherRepeated(courseDto))
+			throw new FieldAlreadyExistException("Profesor Jefe");
+
+		if (this.courseService.studentsRepeatedInCoursesByYear(courseDto))
+			throw new FieldAlreadyExistException("Estudiante");
+
+		return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	// DELETE
+	@PreAuthorize("hasRole('MANAGER')")
+	@DeleteMapping(PATH_ID)
+	public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException, ForbiddenDeleteException {
+
+		if (this.courseService.isCourseInSubject(id))
+			throw new ForbiddenDeleteException("Curso tiene asignatura(s)");
+
+		return this.courseService.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	// GET
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(PATH_ID)
 	public CourseDto getCourseById(@PathVariable String id) throws FieldNotFoundException {
@@ -56,20 +110,8 @@ public class CourseController {
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping(TEACHER_NAME + PATH_TEACHER_NAME + PATH_YEAR)
-	public CourseDto getCourseByChiefTeacherName(@PathVariable String teacherName, @PathVariable String year)
-			throws DocumentNotFoundException, FieldNotFoundException {
-
-		if (!this.userService.existsUserUsername(teacherName))
-			throw new FieldNotFoundException("Username");
-
-		return this.courseService.getCourseByChiefTeacherNameQdsl(teacherName, year)
-				.orElseThrow(() -> new DocumentNotFoundException("Course"));
-	}
-
-	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(NAME + PATH_NAME + PATH_YEAR)
-	public CourseDto getCourseByName(@PathVariable String name, @PathVariable String year)
+	public CourseDto getCourseByName(@PathVariable CourseName name, @PathVariable String year)
 			throws DocumentNotFoundException {
 
 		return this.courseService.getCourseByName(name, year)
@@ -81,54 +123,17 @@ public class CourseController {
 	public List<CourseDto> getFullCoursesByYear(@PathVariable String year) throws DocumentNotFoundException {
 		return this.courseService.getFullCoursesByYear(year).orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
-	
-	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping()
-	public List<CourseDto> getFullCourses() throws DocumentNotFoundException {
-		return this.courseService.getFullCourses().orElseThrow(() -> new DocumentNotFoundException("Course"));
-	}
 
 	@PreAuthorize("hasRole('MANAGER')")
-	@PostMapping()
-	@ResponseStatus(HttpStatus.CREATED)
-	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) throws FieldNullException, FieldAlreadyExistException, FieldInvalidException {
-		
-		if (!this.courseService.isIdNull(courseDto))
-			throw new FieldInvalidException("Id");
-		
-		if (this.courseService.nameRepeated(courseDto))
-			throw new FieldAlreadyExistException("Curso");
-		
-		if (this.courseService.chiefTeacherRepeated(courseDto))
-			throw new FieldAlreadyExistException("Profesor Jefe");
-			
-		if (this.courseService.studentsRepeated(courseDto))
-			throw new FieldAlreadyExistException("Estudiante");
-		
-		return this.courseService.createCourse(courseDto);
-	}
+	@GetMapping(TEACHER_NAME + PATH_TEACHER_NAME + PATH_YEAR)
+	public CourseDto getCourseByChiefTeacherNameAndYear(@PathVariable String teacherName, @PathVariable String year)
+			throws DocumentNotFoundException, FieldNotFoundException {
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@PutMapping(PATH_ID)
-	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
-			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException {
-		
-		if (this.courseService.nameRepeated(courseDto))
-			throw new FieldAlreadyExistException("Curso");
-		
-		if (this.courseService.chiefTeacherRepeated(courseDto))
-			throw new FieldAlreadyExistException("Profesor Jefe");
-			
-		if (this.courseService.studentsRepeated(courseDto))
-			throw new FieldAlreadyExistException("Estudiante");
+		if (!this.userService.existsUserUsername(teacherName))
+			throw new FieldNotFoundException("Nombre de Usuario");
 
-		return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
-
-	@PreAuthorize("hasRole('MANAGER')")
-	@DeleteMapping(PATH_ID)
-	public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException {
-		return this.courseService.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+		return this.courseService.getCourseByChiefTeacherNameQdsl(teacherName, year)
+				.orElseThrow(() -> new DocumentNotFoundException("Curso"));
 	}
 
 }

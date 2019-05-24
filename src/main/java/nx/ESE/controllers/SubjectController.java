@@ -18,15 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.HttpStatus;
 
+import nx.ESE.documents.core.SubjectName;
 import nx.ESE.dtos.SubjectDto;
+import nx.ESE.exceptions.DocumentAlreadyExistException;
 import nx.ESE.exceptions.DocumentNotFoundException;
 import nx.ESE.exceptions.FieldAlreadyExistException;
 import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FieldNullException;
+import nx.ESE.exceptions.ForbiddenDeleteException;
 import nx.ESE.services.SubjectService;
-
-
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
@@ -38,15 +39,63 @@ public class SubjectController {
 
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_NAME = "/{name}";
+	public static final String PATH_COURSE_ID = "/{courseId}";
 
 	@Autowired
 	private SubjectService subjectService;
-	
-	// CRUD******************************
+
+	// POST
 	@PreAuthorize("hasRole('MANAGER')")
+	@PostMapping()
+	@ResponseStatus(HttpStatus.CREATED)
+	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto)
+			throws FieldInvalidException, DocumentAlreadyExistException {
+
+		if (!this.subjectService.isIdNull(subjectDto))
+			throw new FieldInvalidException("Id");
+
+		if (this.subjectService.isSubjectRepeated(subjectDto))
+			throw new DocumentAlreadyExistException("Asignatura");
+
+		return this.subjectService.createSubject(subjectDto);
+	}
+
+	// PUT
+	@PreAuthorize("hasRole('MANAGER')")
+	@PutMapping(PATH_ID)
+	public SubjectDto modifySubject(@PathVariable String id, @Valid @RequestBody SubjectDto subjectDto)
+			throws FieldNotFoundException, DocumentAlreadyExistException {
+
+		if (this.subjectService.isSubjectRepeated(subjectDto))
+			throw new DocumentAlreadyExistException("Asignatura");
+
+		return this.subjectService.modifySubject(id, subjectDto).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	// DELETE
+	@PreAuthorize("hasRole('MANAGER')")
+	@DeleteMapping(PATH_ID)
+	public SubjectDto deleteSubject(@PathVariable String id) throws FieldNotFoundException, ForbiddenDeleteException {
+
+		if (this.subjectService.isSubjectInGrade(id))
+			throw new ForbiddenDeleteException("Asignatura tiene nota(s)");
+
+		return this.subjectService.deleteSubject(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	// GET
+	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(PATH_ID)
 	public SubjectDto getSubjectById(@PathVariable String id) throws FieldNotFoundException {
 		return this.subjectService.getSubjectById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+	@GetMapping(PATH_NAME + PATH_COURSE_ID)
+	public SubjectDto getSubjectByNameAndCourse(@PathVariable SubjectName name, @PathVariable String courseId)
+			throws DocumentNotFoundException {
+		return this.subjectService.getSubjectByNameAndCourse(name, courseId)
+				.orElseThrow(() -> new DocumentNotFoundException("Asignatura"));
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
@@ -54,36 +103,5 @@ public class SubjectController {
 	public List<SubjectDto> getFullSubjects() throws DocumentNotFoundException {
 		return this.subjectService.getFullSubjects().orElseThrow(() -> new DocumentNotFoundException("Subject"));
 	}
-	
-	@PreAuthorize("hasRole('MANAGER')")
-	@PostMapping()
-	@ResponseStatus(HttpStatus.CREATED)
-	public SubjectDto createSubject(@Valid @RequestBody SubjectDto subjectDto) throws FieldNotFoundException, FieldInvalidException, FieldNullException, FieldAlreadyExistException {
-		
-		if (!this.subjectService.isIdNull(subjectDto))
-			throw new FieldInvalidException("Id");
-		
-		if (this.subjectService.isSubjectRepeated(subjectDto))
-			throw new FieldAlreadyExistException("Asignatura");
-		
-		return this.subjectService.createSubject(subjectDto);
-	}
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@PutMapping(PATH_ID)
-	public SubjectDto modifySubject(@PathVariable String id, @Valid @RequestBody SubjectDto subjectDto)
-			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException {
-		
-		if (this.subjectService.isSubjectRepeated(subjectDto))
-			throw new FieldAlreadyExistException("Asignatura");
-
-		return this.subjectService.modifySubject(id, subjectDto).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
-
-	@PreAuthorize("hasRole('MANAGER')")
-	@DeleteMapping(PATH_ID)
-	public SubjectDto deleteSubject(@PathVariable String id) throws FieldNotFoundException {
-		return this.subjectService.deleteSubject(id).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
 }
-

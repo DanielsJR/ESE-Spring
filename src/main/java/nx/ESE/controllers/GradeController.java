@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.dtos.GradeDto;
+import nx.ESE.exceptions.DocumentAlreadyExistException;
 import nx.ESE.exceptions.DocumentNotFoundException;
 import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.services.GradeService;
-
-
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 @RestController
@@ -30,16 +29,48 @@ import nx.ESE.services.GradeService;
 public class GradeController {
 
 	public static final String GRADE = "/grades";
-	
+
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_USERNAME = "/{username}";
 
-
-	
 	@Autowired
 	private GradeService gradeService;
-	
-	// CRUD******************************
+
+	// POST
+	@PreAuthorize("hasRole('TEACHER')")
+	@PostMapping()
+	public GradeDto createGrade(@Valid @RequestBody GradeDto gradeDto)
+			throws FieldInvalidException, DocumentAlreadyExistException {
+
+		if (!this.gradeService.isIdNull(gradeDto))
+			throw new FieldInvalidException("Id");
+
+		if (this.gradeService.isGradeRepeated(gradeDto))
+			throw new DocumentAlreadyExistException("Nota");
+
+		return this.gradeService.createGrade(gradeDto);
+	}
+
+	// PUT
+	@PreAuthorize("hasRole('TEACHER')")
+	@PutMapping(PATH_ID)
+	public GradeDto modifyGrade(@PathVariable String id, @Valid @RequestBody GradeDto gradeDto)
+			throws FieldNotFoundException, DocumentAlreadyExistException {
+
+		if (this.gradeService.isGradeRepeated(gradeDto))
+			throw new DocumentAlreadyExistException("Nota");
+
+		return this.gradeService.modifyGrade(id, gradeDto).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	// DELETE
+	@PreAuthorize("hasRole('TEACHER')")
+	@DeleteMapping(PATH_ID)
+	public GradeDto deleteGrade(@PathVariable String id) throws FieldNotFoundException {
+		return this.gradeService.deleteGrade(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	// GET
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(PATH_ID)
 	public GradeDto getGradeById(@PathVariable String id) throws FieldNotFoundException {
@@ -51,29 +82,4 @@ public class GradeController {
 	public List<GradeDto> getFullGrades() throws DocumentNotFoundException {
 		return this.gradeService.getFullGrades().orElseThrow(() -> new DocumentNotFoundException("Grade"));
 	}
-	
-	@PreAuthorize("hasRole('TEACHER')")
-	@PostMapping()
-	public GradeDto createGrade(@Valid @RequestBody GradeDto gradeDto) throws FieldNotFoundException, FieldInvalidException, FieldNullException {
-		
-		if (!this.gradeService.isIdNull(gradeDto))
-			throw new FieldInvalidException("Id");
-		
-		return this.gradeService.createGrade(gradeDto);
-	}
-
-	@PreAuthorize("hasRole('TEACHER')")
-	@PutMapping(PATH_ID)
-	public GradeDto modifyGrade(@PathVariable String id, @Valid @RequestBody GradeDto gradeDto)
-			throws FieldNotFoundException, FieldNullException {
-		
-		return this.gradeService.modifyGrade(id, gradeDto).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
-
-	@PreAuthorize("hasRole('TEACHER')")
-	@DeleteMapping(PATH_ID)
-	public GradeDto deleteGrade(@PathVariable String id) throws FieldNotFoundException {
-		return this.gradeService.deleteGrade(id).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
 }
-
