@@ -55,7 +55,7 @@ public class CourseControllerFuntionalTesting {
 		courseRestService.postCourse();
 
 		CourseDto cDto = courseRestService.getCourseById(courseRestService.getCourseDto().getId());
-		assertEquals(cDto.getId(), courseRestService.getCourseDto().getId());
+		assertEquals(cDto, courseRestService.getCourseDto());
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class CourseControllerFuntionalTesting {
 		courseRestService.putCourse();
 
 		CourseDto cDto = courseRestService.getCourseById(courseRestService.getCourseDto().getId());
-		assertEquals(cDto.getChiefTeacher().getId(), courseRestService.getCourseDto().getChiefTeacher().getId());
+		assertEquals(cDto.getChiefTeacher(), courseRestService.getCourseDto().getChiefTeacher());
 	}
 
 	@Test
@@ -425,8 +425,8 @@ public class CourseControllerFuntionalTesting {
 		CourseDto cDto = courseRestService.getCourseByChiefTeacherNameAndYear(
 				courseRestService.getCourseDto().getChiefTeacher().getUsername(),
 				courseRestService.getCourseDto().getYear());
-		Assert.assertTrue(courseRestService.getCourseDto().getChiefTeacher().getUsername()
-				.equals(cDto.getChiefTeacher().getUsername()));
+		assertEquals(courseRestService.getCourseDto().getChiefTeacher().getUsername(),
+				(cDto.getChiefTeacher().getUsername()));
 	}
 
 	@Test

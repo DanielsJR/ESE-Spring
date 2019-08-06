@@ -63,8 +63,9 @@ public class SubjectControllerFuntionalTesting {
 	@Test
 	public void testPostSubject() {
 		subjectRestService.postSubject();
+
 		SubjectDto sDto = subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
-		assertEquals(sDto.getId(), subjectRestService.getSubjectDto().getId());
+		assertEquals(sDto, subjectRestService.getSubjectDto());
 	}
 
 	@Test
@@ -143,8 +144,7 @@ public class SubjectControllerFuntionalTesting {
 
 		subjectRestService.putSubject();
 
-		Assert.assertEquals(subjectRestService.getSubjectDto().getTeacher().getId(),
-				userRestService.getTeacherDto().getId());
+		Assert.assertEquals(subjectRestService.getSubjectDto().getTeacher(), userRestService.getTeacherDto());
 	}
 
 	@Test
@@ -285,7 +285,7 @@ public class SubjectControllerFuntionalTesting {
 
 		SubjectDto sDto = subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
 
-		Assert.assertTrue(subjectRestService.getSubjectDto().getId().equals(sDto.getId()));
+		assertEquals(subjectRestService.getSubjectDto(), (sDto));
 	}
 
 	@Test
@@ -324,7 +324,7 @@ public class SubjectControllerFuntionalTesting {
 		SubjectDto sDto = subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(),
 				subjectRestService.getSubjectDto().getCourse().getId());
 
-		Assert.assertTrue(subjectRestService.getSubjectDto().getId().equals(sDto.getId()));
+		assertEquals(subjectRestService.getSubjectDto(), (sDto));
 	}
 
 	@Test
@@ -356,7 +356,6 @@ public class SubjectControllerFuntionalTesting {
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
 		subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(), "xxx");
 
-		
 	}
 
 	//

@@ -5,74 +5,78 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nx.ESE.documents.core.QuizStudent;
 
+@NoArgsConstructor
 public class QuizStudentDto {
 
+	@Getter
 	private String id;
 
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
+	@Setter
 	private Date date;
 
 	@NotNull
+	@Valid
+	@Getter
+	@Setter
 	private UserDto studentDto;
 
+	@Getter
+	@Setter
 	private double grade;
 
 	@NotNull
+	@Valid
+	@Getter
+	@Setter
 	private SubjectDto subjectDto;
 
 	@NotNull
+	@Getter
+	@Setter
 	private QuizDto quizDto;
 
+	@Getter
+	@Setter
 	private List<String> multipleSelectionIitemAnswers = new ArrayList<String>();
 
+	@Getter
+	@Setter
 	private List<Boolean> trueFalseItemAnswers = new ArrayList<Boolean>();
 
+	@Getter
+	@Setter
 	private List<String> correspondItemAnswers = new ArrayList<String>();
 
+	@Getter
+	@Setter
 	private List<String> incompleteTextItemAnswers = new ArrayList<String>();
 
+	@Getter
 	private String createdBy;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date createdDate;
 
+	@Getter
 	private String lastModifiedUser;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date lastModifiedDate;
-
-	public QuizStudentDto() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public QuizStudentDto(String id, Date date, UserDto studentDto, double grade, SubjectDto subjectDto,
-			QuizDto quizDto, List<String> multipleSelectionIitemAnswers, List<Boolean> trueFalseItemAnswers,
-			List<String> correspondItemAnswers, List<String> incompleteTextItemAnswers, String createdBy,
-			Date createdDate, String lastModifiedUser, Date lastModifiedDate) {
-		super();
-		this.id = id;
-		this.date = date;
-		this.studentDto = studentDto;
-		this.grade = grade;
-		this.subjectDto = subjectDto;
-		this.quizDto = quizDto;
-		this.multipleSelectionIitemAnswers = multipleSelectionIitemAnswers;
-		this.trueFalseItemAnswers = trueFalseItemAnswers;
-		this.correspondItemAnswers = correspondItemAnswers;
-		this.incompleteTextItemAnswers = incompleteTextItemAnswers;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.lastModifiedUser = lastModifiedUser;
-		this.lastModifiedDate = lastModifiedDate;
-	}
 
 	public QuizStudentDto(QuizStudent quizStudent) {
 		super();
@@ -90,62 +94,6 @@ public class QuizStudentDto {
 		this.createdDate = quizStudent.getCreatedDate();
 		this.lastModifiedUser = quizStudent.getLastModifiedUser();
 		this.lastModifiedDate = quizStudent.getLastModifiedDate();
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public UserDto getStudentDto() {
-		return studentDto;
-	}
-
-	public double getGrade() {
-		return grade;
-	}
-
-	public SubjectDto getSubjectDto() {
-		return subjectDto;
-	}
-
-	public QuizDto getQuizDto() {
-		return quizDto;
-	}
-
-	public List<String> getMultipleSelectionIitemAnswers() {
-		return multipleSelectionIitemAnswers;
-	}
-
-	public List<Boolean> getTrueFalseItemAnswers() {
-		return trueFalseItemAnswers;
-	}
-
-	public List<String> getCorrespondItemAnswers() {
-		return correspondItemAnswers;
-	}
-
-	public List<String> getIncompleteTextItemAnswers() {
-		return incompleteTextItemAnswers;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
 	}
 
 	@Override

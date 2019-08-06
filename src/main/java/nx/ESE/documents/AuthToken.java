@@ -1,24 +1,17 @@
 package nx.ESE.documents;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthToken {
 
+	@Setter
+	@Getter
 	private String token;
-
-	public AuthToken() {
-
-	}
-
-	public AuthToken(String token) {
-		this.token = token;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 
 	@Override
 	public int hashCode() {
@@ -49,7 +42,5 @@ public class AuthToken {
 	public String toString() {
 		return "AuthToken [token=" + token + "]";
 	}
-	
-	
 
 }

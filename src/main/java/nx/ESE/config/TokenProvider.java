@@ -24,10 +24,14 @@ import javax.crypto.SecretKey;
 public class TokenProvider implements Serializable {
 
 	private static final long serialVersionUID = -3528505550338355205L;
+	
 	public static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5 * 60 * 60;
+	
 	public static final String AUTHORITIES_KEY = "scopes";
+	
 	//public static final String SIGNING_KEY = "clave"; // not safe
 	SecretKey key = MacProvider.generateKey(SignatureAlgorithm.HS256);
+	
 	String base64EncodedKey = TextCodec.BASE64.encode(key.getEncoded());
 
 	public String getUsernameFromToken(String token) {
@@ -69,7 +73,7 @@ public class TokenProvider implements Serializable {
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 
-	UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth,
+	public UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth,
 			final UserDetails userDetails) {
 
 		final JwtParser jwtParser = Jwts.parser().setSigningKey(base64EncodedKey);

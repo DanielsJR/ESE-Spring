@@ -1,7 +1,5 @@
 package nx.ESE.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -25,7 +23,8 @@ public class PreferencesService {
 	public ThemeDto getUserTheme(String id) {
 		ThemeDto themeDto = new ThemeDto();
 		User user = userRepository.findById(id).get();
-		if (preferencesRepository.findByUserId(id) != null && preferencesRepository.findByUserId(id).getTheme() != null) {
+		if (preferencesRepository.findByUserId(id) != null
+				&& preferencesRepository.findByUserId(id).getTheme() != null) {
 			Theme themeDb = preferencesRepository.findByUserId(id).getTheme();
 			themeDto.setName(themeDb.getName());
 			themeDto.setIsDark(themeDb.getIsDark());

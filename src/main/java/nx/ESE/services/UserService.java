@@ -70,11 +70,11 @@ public class UserService {
 	}
 
 	// Exceptions*********************
-	
+
 	public boolean isIdNull(UserDto userDto) {
 		return userDto.getId() == null;
 	}
-	
+
 	public boolean isPassNull(UserDto userDto) {
 		return userDto.getPassword() == null;
 	}
@@ -118,18 +118,14 @@ public class UserService {
 
 	public boolean hasUserGreaterPrivilegesByUsername(String username, Role[] roles) {
 		User user = this.userRepository.findByUsername(username);
-		if (user != null && Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles())))
-			return false;
-		return true;
+		return user != null && !Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
+
 	}
 
 	public boolean hasUserGreaterPrivilegesById(String id, Role[] roles) {
 		User user = this.userRepository.findById(id).get();
-		if (user != null && Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles())))
-			return false;
-		return true;
+		return user != null && !Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
 	}
-
 
 	public boolean passMatch(String username, String pass) {
 		if (pass == null) {
@@ -142,46 +138,28 @@ public class UserService {
 
 	public boolean isChiefTeacher(String username) {
 		User user = this.userRepository.findByUsername(username);
-		return courseRepository.findFirstByChiefTeacher(user.getId()) != null;
+		return user != null && courseRepository.findFirstByChiefTeacher(user.getId()) != null;
 
 	}
 
 	public boolean isChiefTeacherSetRoles(UserDto userDto) {
-		Boolean[] found = { false };
+    	boolean roleTeacher = Stream.of(userDto.getRoles()).filter(r -> r.toString() == "TEACHER").findFirst()
+				.isPresent();
 
-		Stream.of(userDto.getRoles()).forEach(r -> {
-			if (r.toString() == "TEACHER") {
-				found[0] = true;
-			}
-		});
-
-		if ((!found[0]) && (this.courseRepository.findFirstByChiefTeacher(userDto.getId()) != null)) {
-			return true;
-		} else {
-			return false;
-		}
+		return (!roleTeacher) && (this.courseRepository.findFirstByChiefTeacher(userDto.getId()) != null);
 
 	}
 
 	public boolean isTeacherInSubject(String username) {
 		User user = this.userRepository.findByUsername(username);
-		return this.subjectRepository.findFirstByTeacher(user.getId()) != null;
+		return user != null && this.subjectRepository.findFirstByTeacher(user.getId()) != null;
 	}
 
 	public boolean isTeacherInSubjectSetRoles(UserDto userDto) {
-		Boolean[] found = { false };
+		boolean roleTeacher = Stream.of(userDto.getRoles()).filter(r -> r.toString() == "TEACHER").findFirst()
+				.isPresent();
 
-		Stream.of(userDto.getRoles()).forEach(r -> {
-			if (r.toString() == "TEACHER") {
-				found[0] = true;
-			}
-		});
-
-		if ((!found[0]) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null)) {
-			return true;
-		} else {
-			return false;
-		}
+		return (!roleTeacher) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null);
 
 	}
 

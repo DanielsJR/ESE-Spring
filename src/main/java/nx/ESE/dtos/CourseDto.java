@@ -5,53 +5,57 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
 import nx.ESE.documents.core.CourseName;
 
+@NoArgsConstructor
 public class CourseDto {
 
+	@Getter
 	private String id;
 
-	@NotNull
+	@NotNull(message = "Nombre de Curso cannot be null")
+	@Getter
+	@Setter
 	private CourseName name;
 
-	@NotNull
+	@NotNull(message = "Profesor Jefe cannot be null")
+	@Valid
+	@Getter
+	@Setter
 	private UserDto chiefTeacher;
 
-	private List<UserDto> students;
+	@Getter
+	@Setter
+	private List<@Valid UserDto> students;
 
-	@NotNull
+	@NotNull(message = "Año cannot be null")
+	@Getter
+	@Setter
 	private String year;
-	
+
+	@Getter
 	private String createdBy;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date createdDate;
 
+	@Getter
 	private String lastModifiedUser;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date lastModifiedDate;
-
-	public CourseDto() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	//input
-	public CourseDto(String id, CourseName name, UserDto chiefTeacher, List<UserDto> students, String year) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.chiefTeacher = chiefTeacher;
-		this.students = students;
-		this.year = year;
-	}
 
 	// output
 	public CourseDto(Course course) {
@@ -59,7 +63,7 @@ public class CourseDto {
 		this.id = course.getId();
 		this.name = course.getName();
 		this.chiefTeacher = new UserDto(course.getChiefTeacher());
-		this.students = this.usersList(course);
+		this.students = this.studentsList(course);
 		this.year = course.getYear();
 		this.createdBy = course.getCreatedBy();
 		this.createdDate = course.getCreatedDate();
@@ -67,7 +71,7 @@ public class CourseDto {
 		this.lastModifiedDate = course.getLastModifiedDate();
 	}
 
-	public List<UserDto> usersList(Course course) {
+	public List<UserDto> studentsList(Course course) {
 		List<UserDto> usersList = new ArrayList<>();
 		for (User user : course.getStudents()) {
 			usersList.add(new UserDto(user));
@@ -76,61 +80,9 @@ public class CourseDto {
 		return usersList;
 	}
 
-	public CourseName getName() {
-		return name;
-	}
-
-	public void setName(CourseName name) {
-		this.name = name;
-	}
-
-	public UserDto getChiefTeacher() {
-		return chiefTeacher;
-	}
-
-	public void setChiefTeacher(UserDto chiefTeacher) {
-		this.chiefTeacher = chiefTeacher;
-	}
-
-	public List<UserDto> getStudents() {
-		return students;
-	}
-
-	public void setStudents(List<UserDto> students) {
-		this.students = students;
-	}
-
-	public String getYear() {
-		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
-	}
-
-	public String getId() {
-		return id;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
 	@Override
 	public String toString() {
-		
+
 		String cDate = "null";
 		if (this.createdDate != null)
 			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
@@ -138,10 +90,38 @@ public class CourseDto {
 		String lModified = "null";
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-		
+
 		return "CourseDto [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
-				+ ", year=" + year + ", createdBy=" + createdBy + ", createdDate=" + cDate
-				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
+				+ ", year=" + year + ", createdBy=" + createdBy + ", createdDate=" + cDate + ", lastModifiedUser="
+				+ lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((year == null) ? 0 : year.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CourseDto other = (CourseDto) obj;
+		if (name != other.name)
+			return false;
+		if (year == null) {
+			if (other.year != null)
+				return false;
+		} else if (!year.equals(other.year))
+			return false;
+		return true;
 	}
 
 }

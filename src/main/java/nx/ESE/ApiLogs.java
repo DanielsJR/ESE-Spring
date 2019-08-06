@@ -18,12 +18,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class ApiLogs {
 
-	@Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping) || "
-			+ "@annotation(org.springframework.web.bind.annotation.GetMapping) || "
-			+ "@annotation(org.springframework.web.bind.annotation.PostMapping) || "
-			+ "@annotation(org.springframework.web.bind.annotation.PatchMapping) || "
-			+ "@annotation(org.springframework.web.bind.annotation.PutMapping) || "
-			+ "@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+	@Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
 	public void allResources() {
 	}
 
@@ -51,15 +46,15 @@ public class ApiLogs {
 				+ exception.getMessage();
 		LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName()).error(log);
 	}
-	
-    @Around("allResources()")
-    public Object processTimeLog(ProceedingJoinPoint pjp) throws Throwable {
-        Calendar before = Calendar.getInstance();
-        Object obj = pjp.proceed();
-        Calendar now = Calendar.getInstance();
-        LogManager.getLogger(pjp.getSignature().getDeclaringTypeName())
-                .info("Processing time: " + (now.getTimeInMillis() - before.getTimeInMillis()) + "ms");
-        return obj;
-    }
+
+	@Around("allResources()")
+	public Object processTimeLog(ProceedingJoinPoint pjp) throws Throwable {
+		Calendar before = Calendar.getInstance();
+		Object obj = pjp.proceed();
+		Calendar now = Calendar.getInstance();
+		LogManager.getLogger(pjp.getSignature().getDeclaringTypeName())
+				.info("Processing time: " + (now.getTimeInMillis() - before.getTimeInMillis()) + "ms");
+		return obj;
+	}
 
 }

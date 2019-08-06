@@ -3,49 +3,53 @@ package nx.ESE.dtos;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nx.ESE.documents.core.Subject;
 import nx.ESE.documents.core.SubjectName;
 
+@NoArgsConstructor
 public class SubjectDto {
 
+	@Getter
 	private String id;
 
 	@NotNull
+	@Getter
+	@Setter
 	private SubjectName name;
 
 	@NotNull
+	@Valid
+	@Getter
+	@Setter
 	private UserDto teacher;
 
 	@NotNull
+	@Valid
+	@Getter
+	@Setter
 	private CourseDto course;
-	
+
+	@Getter
 	private String createdBy;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date createdDate;
 
+	@Getter
 	private String lastModifiedUser;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date lastModifiedDate;
-
-	public SubjectDto() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	//input
-	public SubjectDto(String id, SubjectName name, UserDto teacher, CourseDto course) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.teacher = teacher;
-		this.course = course;
-	}
 
 	// output
 	public SubjectDto(Subject subject) {
@@ -59,52 +63,6 @@ public class SubjectDto {
 		this.lastModifiedDate = subject.getLastModifiedDate();
 	}
 
-	public SubjectName getName() {
-		return name;
-	}
-
-	public void setName(SubjectName name) {
-		this.name = name;
-	}
-
-	public UserDto getTeacher() {
-		return teacher;
-	}
-
-	public void setTeacher(UserDto teacher) {
-		this.teacher = teacher;
-	}
-
-	public CourseDto getCourse() {
-		return course;
-	}
-
-	public void setCourse(CourseDto course) {
-		this.course = course;
-	}
-
-	public String getId() {
-		return id;
-	}
-	
-	
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
 	@Override
 	public String toString() {
 
@@ -116,11 +74,40 @@ public class SubjectDto {
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
 
-		return "Subject [id=" + id + ", name=" + name + ", teacher=" + teacher + ", course=" + course
-				+ ", createdBy=" + createdBy + ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser
+		return "Subject [id=" + id + ", name=" + name + ", teacher=" + teacher + ", course=" + course + ", createdBy="
+				+ createdBy + ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser
 				+ ", lastModifiedDate=" + lModified + "]";
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((course == null) ? 0 : course.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SubjectDto other = (SubjectDto) obj;
+		if (course == null) {
+			if (other.course != null)
+				return false;
+		} else if (!course.equals(other.course))
+			return false;
+		if (name != other.name)
+			return false;
+		return true;
+	}
+
+
 	
 
 }

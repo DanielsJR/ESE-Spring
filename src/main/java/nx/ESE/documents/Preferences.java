@@ -13,6 +13,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
 @Document
 public class Preferences {
 
@@ -21,67 +26,34 @@ public class Preferences {
 
 	@DBRef
 	@NotNull
+	@Setter
+	@Getter
 	private User user;
 
+	@Setter
+	@Getter
 	private Theme theme;
 
 	@CreatedBy
+	@Getter
 	private String createdBy;
 
 	@CreatedDate
+	@Getter
 	private Date createdDate;
 
 	@LastModifiedBy
+	@Getter
 	private String lastModifiedUser;
 
 	@LastModifiedDate
+	@Getter
 	private Date lastModifiedDate;
-
-	public Preferences() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public Preferences(User user, Theme theme) {
 		super();
 		this.user = user;
 		this.theme = theme;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Theme getTheme() {
-		return theme;
-	}
-
-	public void setTheme(Theme theme) {
-		this.theme = theme;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
 	}
 
 	@Override

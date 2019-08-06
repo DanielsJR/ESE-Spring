@@ -1,52 +1,30 @@
 package nx.ESE.documents.core;
 
+import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class CorrespondItem {
 
+	@NotNull
+	@Getter
+	@Setter
 	private String item;
-	
+
+	@NotNull
+	@Getter
+	@Setter
 	private String correspond;
-
-
-	public CorrespondItem() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-
-	public CorrespondItem(String item, String correspond) {
-		super();
-		this.item = item;
-		this.correspond = correspond;
-	}
-
-
-	public String getItem() {
-		return item;
-	}
-
-
-	public void setItem(String item) {
-		this.item = item;
-	}
-
-
-	public String getCorrespond() {
-		return correspond;
-	}
-
-
-	public void setCorrespond(String correspond) {
-		this.correspond = correspond;
-	}
-
 
 	@Override
 	public String toString() {
 		return "CorrespondItem [item=" + item + ", correspond=" + correspond + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -56,7 +34,6 @@ public class CorrespondItem {
 		result = prime * result + ((item == null) ? 0 : item.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -79,7 +56,5 @@ public class CorrespondItem {
 			return false;
 		return true;
 	}
-
-
 
 }

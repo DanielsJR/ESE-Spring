@@ -8,9 +8,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nx.ESE.documents.Avatar;
 import nx.ESE.documents.Commune;
 import nx.ESE.documents.Gender;
@@ -20,62 +25,84 @@ import nx.ESE.dtos.validators.RUTValid;
 import nx.ESE.utils.Capitalizer;
 
 @JsonInclude(Include.NON_NULL)
+@NoArgsConstructor
 public class UserDto {
 
+	@Getter
 	private String id;
 
 	@NotNull
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.USERNAME)
+	@Getter
 	private String username;
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.PASSWORD)
+	@Getter
+	@Setter
 	private String password;
 
 	@NotNull
+	@Getter
 	private String firstName;
 
 	@NotNull
+	@Getter
 	private String lastName;
 
 	@RUTValid
 	private String dni;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
+	@Setter
 	private Date birthday;
 
+	@Getter
+	@Setter
 	private Gender gender;
 
+	@Getter
+	@Setter
 	private Avatar avatar;
 
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.NINE_DIGITS)
+	@Getter
+	@Setter
 	private String mobile;
 
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.EMAIL)
+	@Getter
 	private String email;
 
+	@Getter
 	private String address;
 
+	@Getter
+	@Setter
 	private Commune commune;
 
+	@Getter
+	@Setter
 	private Role[] roles;
 
+	@Getter
+	@Setter
 	private boolean active;
 
+	@Getter
 	private String createdBy;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date createdDate;
 
+	@Getter
 	private String lastModifiedUser;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Getter
 	private Date lastModifiedDate;
-
-
-
-	public UserDto() {
-		super();
-	}
 
 	// input
 	public UserDto(String id, String username, String password, String firstName, String lastName, String dni,
@@ -85,32 +112,31 @@ public class UserDto {
 		this.id = id;
 		this.setUsername(username);
 		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.setFirstName(firstName);
+		this.setLastName(lastName);
 		this.setDni(dni);
 		this.birthday = birthday;
-		this.setGender(gender);
+		this.gender = gender ;
 		this.avatar = avatar;
 		this.mobile = mobile;
 		this.setEmail(email);
-		this.address = address;
-		this.setCommune(commune);
+		this.setAddress(address);
+		this.commune = commune;
 		this.roles = roles;
 		this.active = active;
 
 	}
 
-	//test
+	// test
 	public UserDto(String usernamePass) {
-		this(null, usernamePass, usernamePass + "@ESE1", usernamePass, usernamePass, null, null, null, null, null, null, null, null,
-				null, true, null);
+		this(null, usernamePass, usernamePass + "@ESE1", usernamePass, usernamePass, null, null, null, null, null, null,
+				null, null, null, true, null);
 	}
 
 	// output
 	public UserDto(User user) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		// this.password = user.getPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
 		this.dni = user.getDni();
@@ -129,18 +155,6 @@ public class UserDto {
 		this.lastModifiedDate = user.getLastModifiedDate();
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
 	public void setUsername(String username) {
 		if (username != null) {
 			this.username = username.toLowerCase();
@@ -149,28 +163,12 @@ public class UserDto {
 		}
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
 	public void setFirstName(String firstName) {
 		if (firstName != null) {
 			this.firstName = Capitalizer.capitalizer(firstName);
 		} else {
 			this.firstName = firstName;
 		}
-	}
-
-	public String getLastName() {
-		return lastName;
 	}
 
 	public void setLastName(String lastName) {
@@ -198,42 +196,6 @@ public class UserDto {
 		}
 	}
 
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
-
-	public Avatar getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(Avatar avatar) {
-		this.avatar = avatar;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
 	public void setEmail(String email) {
 		if (email != null) {
 			this.email = email.toLowerCase();
@@ -242,56 +204,12 @@ public class UserDto {
 		}
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
 	public void setAddress(String address) {
 		if (address != null) {
 			this.address = Capitalizer.capitalizer(address);
 		} else {
 			this.address = address;
 		}
-	}
-
-	public Commune getCommune() {
-		return commune;
-	}
-
-	public void setCommune(Commune commune) {
-		this.commune = commune;
-	}
-
-	public Role[] getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Role[] roles) {
-		this.roles = roles;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
 	}
 
 	@Override
@@ -321,6 +239,7 @@ public class UserDto {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -334,6 +253,11 @@ public class UserDto {
 		if (getClass() != obj.getClass())
 			return false;
 		UserDto other = (UserDto) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -341,7 +265,5 @@ public class UserDto {
 			return false;
 		return true;
 	}
-	
-	
 
 }

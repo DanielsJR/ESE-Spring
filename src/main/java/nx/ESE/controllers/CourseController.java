@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,8 +56,8 @@ public class CourseController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto)
-			throws FieldAlreadyExistException, FieldInvalidException, DocumentAlreadyExistException {
+	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) throws FieldAlreadyExistException,
+			FieldInvalidException, DocumentAlreadyExistException {
 
 		if (!this.courseService.isIdNull(courseDto))
 			throw new FieldInvalidException("Id");
@@ -77,7 +78,8 @@ public class CourseController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PutMapping(PATH_ID)
 	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
-			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException, DocumentAlreadyExistException {
+			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException,
+			DocumentAlreadyExistException {
 
 		if (this.courseService.nameAndYearRepeated(courseDto))
 			throw new DocumentAlreadyExistException("Curso");

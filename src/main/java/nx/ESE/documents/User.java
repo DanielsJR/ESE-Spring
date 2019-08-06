@@ -15,64 +15,97 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
+import lombok.Getter;
+import lombok.Setter;
 
 @Document
 public class User {
 
+	@Getter
 	@Id
 	private String id;
 
 	@Indexed(unique = true)
 	@NotNull
+	@Setter
+	@Getter
 	private String username;
 
 	@NotNull
+	@Getter
 	private String password;
-	
+
+	@Setter
+	@Getter
 	private String firstName;
 
+	@Setter
+	@Getter
 	private String lastName;
 
+	@Setter
+	@Getter
 	private String dni;
 
+	@Setter
+	@Getter
 	private Date birthday;
-	
+
+	@Setter
+	@Getter
 	private Gender gender;
-	
+
+	@Setter
+	@Getter
 	private Avatar avatar;
-	
+
+	@Setter
+	@Getter
 	private String mobile;
 
+	@Setter
+	@Getter
 	private String email;
 
+	@Setter
+	@Getter
 	private String address;
 
+	@Setter
+	@Getter
 	private Commune commune;
 
 	@NotNull
+	@Setter
+	@Getter
 	private Role[] roles;
 
+	@Setter
+	@Getter
 	private boolean active;
-	
+
 	@CreatedBy
+	@Getter
 	private String createdBy;
 
 	@CreatedDate
+	@Getter
 	private Date createdDate;
 
 	@LastModifiedBy
+	@Getter
 	private String lastModifiedUser;
 
 	@LastModifiedDate
+	@Getter
 	private Date lastModifiedDate;
 
 	public User() {
 		active = true;
 	}
 
-	public User(String username, String password, String firstName, String lastName, String dni, Date birthday, Gender gender,
-			Avatar avatar, String mobile, String email, String address, Commune commune) {
+	public User(String username, String password, String firstName, String lastName, String dni, Date birthday,
+			Gender gender, Avatar avatar, String mobile, String email, String address, Commune commune) {
 		this();
 		this.username = username;
 		this.setPassword(password);
@@ -88,148 +121,15 @@ public class User {
 		this.commune = commune;
 		this.roles = new Role[] { Role.STUDENT };
 	}
-	
 
 	public User(String username, String password) {
 		this(username, password, null, null, null, null, null, null, null, null, null, null);
 
 	}
-	
 
-	public String getUsername() {
-		return username;
+	public void setPassword(String password) {
+		this.password = new BCryptPasswordEncoder().encode(password);
 	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-    public void setPassword(String password) {
-        this.password = new BCryptPasswordEncoder().encode(password);
-    }
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getDni() {
-		return dni;
-	}
-
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
-
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
-	
-	
-	public Avatar getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(Avatar avatar) {
-		this.avatar = avatar;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public Commune getCommune() {
-		return commune;
-	}
-
-	public void setCommune(Commune commune) {
-		this.commune = commune;
-	}
-
-	public Role[] getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Role[] roles) {
-		this.roles = roles;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public String getId() {
-		return id;
-	}
-	
 
 	@Override
 	public String toString() {
@@ -237,7 +137,7 @@ public class User {
 		if (this.birthday != null) {
 			birthdayF = new SimpleDateFormat("dd-MMM-yyyy").format(birthday.getTime());
 		}
-		
+
 		String cDate = "null";
 		if (this.createdDate != null)
 			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
@@ -245,13 +145,13 @@ public class User {
 		String lModified = "null";
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-		
-		
+
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender + ", mobile="
-				+ mobile +", avatar=" + avatar + ", email=" + email + ", address=" + address + ", commune=" + commune + ", roles="
-				+ Arrays.toString(roles)  + ", active=" + active + ", createdBy=" + createdBy + ", createdDate=" + cDate
-				+ ", lastModifiedBy=" + lastModifiedUser  + ", lastModifiedDate=" + lModified + "]";
+				+ ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + birthdayF + ", gender=" + gender
+				+ ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
+				+ ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
+				+ createdBy + ", createdDate=" + cDate + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
+				+ lModified + "]";
 	}
 
 	@Override
@@ -284,11 +184,5 @@ public class User {
 			return false;
 		return true;
 	}
-
-
-
-
-
-
 
 }

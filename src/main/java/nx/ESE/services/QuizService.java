@@ -31,8 +31,8 @@ public class QuizService {
 		quiz.setTitle(quizDto.getTitle());
 		quiz.setDescription(quizDto.getDescription());
 		quiz.setAuthor(this.setAuthor(quizDto).get());
-		quiz.setDate(quizDto.getDate());
 		quiz.setSubjectName(quizDto.getSubjectName());
+		quiz.setQuizLevel(quizDto.getQuizLevel());
         quiz.setCorrespondItems(quizDto.getCorrespondItems());
         quiz.setIncompleteTextItems(quizDto.getIncompleteTextItems());
         quiz.setTrueFalseItems(quizDto.getTrueFalseItems());

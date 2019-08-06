@@ -1,45 +1,60 @@
 package nx.ESE.documents.core;
 
+import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class IncompleteTextItem {
 
+	@NotNull
+	@Getter
+	@Setter
 	private String sentence;
-	
+
+	@NotNull
+	@Getter
+	@Setter
 	private String answer;
-
-
-	public IncompleteTextItem() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public IncompleteTextItem(String sentence, String answer) {
-		super();
-		this.sentence = sentence;
-		this.answer = answer;
-	}
-
-	public String getSentence() {
-		return sentence;
-	}
-
-	public void setSentence(String sentence) {
-		this.sentence = sentence;
-	}
-
-	public String getAnswer() {
-		return answer;
-	}
-
-	public void setAnswer(String answer) {
-		this.answer = answer;
-	}
-
 
 	@Override
 	public String toString() {
 		return "IncompleteTextItem [sentence=" + sentence + ", answer=" + answer + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((answer == null) ? 0 : answer.hashCode());
+		result = prime * result + ((sentence == null) ? 0 : sentence.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IncompleteTextItem other = (IncompleteTextItem) obj;
+		if (answer == null) {
+			if (other.answer != null)
+				return false;
+		} else if (!answer.equals(other.answer))
+			return false;
+		if (sentence == null) {
+			if (other.sentence != null)
+				return false;
+		} else if (!sentence.equals(other.sentence))
+			return false;
+		return true;
+	}
 
 }

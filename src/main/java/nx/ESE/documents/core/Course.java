@@ -12,41 +12,53 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nx.ESE.documents.User;
 import nx.ESE.dtos.UserDto;
 
+@NoArgsConstructor
 @Document
 public class Course {
 
 	@Id
+	@Getter
 	private String id;
 
+	@Getter
+	@Setter
 	private CourseName name;
 
 	@DBRef
+	@Getter
+	@Setter
 	private User chiefTeacher;
 
 	@DBRef(lazy = true)
+	@Getter
+	@Setter
 	private List<User> students;
 
+	@Getter
+	@Setter
 	private String year;
-	
+
 	@CreatedBy
+	@Getter
 	private String createdBy;
 
 	@CreatedDate
+	@Getter
 	private Date createdDate;
 
 	@LastModifiedBy
+	@Getter
 	private String lastModifiedUser;
 
 	@LastModifiedDate
+	@Getter
 	private Date lastModifiedDate;
-
-	public Course() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public Course(CourseName name, User chiefTeacher, List<User> students, String year) {
 		super();
@@ -55,62 +67,6 @@ public class Course {
 		this.students = students;
 		this.year = year;
 	}
-
-	public CourseName getName() {
-		return name;
-	}
-
-	public void setName(CourseName name) {
-		this.name = name;
-	}
-
-	public User getChiefTeacher() {
-		return chiefTeacher;
-	}
-
-	public void setChiefTeacher(User chiefTeacher) {
-		this.chiefTeacher = chiefTeacher;
-	}
-
-	public List<User> getStudents() {
-		return students;
-	}
-
-	public void setStudents(List<User> students) {
-		this.students = students;
-	}
-
-
-	public String getYear() {
-		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
-	}
-
-	public String getId() {
-		return id;
-	}
-	
-	
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
 
 	@Override
 	public int hashCode() {
@@ -142,7 +98,7 @@ public class Course {
 
 	@Override
 	public String toString() {
-		
+
 		String cDate = "null";
 		if (this.createdDate != null)
 			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
@@ -150,15 +106,10 @@ public class Course {
 		String lModified = "null";
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-		
+
 		return "Course [id=" + id + ", name=" + name + ", chiefTeacher=" + chiefTeacher + ", students=" + students
-				+ ", year=" + year + ", createdBy=" + createdBy + ", createdDate=" + cDate
-				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
+				+ ", year=" + year + ", createdBy=" + createdBy + ", createdDate=" + cDate + ", lastModifiedUser="
+				+ lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
 	}
-
-	
-
-
-
 
 }

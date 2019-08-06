@@ -124,9 +124,8 @@ public class UserTeacherControllerFuntionalTesting {
 	}
 
 	@Test
-	public void testPostTeacherWithoutUser() {
+	public void testPostTeacherWithoutBody() {
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.getTeacherDto().setUsername(null);
 		restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS)
 				.bearerAuth(restService.getAuthToken().getToken()).post().build();
 	}

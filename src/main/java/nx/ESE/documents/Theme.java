@@ -1,48 +1,34 @@
 package nx.ESE.documents;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class Theme {
 
+	@Setter
+	@Getter
 	private String name;
-	
+
+	//@Setter
+	//@Getter
 	private boolean isDark;
 	
+
+	@Setter
+	@Getter
 	private String color;
 	
-	public Theme() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 	
-
-	public Theme(String name, boolean isDark, String color) {
-		super();
-		this.name = name;
-		this.isDark = isDark;
-		this.color = color;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public boolean getIsDark() {
 		return isDark;
 	}
 
 	public void setIsDark(boolean isDark) {
 		this.isDark = isDark;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
 	}
 
 	@Override
@@ -75,7 +61,6 @@ public class Theme {
 		return "Theme [name=" + name + ", isDark=" + isDark + ", color=" + color + "]";
 	}
 
-	
 
 
 }

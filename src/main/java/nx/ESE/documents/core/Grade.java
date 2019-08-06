@@ -11,47 +11,65 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nx.ESE.documents.User;
 
+@NoArgsConstructor
 @Document
 public class Grade {
 
 	@Id
+	@Getter
 	private String id;
 
+	@Getter
+	@Setter
 	private String title;
 
+	@Getter
+	@Setter
 	private String type;
 
 	@DBRef
+	@Getter
+	@Setter
 	private User student;
 
 	@DBRef
+	@Getter
+	@Setter
 	private QuizStudent quizStudent;
 
+	@Getter
+	@Setter
 	private double grade;
 
 	@DBRef
+	@Getter
+	@Setter
 	private Subject subject;
 
+	@Getter
+	@Setter
 	private Date date;
 
 	@CreatedBy
+	@Getter
 	private String createdBy;
 
 	@CreatedDate
+	@Getter
 	private Date createdDate;
 
 	@LastModifiedBy
+	@Getter
 	private String lastModifiedUser;
 
 	@LastModifiedDate
+	@Getter
 	private Date lastModifiedDate;
-
-	public Grade() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public Grade(String title, String type, QuizStudent quizStudent, Date date) {
 		super();
@@ -72,82 +90,6 @@ public class Grade {
 		this.grade = grade;
 		this.subject = subject;
 		this.date = date;
-	}
-
-	public User getStudent() {
-		return student;
-	}
-
-	public void setStudent(User student) {
-		this.student = student;
-	}
-
-	public double getGrade() {
-		return grade;
-	}
-
-	public void setGrade(double grade) {
-		this.grade = grade;
-	}
-
-	public Subject getSubject() {
-		return subject;
-	}
-
-	public void setSubject(Subject subject) {
-		this.subject = subject;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public QuizStudent getQuizStudent() {
-		return quizStudent;
-	}
-
-	public void setQuizStudent(QuizStudent quizStudent) {
-		this.quizStudent = quizStudent;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
 	}
 
 	@Override
@@ -172,8 +114,11 @@ public class Grade {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((student == null) ? 0 : student.hashCode());
+		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -186,15 +131,30 @@ public class Grade {
 		if (getClass() != obj.getClass())
 			return false;
 		Grade other = (Grade) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (date == null) {
+			if (other.date != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!date.equals(other.date))
 			return false;
 		if (student == null) {
 			if (other.student != null)
 				return false;
 		} else if (!student.equals(other.student))
+			return false;
+		if (subject == null) {
+			if (other.subject != null)
+				return false;
+		} else if (!subject.equals(other.subject))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
 			return false;
 		return true;
 	}

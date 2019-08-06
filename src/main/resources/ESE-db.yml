@@ -513,11 +513,11 @@ subjectsList:
 quizesList:
 
   - &q01
-    title: prueba-01
-    description: prueba de diagnostico matematica-01
+    title: Prueba-01
+    description: Prueba de diagnóstico matematica-01
     author: *u022
-    date: 2018-6-11
     subjectName: MATEMATICAS
+    quizLevel: PRIMERO_BASICO
     multipleSelectionItems:
       - sentence: '1+1'
         alternativeA: '2'
@@ -537,24 +537,24 @@ quizesList:
       - sentence: '8/0=8'
         answer: false
     correspondItems:
-      - item: area de un triangulo
+      - item: Área de un Triángulo
         correspond: 'A=(B*H)/2'
-      - item: area de un rectangulo
+      - item: Área de un Rectángulo
         correspond: 'A=B*H'
     incompleteTextItems:
-      - sentence: un cuadrado es 
-        answer: cuadrado
-      - sentence: un circulo es 
-        answer: circular
+      - sentence: Un cuadrado es 
+        answer: Cuadrado
+      - sentence: Un circulo es 
+        answer: Circular
         
   - &q02
-    title: prueba-02
-    description: prueba de diagnostico historia-01
-    author: *u022
-    date: 2018-6-16
+    title: Prueba-02
+    description: Prueba de diagnóstico historia-01
+    author: *u023
     subjectName: HISTORIA
+    quizLevel: SEGUNDO_BASICO
     multipleSelectionItems:
-      - sentence: 'Quien descubrio America'
+      - sentence: '¿Quien descubrio America?'
         alternativeA: 'Carlo Magno'
         alternativeB: 'Cristobal Colón'
         alternativeC: 'Rey Felipe II'
@@ -567,20 +567,20 @@ quizesList:
         alternativeD: '10,5 billones de años'
         answer: '2,85 millones de años'   
     trueFalseItems:
-      - sentence: '¿Roma se construyo en un dia?'
+      - sentence: 'Roma se construyo en un día'
         answer: false
-      - sentence: '¿Muere espartaco al final?'
+      - sentence: 'Espartaco muere al final.'
         answer: true
     correspondItems:
       - item: Grecia
-        correspond: 'griegos'
+        correspond: 'Griegos'
       - item: Esparta
-        correspond: 'espartanos'
+        correspond: 'Espartanos'
     incompleteTextItems:
-      - sentence: esparta la polis 
+      - sentence: Esparta la polis 
         answer: militar
-      - sentence: los aztecas estaban en 
-        answer: mexico      
+      - sentence: Los aztecas estaban en 
+        answer: México      
        
 quizesStudentList:
 

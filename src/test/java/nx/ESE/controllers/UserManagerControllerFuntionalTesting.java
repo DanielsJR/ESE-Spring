@@ -127,9 +127,8 @@ public class UserManagerControllerFuntionalTesting {
 	}
 
 	@Test
-	public void testPostManagerWithoutUser() {
+	public void testPostManagerWithoutBody() {
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.getManagerDto().setUsername(null);
 		restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
 				.bearerAuth(restService.getAuthToken().getToken()).post().build();
 	}

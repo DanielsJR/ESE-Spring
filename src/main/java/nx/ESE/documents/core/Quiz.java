@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -12,136 +15,74 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Getter;
+import lombok.Setter;
 import nx.ESE.documents.User;
 
 @Document
 public class Quiz {
 
 	@Id
+	@Getter
 	private String id;
 
+	@NotNull
+	@Getter
+	@Setter
 	private String title;
 
+	@Getter
+	@Setter
 	private String description;
 
 	@DBRef
+	@NotNull
+	@Valid
+	@Getter
+	@Setter
 	private User author;
 
-	private Date date;
-
+	@NotNull
+	@Getter
+	@Setter
 	private SubjectName subjectName;
 
+	@NotNull
+	@Getter
+	@Setter
+	private QuizLevel quizLevel;
+
+	@Getter
+	@Setter
 	private List<CorrespondItem> correspondItems;
 
+	@Getter
+	@Setter
 	private List<IncompleteTextItem> incompleteTextItems;
 
+	@Getter
+	@Setter
 	private List<TrueFalseItem> trueFalseItems;
 
+	@Getter
+	@Setter
 	private List<MultipleSelectionItem> multipleSelectionItems;
 
 	@CreatedBy
+	@Getter
 	private String createdBy;
 
 	@CreatedDate
+	@Getter
 	private Date createdDate;
 
 	@LastModifiedBy
+	@Getter
 	private String lastModifiedUser;
 
 	@LastModifiedDate
+	@Getter
 	private Date lastModifiedDate;
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public User getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(User author) {
-		this.author = author;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public SubjectName getSubjectName() {
-		return subjectName;
-	}
-
-	public void setSubjectName(SubjectName subjectName) {
-		this.subjectName = subjectName;
-	}
-
-	public List<CorrespondItem> getCorrespondItems() {
-		return correspondItems;
-	}
-
-	public void setCorrespondItems(List<CorrespondItem> correspondItems) {
-		this.correspondItems = correspondItems;
-	}
-
-	public List<IncompleteTextItem> getIncompleteTextItems() {
-		return incompleteTextItems;
-	}
-
-	public void setIncompleteTextItems(List<IncompleteTextItem> incompleteTextItems) {
-		this.incompleteTextItems = incompleteTextItems;
-	}
-
-	public List<TrueFalseItem> getTrueFalseItems() {
-		return trueFalseItems;
-	}
-
-	public void setTrueFalseItems(List<TrueFalseItem> trueFalseItems) {
-		this.trueFalseItems = trueFalseItems;
-	}
-
-	public List<MultipleSelectionItem> getMultipleSelectionItems() {
-		return multipleSelectionItems;
-	}
-
-	public void setMultipleSelectionItems(List<MultipleSelectionItem> multipleSelectionItems) {
-		this.multipleSelectionItems = multipleSelectionItems;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public String getLastModifiedUser() {
-		return lastModifiedUser;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
 
 	@Override
 	public String toString() {
@@ -154,8 +95,8 @@ public class Quiz {
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
 
-		return "Quiz [id=" + id + ", title=" + title + ", description=" + description + ", author=" + author + ", date="
-				+ date + ", subjectName=" + subjectName + ", correspondItems=" + correspondItems
+		return "Quiz [id=" + id + ", title=" + title + ", description=" + description + ", author=" + author
+				+ ", subjectName=" + subjectName + ", quizLevel=" + quizLevel + ", correspondItems=" + correspondItems
 				+ ", incompleteTextItems=" + incompleteTextItems + ", trueFalseItems=" + trueFalseItems
 				+ ", multipleSelectionItems=" + multipleSelectionItems + ", createdBy=" + createdBy + ", createdDate="
 				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
@@ -185,7 +126,5 @@ public class Quiz {
 			return false;
 		return true;
 	}
-
-
 
 }

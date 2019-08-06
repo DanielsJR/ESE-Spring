@@ -2,8 +2,6 @@ package nx.ESE.controllers;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import nx.ESE.dtos.GradeDto;
 import nx.ESE.services.GradeRestService;
 import nx.ESE.services.HttpMatcher;
-import nx.ESE.services.RestBuilder;
 import nx.ESE.services.RestService;
 
 @RunWith(SpringRunner.class)
@@ -55,9 +52,8 @@ public class GradeControllerFuntionalTesting {
 		gradeRestService.postGrade();
 
 		GradeDto gDto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
-		assertEquals(gDto.getId(), gradeRestService.getGradeDto().getId());
-		
-		
+		assertEquals(gDto, gradeRestService.getGradeDto());
+
 		gradeRestService.postGrade2();
 
 		GradeDto gDto2 = gradeRestService.getGradeById(gradeRestService.getGradeDto2().getId());
@@ -91,16 +87,16 @@ public class GradeControllerFuntionalTesting {
 	@Test
 	public void testPostGradeDocumentAlreadyExistException() {
 		gradeRestService.postGrade();
-		
+
 		gradeRestService.getGradeDto2().setTitle(gradeRestService.getGradeDto().getTitle());
 		gradeRestService.getGradeDto2().setType(gradeRestService.getGradeDto().getType());
 		gradeRestService.getGradeDto2().setStudent(gradeRestService.getGradeDto().getStudent());
 		gradeRestService.getGradeDto2().setSubject(gradeRestService.getGradeDto().getSubject());
 		gradeRestService.getGradeDto2().setDate(gradeRestService.getGradeDto().getDate());
-		
+
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.postGrade2();
-		
+
 	}
 
 	@Test
@@ -141,7 +137,7 @@ public class GradeControllerFuntionalTesting {
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.postGrade();
 	}
-	
+
 	@Test
 	public void testPostGradeDateNull() {
 		gradeRestService.getGradeDto().setDate(null);
@@ -185,18 +181,18 @@ public class GradeControllerFuntionalTesting {
 				.expand(gradeRestService.getGradeDto().getId()).body(gradeRestService.getGradeDto()).put().build();
 
 	}
-	
+
 	@Test
 	public void testPutGradeDocumentAlreadyExistException() {
 		gradeRestService.postGrade();
 		gradeRestService.postGrade2();
-		
+
 		gradeRestService.getGradeDto().setTitle(gradeRestService.getGradeDto2().getTitle());
 		gradeRestService.getGradeDto().setType(gradeRestService.getGradeDto2().getType());
 		gradeRestService.getGradeDto().setStudent(gradeRestService.getGradeDto2().getStudent());
 		gradeRestService.getGradeDto().setSubject(gradeRestService.getGradeDto2().getSubject());
 		gradeRestService.getGradeDto().setDate(gradeRestService.getGradeDto2().getDate());
-		
+
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.putGrade();
 
@@ -261,7 +257,7 @@ public class GradeControllerFuntionalTesting {
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.putGrade();
 	}
-	
+
 	@Test
 	public void testPutGradeDateNull() {
 		gradeRestService.postGrade();
@@ -298,7 +294,7 @@ public class GradeControllerFuntionalTesting {
 		restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
 				.expand(gradeRestService.getGradeDto().getId()).delete().build();
 	}
-	
+
 	@Test
 	public void testDeleteGradeFieldNotFoundExceptionId() {
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
@@ -308,8 +304,9 @@ public class GradeControllerFuntionalTesting {
 	// GET********************************
 	@Test
 	public void testGetGradeById() {
-		GradeDto Gdto = gradeRestService.getGradeById(gradeRestService.postGrade().getId());
-		Assert.assertEquals(Gdto.getId(), gradeRestService.getGradeDto().getId());
+		gradeRestService.postGrade();
+		GradeDto Gdto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
+		Assert.assertEquals(Gdto, gradeRestService.getGradeDto());
 	}
 
 	@Test
