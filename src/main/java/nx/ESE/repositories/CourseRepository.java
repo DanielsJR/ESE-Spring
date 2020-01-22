@@ -33,6 +33,8 @@ public interface CourseRepository extends MongoRepository<Course, String>,Course
 	
 	//is chiefTeacher
 	public CourseDto findFirstByChiefTeacher(String TeacherId);
+
+
 	
 
 }

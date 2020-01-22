@@ -1,7 +1,7 @@
 package nx.ESE.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import nx.ESE.documents.Gender;
 import nx.ESE.documents.Preferences;
@@ -11,7 +11,7 @@ import nx.ESE.dtos.ThemeDto;
 import nx.ESE.repositories.PreferencesRepository;
 import nx.ESE.repositories.UserRepository;
 
-@Controller
+@Service
 public class PreferencesService {
 
 	@Autowired

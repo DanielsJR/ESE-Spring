@@ -2,10 +2,10 @@
 
 
     
-# Users u000-u009 ADMIN 
+# Users u000-u009 ADMIN ***********************************************************
 userList:
 
-# Users u010-u019 MANAGER 
+# Users u010-u019 MANAGER ***********************************************************
 
   - &u019
     username: megauser
@@ -87,7 +87,7 @@ userList:
     
     
     
-# Users u020-u029 TEACHER   
+# Users u020-u029 TEACHER ***********************************************************  
   - &u020
     username: u020
     firstName: Jada Candase 
@@ -166,7 +166,7 @@ userList:
     
     
     
-# Users u030-u039 STUDENT     
+# Users u030-u039 STUDENT ***********************************************************    
   - &u030
     username: u030
     firstName: Keisha 
@@ -340,7 +340,7 @@ userList:
       
       
       
-    
+# PREFERENCES ***********************************************************    
     
 preferencesList:
   - user: *u010
@@ -415,7 +415,7 @@ preferencesList:
        isDark: true
        color: '#2196F3'   
        
-       
+# COURSES***********************************************************       
 coursesList:
 
   - &c01
@@ -454,7 +454,7 @@ coursesList:
       - *u038
     year: 2017     
     
-    
+# SUBJETCS ***********************************************************     
 subjectsList:
 
   - &s01
@@ -509,13 +509,13 @@ subjectsList:
     course: *c03     
     
               
-                 
+# QUIZES ***********************************************************                  
 quizesList:
 
   - &q01
-    title: Prueba-01
+    title: Aritmetica Básica
     description: Prueba de diagnóstico matematica-01
-    author: *u022
+    author: *u010
     subjectName: MATEMATICAS
     quizLevel: PRIMERO_BASICO
     multipleSelectionItems:
@@ -548,9 +548,9 @@ quizesList:
         answer: Circular
         
   - &q02
-    title: Prueba-02
+    title: Ecuaciones de Primer Grado
     description: Prueba de diagnóstico historia-01
-    author: *u023
+    author: *u010
     subjectName: HISTORIA
     quizLevel: SEGUNDO_BASICO
     multipleSelectionItems:
@@ -580,138 +580,479 @@ quizesList:
       - sentence: Esparta la polis 
         answer: militar
       - sentence: Los aztecas estaban en 
-        answer: México      
-       
+        answer: México
+        
+  - &q03
+    title: Álgebra I
+    description: Lo mas facíl en Álgebra
+    author: *u010
+    subjectName: MATEMATICAS
+    quizLevel: SEGUNDO_BASICO
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '2'
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+    correspondItems:
+      - item: Área de un Triángulo
+        correspond: 'A=(B*H)/2'
+    incompleteTextItems:
+      - sentence: Un cuadrado es 
+        answer: Cuadrado
+
+  - &q04
+    title: Álgebra II
+    description: Segundo nivel en Álgebra
+    author: *u010
+    subjectName: MATEMATICAS
+    quizLevel: SEGUNDO_BASICO
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '2'
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+    correspondItems:
+      - item: Área de un Triángulo
+        correspond: 'A=(B*H)/2'
+    incompleteTextItems:
+      - sentence: Un cuadrado es 
+        answer: Cuadrado    
+    
+  - &q05
+    title: Álgebra III
+    description: Tercer nivel en Álgebra
+    author: *u021
+    subjectName: MATEMATICAS
+    quizLevel: SEGUNDO_BASICO
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '2'
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+    correspondItems:
+      - item: Área de un Triángulo
+        correspond: 'A=(B*H)/2'
+    incompleteTextItems:
+      - sentence: Un cuadrado es 
+        answer: Cuadrado    
+                           
+  - &q06
+    title: Álgebra IV
+    description: Cuarto nivel en Álgebra
+    author: *u021
+    subjectName: MATEMATICAS
+    quizLevel: SEGUNDO_BASICO
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '2'
+      - sentence: '1-1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '0'
+        answer: '0'
+      - sentence: '1*1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '1'
+      - sentence: '1/1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '0'
+        answer: '1'                        
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+      - sentence: '4+2=2'
+        answer: false
+      - sentence: '4*2=8'
+        answer: true
+      - sentence: '4-2=2'
+        answer: true
+      - sentence: '4/4=2'
+        answer: false
+      - sentence: '2+2=2'
+        answer: false                                        
+    correspondItems:
+      - item: animal
+        correspond: perro
+      - item: matematicas
+        correspond: '1+1'
+      - item: futbol
+        correspond: Messy
+      - item: naturaleza
+        correspond: arbol
+      - item: roma
+        correspond: coliseo
+      - item: comida
+        correspond: tallarines                         
+    incompleteTextItems:
+      - sentence: Un cuadrado es 
+        answer: cuadrado
+      - sentence: Un triangulo es 
+        answer: triangular
+      - sentence: Un rectangulo es 
+        answer: rectangular
+      - sentence: Un circulo es 
+        answer: circular                             
+    
+# QUIZES-STUDENT***********************************************************        
 quizesStudentList:
 
   - &qs01
-    date: 2018-6-10
-    grade: 5.0
-    student: *u030
-    subject: *s01
-    quiz: *q01
-    multipleSelectionIitemAnswers:
-      - 1
-      - 8
-    trueFalseItemAnswers:
-      - true
-      - true
-    correspondItemAnswers:
-      - 'A=(B*H)/2'
-      - 'A=B*H'
-    incompleteTextItemAnswers:
-      - cuadrado
-      - triangular
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '2'
+        correct: true
+      - sentence: '2*2'
+        alternativeA: '3'
+        alternativeB: '6'
+        alternativeC: '4'
+        alternativeD: '8'
+        answer: '4'
+        correct: true  
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+        correct: true
+      - sentence: '8/0=8'
+        answer: false
+        correct: true
+    correspondItems:
+      - item: Área de un Triángulo
+        correspond: 'A=(B*H)/2'
+        correct: false
+      - item: Área de un Rectángulo
+        correspond: 'A=B*H'
+        correct: false
+    incompleteTextItems:
+      - sentence: Un cuadrado es 
+        answer: Cuadrado
+        correct: true
+      - sentence: Un circulo es 
+        answer: Circular
+        correct: true
       
   - &qs02
-    date: 2018-6-10
-    grade: 6.0
-    student: *u031
-    subject: *s01
-    quiz: *q01
-    multipleSelectionIitemAnswers:
-      - 2
-      - 8
-    trueFalseItemAnswers:
-      - false
-      - false
-    correspondItemAnswers:
-      - 'A=B*H'
-      - 'A=(B*H)/2'
-    incompleteTextItemAnswers:
-      - cuadrado
-      - triangular
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '4'
+        correct: false
+      - sentence: '2*2'
+        alternativeA: '3'
+        alternativeB: '6'
+        alternativeC: '4'
+        alternativeD: '8'
+        answer: '4'
+        correct: true  
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+        correct: true
+      - sentence: '8/0=8'
+        answer: false
+        correct: true
+    correspondItems:
+      - item: Área de un Triángulo
+        correspond: 'A=B*H'
+        correct: true
+      - item: Área de un Rectángulo
+        correspond: 'A=(B*H)/2'
+        correct: true
+    incompleteTextItems:
+      - sentence: Un cuadrado es 
+        answer: Cuadradin
+        correct: false
+      - sentence: Un circulo es 
+        answer: Circulin
+        correct: false
 
   - &qs03
-    date: 2018-6-10
-    grade: 4.8
-    student: *u032
+    multipleSelectionItems:
+      - sentence: '1+1'
+        alternativeA: '2'
+        alternativeB: '1'
+        alternativeC: '3'
+        alternativeD: '4'
+        answer: '3'
+        correct: false
+      - sentence: '2*2'
+        alternativeA: '3'
+        alternativeB: '6'
+        alternativeC: '4'
+        alternativeD: '8'
+        answer: '8'
+        correct: false  
+    trueFalseItems:
+      - sentence: '4/2=2'
+        answer: true
+        correct: true
+      - sentence: '8/0=8'
+        answer: true
+        correct: false
+    correspondItems:
+      - item: Área de un Triángulo
+        correspond: 'A=(B*H)/2'
+        correct: false
+      - item: Área de un Rectángulo
+        correspond: 'A=B*H'
+        correct: false
+    incompleteTextItems:
+      - sentence: Un cuadrado es
+        correct: true
+        answer: Cuadrado
+      - sentence: Un circulo es 
+        answer: Circular
+        correct: true       
+      
+ 
+  - &qs04
+    multipleSelectionItems:
+      - sentence: '¿Quien descubrio America?'
+        alternativeA: 'Carlo Magno'
+        alternativeB: 'Cristobal Colón'
+        alternativeC: 'Rey Felipe II'
+        alternativeD: 'El Papa IV'
+        answer: 'Cristobal Colón'
+        correct: true
+      - sentence: 'El Paleolítico es un periodo de la historia de la Humanidad que se inició hace'
+        alternativeA: '10,5 millones de años'
+        alternativeB: '2,85 millones de años'
+        alternativeC: '100 mil años'
+        alternativeD: '10,5 billones de años'
+        answer: '2,85 millones de años'
+        correct: true   
+    trueFalseItems:
+      - sentence: 'Roma se construyo en un día'
+        answer: false
+        correct: true
+      - sentence: 'Espartaco muere al final.'
+        answer: false
+        correct: false
+    correspondItems:
+      - item: Grecia
+        correspond: 'Griegos'
+        correct: true
+      - item: Esparta
+        correspond: 'Espartanos'
+        correct: true
+    incompleteTextItems:
+      - sentence: Esparta la polis 
+        answer: militar
+        correct: true
+      - sentence: Los aztecas estaban en 
+        answer: México
+        correct: true  
+        
+  - &qs05
+    multipleSelectionItems:
+      - sentence: '¿Quien descubrio America?'
+        alternativeA: 'Carlo Magno'
+        alternativeB: 'Cristobal Colón'
+        alternativeC: 'Rey Felipe II'
+        alternativeD: 'El Papa IV'
+        answer: 'Cristobal Colón'
+        correct: true
+      - sentence: 'El Paleolítico es un periodo de la historia de la Humanidad que se inició hace'
+        alternativeA: '10,5 millones de años'
+        alternativeB: '2,85 millones de años'
+        alternativeC: '100 mil años'
+        alternativeD: '10,5 billones de años'
+        answer: '10,5 millones de años'
+        correct: false   
+    trueFalseItems:
+      - sentence: 'Roma se construyo en un día'
+        answer: false
+        correct: true
+      - sentence: 'Espartaco muere al final.'
+        answer: false
+        correct: false
+    correspondItems:
+      - item: Grecia
+        correspond: 'Griegos'
+        correct: true
+      - item: Esparta
+        correspond: 'Espartanos'
+        correct: true
+    incompleteTextItems:
+      - sentence: Esparta la polis 
+        answer: militar
+        correct: true
+      - sentence: Los aztecas estaban en 
+        answer: México
+        correct: true 
+        
+  - &qs06
+    multipleSelectionItems:
+      - sentence: '¿Quien descubrio America?'
+        alternativeA: 'Carlo Magno'
+        alternativeB: 'Cristobal Colón'
+        alternativeC: 'Rey Felipe II'
+        alternativeD: 'El Papa IV'
+        answer: 'Carlo Magno'
+        correct: false
+      - sentence: 'El Paleolítico es un periodo de la historia de la Humanidad que se inició hace'
+        alternativeA: '10,5 millones de años'
+        alternativeB: '2,85 millones de años'
+        alternativeC: '100 mil años'
+        alternativeD: '10,5 billones de años'
+        answer: '10,5 millones de años'
+        correct: true   
+    trueFalseItems:
+      - sentence: 'Roma se construyo en un día'
+        answer: true
+        correct: false
+      - sentence: 'Espartaco muere al final.'
+        answer: true
+        correct: true
+    correspondItems:
+      - item: Grecia
+        correspond: 'Espartanos'
+        correct: false
+      - item: Esparta
+        correspond: 'Griegos'
+        correct: false
+    incompleteTextItems:
+      - sentence: Esparta la polis 
+        answer: México
+        correct: false
+      - sentence: Los aztecas estaban en 
+        answer: militar
+        correct: false                   
+          
+# EVALUATIONS***********************************************************
+evaluationsList:
+
+  - &e01
+    title: Aritmetica Básica
+    type: PRUEBA   
+    date: 2018-6-11
     subject: *s01
     quiz: *q01
-    multipleSelectionIitemAnswers:
-      - 3
-      - 4
-    trueFalseItemAnswers:
-      - false
-      - true
-    correspondItemAnswers:
-      - 'A=(B*H)/2'
-      - 'A=B*H'
-    incompleteTextItemAnswers:
-      - cuadrado
-      - triangular            
+    isOpen: false
 
+  - &e02
+    title: Ecuaciones de Primer Grado
+    type: PRUEBA
+    date: 2018-6-20
+    subject: *s01
+    quiz: *q02
+    isOpen: false
+    
+  - &e03
+    title: Disertacion-01
+    type: DISERTACION
+    date: 2018-8-22
+    subject: *s01
+    isOpen: false
+    
+  - &e04
+    title: La historia de los números Romanos-01
+    type: DISERTACION
+    date: 2018-9-16
+    subject: *s01
+    isOpen: true
+    
+  - &e05
+    title: El gran Examen 3
+    type: EXAMEN
+    date: 2018-10-12
+    subject: *s03
+    quiz: *q05
+    isOpen: true
+    
+  - &e06
+    title: El gran Examen 4
+    type: EXAMEN
+    date: 2018-11-12
+    subject: *s03
+    quiz: *q06
+    isOpen: true    
+    
+ 
+# GRADES*********************************************************** 
 gradesList:   
 
   - &g01
-    title: prueba-01
-    type: prueba
     grade: 6.0
-    date: 2018-6-11
     student: *u030
-    subject: *s01
+    evaluation: *e01
     quizStudent: *qs01
     
   - &g02
-    title: prueba-02
-    type: prueba
-    grade: 6.0
-    date: 2018-6-20
-    student: *u030
-    subject: *s01
+    grade: 5.5
+    student: *u031
+    evaluation: *e01
+    quizStudent: *qs02
     
   - &g03
-    title: prueba-03
-    type: prueba
-    grade: 4.8
-    date: 2018-7-12
-    student: *u030
-    subject: *s01            
+    grade: 4.5
+    student: *u032
+    evaluation: *e01
+    quizStudent: *qs03
     
+        
   - &g04
-    title: prueba-01
-    type: prueba
-    grade: 5.5
-    date: 2018-6-11
-    student: *u031
-    subject: *s01
+    grade: 6.5
+    student: *u030
+    evaluation: *e02
+    quizStudent: *qs04 
     
   - &g05
-    title: prueba-02
-    type: prueba
-    grade: 6.2
-    date: 2018-6-20
+    grade: 6.1
     student: *u031
-    subject: *s01
-    
+    evaluation: *e02
+    quizStudent: *qs05
+   
   - &g06
-    title: prueba-03
-    type: prueba
-    grade: 5.8
-    date: 2018-7-12
-    student: *u031
-    subject: *s01
+    grade: 2.3
+    student: *u032
+    evaluation: *e02
+    quizStudent: *qs06
+    
     
   - &g07
-    title: prueba-01
-    type: prueba
-    grade: 4.5
-    date: 2018-6-11
-    student: *u032
-    subject: *s01
+    grade: 5.7
+    student: *u030
+    evaluation: *e03
     
   - &g08
-    title: prueba-02
-    type: prueba
-    grade: 2.3
-    date: 2018-6-20
-    student: *u032
-    subject: *s01
+    grade: 6.4
+    student: *u031
+    evaluation: *e03
     
   - &g09
-    title: prueba-03
-    type: prueba
-    grade: 3.8
-    date: 2018-7-12
+    grade: 2.9
     student: *u032
-    subject: *s01              
+    evaluation: *e03
+            

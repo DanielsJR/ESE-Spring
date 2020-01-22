@@ -1,6 +1,5 @@
 package nx.ESE.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.Getter;
+import lombok.Setter;
 import nx.ESE.controllers.GradeController;
 import nx.ESE.dtos.GradeDto;
 
@@ -21,74 +22,44 @@ public class GradeRestService {
 	private UserRestService userRestService;
 
 	@Autowired
-	private SubjectRestService subjectRestService;
+	private EvaluationRestService evaluationRestService;
 
+	@Getter
+	@Setter
 	private GradeDto gradeDto;
 
+	@Getter
+	@Setter
 	private GradeDto gradeDto2;
 
+	@Getter
+	@Setter
 	private List<GradeDto> listGradeDto;
 
 	private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
 
-	public GradeDto getGradeDto() {
-		return gradeDto;
-	}
-
-	public void setGradeDto(GradeDto gradeDto) {
-		this.gradeDto = gradeDto;
-	}
-
-	public GradeDto getGradeDto2() {
-		return gradeDto2;
-	}
-
-	public void setGradeDto2(GradeDto gradeDto2) {
-		this.gradeDto2 = gradeDto2;
-	}
-
-	public List<GradeDto> getListGradeDto() {
-		return listGradeDto;
-	}
-
-	public void setListGradeDto(List<GradeDto> listGradeDto) {
-		this.listGradeDto = listGradeDto;
-	}
-
 	public void createGradesDto() {
+		evaluationRestService.createEvaluationsDto();
+		
+		restService.loginTeacher();
+		evaluationRestService.postEvaluation();
 
-		logger.warn(
-				"*********************************CREATING_GRADES**************************************************");
-
-		restService.loginManager();
-		subjectRestService.createSubjectsDto();
-		subjectRestService.postSubject();
-
+		logger.warn("*********************************CREATING_GRADES*****************************************");
 		this.gradeDto = new GradeDto();
-		this.gradeDto.setType("prueba");
-		this.gradeDto.setTitle("prueba-01");
-		Date date = new Date();
-		this.gradeDto.setDate(date);
 		this.gradeDto.setStudent(userRestService.getStudentDto());
-		this.gradeDto.setSubject(subjectRestService.getSubjectDto());
+		this.gradeDto.setEvaluation(evaluationRestService.getEvaluationDto());
 		this.gradeDto.setGrade(6.5);
 
 		this.gradeDto2 = new GradeDto();
-		this.gradeDto2.setType("prueba");
-		this.gradeDto2.setTitle("prueba-02");
-		Date date2 = new Date();
-		this.gradeDto2.setDate(date2);
 		this.gradeDto2.setStudent(userRestService.getStudentDto2());
-		this.gradeDto2.setSubject(subjectRestService.getSubjectDto());
+		this.gradeDto2.setEvaluation(evaluationRestService.getEvaluationDto());
 		this.gradeDto2.setGrade(3.5);
-
-		logger.warn("***********************************************************************************************");
+		logger.warn("**************************************************************************************");
 
 	}
 
 	public void deleteGrades() {
-		logger.warn(
-				"*********************************DELETING_GRADE**************************************************");
+		logger.warn("*********************************DELETING_GRADE**************************************");
 		this.restService.loginTeacher();
 
 		try {
@@ -103,9 +74,9 @@ public class GradeRestService {
 			logger.warn("error: " + e.getMessage() + "gradeDto2: nothing to delete");
 		}
 
-		this.subjectRestService.deleteSubjects();
+		this.evaluationRestService.deleteEvaluationsDto();
 
-		logger.warn("***********************************************************************************************");
+		logger.warn("********************************************************************************");
 
 	}
 
@@ -132,23 +103,36 @@ public class GradeRestService {
 
 	// DELETE
 	public GradeDto deleteGrade(String id) {
-		return restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
-				.path(GradeController.GRADE).path(GradeController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken()).delete().build();
+		return restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class).path(GradeController.GRADE)
+				.path(GradeController.PATH_ID).expand(id).bearerAuth(restService.getAuthToken().getToken()).delete()
+				.build();
 	}
 
 	// GET
 	public GradeDto getGradeById(String id) {
 		return restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
-				.path(GradeController.GRADE).path(GradeController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken()).body(gradeDto).get().build();
+				.path(GradeController.GRADE)
+				.path(GradeController.PATH_ID).expand(id)
+				.bearerAuth(restService.getAuthToken().getToken()).get()
+				.build();
 	}
 
-	//
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<GradeDto> getFullGrades() {
 		return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
 				.path(GradeController.GRADE).bearerAuth(restService.getAuthToken().getToken()).get().build();
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<GradeDto> getGradesBySubject(String id) {
+		return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+				.path(GradeController.GRADE)
+				.path(GradeController.SUBJECT)
+				.path(GradeController.PATH_ID).expand(id)
+				.bearerAuth(restService.getAuthToken().getToken())
+				.get()
+				.build();
+		
 	}
 
 }

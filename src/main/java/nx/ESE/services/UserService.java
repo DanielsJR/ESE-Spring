@@ -1,29 +1,27 @@
 package nx.ESE.services;
 
 import java.util.Arrays;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.Valid;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import nx.ESE.documents.Role;
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
-import nx.ESE.dtos.CourseDto;
 import nx.ESE.dtos.UserDto;
 import nx.ESE.dtos.UserMinDto;
 import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
 
-@Controller
+@Service
 public class UserService {
 
 	@Autowired
@@ -188,7 +186,9 @@ public class UserService {
 	}
 
 	public List<UserDto> getFullUsers(Role role) {
-		return this.userRepository.findUsersFullAll(role).stream().parallel()
+		return this.userRepository.findUsersFullAll(role)
+				.stream()
+				.parallel()
 				.sorted((u1, u2) -> u1.getFirstName().toString().compareTo(u2.getFirstName().toString()))
 				.collect(Collectors.toList());
 	}

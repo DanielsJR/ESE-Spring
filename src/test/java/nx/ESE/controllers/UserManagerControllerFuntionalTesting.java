@@ -23,6 +23,7 @@ import nx.ESE.controllers.UserController;
 import nx.ESE.documents.Role;
 import nx.ESE.dtos.UserDto;
 import nx.ESE.services.HttpMatcher;
+import nx.ESE.services.RestBuilder;
 import nx.ESE.services.RestService;
 import nx.ESE.services.UserRestService;
 
@@ -151,9 +152,7 @@ public class UserManagerControllerFuntionalTesting {
 
 	@Test
 	public void testPostManagerBadUsername() {
-		userRestService.getManagerDto().setUsername("lu");
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		userRestService.getManagerDto().setUsername("lu");		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		userRestService.postManager();
 	}
 
@@ -162,7 +161,8 @@ public class UserManagerControllerFuntionalTesting {
 		userRestService.getManagerDto().setPassword("password");
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.postManager();
+		userRestService.postManager(); 
+		
 	}
 
 	@Test

@@ -41,11 +41,32 @@ public class MultipleSelectionItem {
 	@Setter
 	private String answer;
 
+	private boolean correct;
+
+	public MultipleSelectionItem(@NotNull String sentence, @NotNull String alternativeA, @NotNull String alternativeB,
+			@NotNull String alternativeC, @NotNull String alternativeD, @NotNull String answer) {
+		super();
+		this.sentence = sentence;
+		this.alternativeA = alternativeA;
+		this.alternativeB = alternativeB;
+		this.alternativeC = alternativeC;
+		this.alternativeD = alternativeD;
+		this.answer = answer;
+	}
+
+	public boolean getCorrect() {
+		return correct;
+	}
+
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
+	}
+
 	@Override
 	public String toString() {
 		return "MultipleSelectionItem [sentence=" + sentence + ", alternativeA=" + alternativeA + ", alternativeB="
 				+ alternativeB + ", alternativeC=" + alternativeC + ", alternativeD=" + alternativeD + ", answer="
-				+ answer + "]";
+				+ answer + ", correct=" + correct + "]";
 	}
 
 	@Override

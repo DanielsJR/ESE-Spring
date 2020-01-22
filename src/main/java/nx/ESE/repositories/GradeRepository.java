@@ -1,6 +1,7 @@
 package nx.ESE.repositories;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -10,7 +11,10 @@ import nx.ESE.dtos.GradeDto;
 
 public interface GradeRepository extends MongoRepository<Grade, String> {
 	
-	public GradeDto  findByTitleAndTypeAndStudentAndSubjectAndDate(String title, String type, String studentId, String subjectId, Date date);
+	public GradeDto findByStudentAndEvaluation(String studentId, String evaluationId);
 	
+	public GradeDto findFirstByQuizStudent(String qsId);
+	
+	public List<GradeDto> findByEvaluation(String evaluationId);
 
 }

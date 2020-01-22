@@ -107,7 +107,7 @@ public class UserDto {
 	// input
 	public UserDto(String id, String username, String password, String firstName, String lastName, String dni,
 			Date birthday, Gender gender, Avatar avatar, String mobile, String email, String address, Commune commune,
-			Role[] roles, boolean active, Date createdAt) {
+			Role[] roles, boolean active) {
 		super();
 		this.id = id;
 		this.setUsername(username);
@@ -126,11 +126,11 @@ public class UserDto {
 		this.active = active;
 
 	}
-
-	// test
+	
+	// for tests
 	public UserDto(String usernamePass) {
 		this(null, usernamePass, usernamePass + "@ESE1", usernamePass, usernamePass, null, null, null, null, null, null,
-				null, null, null, true, null);
+				null, null, null, true);
 	}
 
 	// output

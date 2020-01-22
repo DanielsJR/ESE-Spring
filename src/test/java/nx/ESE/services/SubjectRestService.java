@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.Getter;
+import lombok.Setter;
 import nx.ESE.controllers.SubjectController;
 import nx.ESE.documents.core.SubjectName;
 import nx.ESE.dtos.SubjectDto;
@@ -23,37 +25,25 @@ public class SubjectRestService {
 	@Autowired
 	private CourseRestService courseRestService;
 
+	@Getter
+	@Setter
 	private SubjectDto subjectDto;
 
+	@Getter
+	@Setter
 	private SubjectDto subjectDto2;
 
 	private static final Logger logger = LoggerFactory.getLogger(SubjectRestService.class);
 
-	public SubjectDto getSubjectDto() {
-		return subjectDto;
-	}
-
-	public void setSubjectDto(SubjectDto subjectDto) {
-		this.subjectDto = subjectDto;
-	}
-
-	public SubjectDto getSubjectDto2() {
-		return subjectDto2;
-	}
-
-	public void setSubjectDto2(SubjectDto subjectDto2) {
-		this.subjectDto2 = subjectDto2;
-	}
 
 	public void createSubjectsDto() {
-		logger.warn(
-				"*********************************CREATING_SUBJECTS**************************************************");
-
-		restService.loginManager();
 		courseRestService.createCoursesDto();
+		
+		restService.loginManager();
 		courseRestService.postCourse();
 		courseRestService.postCourse2();
 
+		logger.warn("***********************CREATING_SUBJECTS**********************************************");
 		this.subjectDto = new SubjectDto();
 		this.subjectDto.setName(SubjectName.MATEMATICAS);
 		this.subjectDto.setTeacher(userRestService.getTeacherDto2());
@@ -64,13 +54,12 @@ public class SubjectRestService {
 		this.subjectDto2.setTeacher(userRestService.getTeacherDto());
 		this.subjectDto2.setCourse(courseRestService.getCourseDto2());
 
-		logger.warn("***********************************************************************************************");
+		logger.warn("****************************************************************************************");
 
 	}
 
 	public void deleteSubjects() {
-		logger.warn(
-				"*********************************DELETING_SUBJECT**************************************************");
+		logger.warn("*********************************DELETING_SUBJECT*****************************************");
 		this.restService.loginManager();
 
 		try {
@@ -87,7 +76,7 @@ public class SubjectRestService {
 
 		this.courseRestService.deleteCourses();
 
-		logger.warn("***********************************************************************************************");
+		logger.warn("*******************************************************************************************");
 
 	}
 

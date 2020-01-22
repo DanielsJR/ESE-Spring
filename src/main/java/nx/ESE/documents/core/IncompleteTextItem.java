@@ -21,9 +21,25 @@ public class IncompleteTextItem {
 	@Setter
 	private String answer;
 
+	private boolean correct;
+
+	public IncompleteTextItem(@NotNull String sentence, @NotNull String answer) {
+		super();
+		this.sentence = sentence;
+		this.answer = answer;
+	}
+
+	public boolean getCorrect() {
+		return correct;
+	}
+
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
+	}
+
 	@Override
 	public String toString() {
-		return "IncompleteTextItem [sentence=" + sentence + ", answer=" + answer + "]";
+		return "IncompleteTextItem [sentence=" + sentence + ", answer=" + answer + ", correct=" + correct + "]";
 	}
 
 	@Override

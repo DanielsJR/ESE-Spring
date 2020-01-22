@@ -17,13 +17,35 @@ public class TrueFalseItem {
 	private String sentence;
 
 	@NotNull
-	@Getter
-	@Setter
 	private boolean answer;
+
+	private boolean correct;
+
+	public boolean getCorrect() {
+		return correct;
+	}
+
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
+	}
+
+	public TrueFalseItem(@NotNull String sentence, @NotNull boolean answer) {
+		super();
+		this.sentence = sentence;
+		this.answer = answer;
+	}
+
+	public boolean getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(boolean answer) {
+		this.answer = answer;
+	}
 
 	@Override
 	public String toString() {
-		return "TrueFalseItem [sentence=" + sentence + ", answer=" + answer + "]";
+		return "TrueFalseItem [sentence=" + sentence + ", answer=" + answer + ", correct=" + correct + "]";
 	}
 
 	@Override

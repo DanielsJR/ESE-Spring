@@ -30,7 +30,7 @@ import nx.ESE.exceptions.ForbiddenDeleteException;
 import nx.ESE.services.CourseService;
 import nx.ESE.services.UserService;
 
-@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
 @RestController
 @RequestMapping(CourseController.COURSE)
 public class CourseController {
@@ -39,12 +39,15 @@ public class CourseController {
 	public static final String NAME = "/name";
 	public static final String YEAR = "/year";
 	public static final String TEACHER_NAME = "/teacherName";
+	public static final String STUDENT_NAME = "/studentName";
+	
 
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_NAME = "/{name}";
-	public static final String PATH_USERNAME = "/{username}";
-	public static final String PATH_TEACHER_NAME = "/{teacherName}";
 	public static final String PATH_YEAR = "/{year}";
+	public static final String PATH_TEACHER_NAME = "/{teacherName}";
+	public static final String PATH_STUDENT_NAME = "/{studentName}";
+	
 
 	@Autowired
 	private CourseService courseService;
@@ -135,6 +138,18 @@ public class CourseController {
 			throw new FieldNotFoundException("Nombre de Usuario");
 
 		return this.courseService.getCourseByChiefTeacherNameQdsl(teacherName, year)
+				.orElseThrow(() -> new DocumentNotFoundException("Curso"));
+	}
+	
+	@PreAuthorize("hasRole('STUDENT')")
+	@GetMapping(STUDENT_NAME + PATH_STUDENT_NAME + PATH_YEAR)
+	public String getCourseIdByStudentAndYear(@PathVariable String 	studentName, @PathVariable String year)
+			throws DocumentNotFoundException, FieldNotFoundException {
+
+		if (!this.userService.existsUserUsername(studentName))
+			throw new FieldNotFoundException("Nombre de Usuario");
+
+		return this.courseService.getCourseIdByStudentAndYear(studentName, year)
 				.orElseThrow(() -> new DocumentNotFoundException("Curso"));
 	}
 

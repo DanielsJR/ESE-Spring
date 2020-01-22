@@ -20,6 +20,7 @@ import nx.ESE.dtos.GradeDto;
 import nx.ESE.services.GradeRestService;
 import nx.ESE.services.HttpMatcher;
 import nx.ESE.services.RestService;
+import nx.ESE.services.SubjectRestService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -31,6 +32,9 @@ public class GradeControllerFuntionalTesting {
 
 	@Autowired
 	private GradeRestService gradeRestService;
+	
+	@Autowired
+	private SubjectRestService subjectRestService;
 
 	@Autowired
 	private RestService restService;
@@ -88,11 +92,8 @@ public class GradeControllerFuntionalTesting {
 	public void testPostGradeDocumentAlreadyExistException() {
 		gradeRestService.postGrade();
 
-		gradeRestService.getGradeDto2().setTitle(gradeRestService.getGradeDto().getTitle());
-		gradeRestService.getGradeDto2().setType(gradeRestService.getGradeDto().getType());
 		gradeRestService.getGradeDto2().setStudent(gradeRestService.getGradeDto().getStudent());
-		gradeRestService.getGradeDto2().setSubject(gradeRestService.getGradeDto().getSubject());
-		gradeRestService.getGradeDto2().setDate(gradeRestService.getGradeDto().getDate());
+		gradeRestService.getGradeDto2().setEvaluation(gradeRestService.getGradeDto().getEvaluation());
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.postGrade2();
@@ -106,21 +107,7 @@ public class GradeControllerFuntionalTesting {
 				.body(null).post().build();
 	}
 
-	@Test
-	public void testPostGradeTitleNull() {
-		gradeRestService.getGradeDto().setTitle(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.postGrade();
-	}
-
-	@Test
-	public void testPostGradeTypeNull() {
-		gradeRestService.getGradeDto().setType(null);
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.postGrade();
-	}
 
 	@Test
 	public void testPostGradeStudentNull() {
@@ -131,20 +118,13 @@ public class GradeControllerFuntionalTesting {
 	}
 
 	@Test
-	public void testPostGradeSubjectNull() {
-		gradeRestService.getGradeDto().setSubject(null);
+	public void testPostGradeEvaluationNull() {
+		gradeRestService.getGradeDto().setEvaluation(null);
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.postGrade();
 	}
 
-	@Test
-	public void testPostGradeDateNull() {
-		gradeRestService.getGradeDto().setDate(null);
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.postGrade();
-	}
 
 	// PUT********************************
 	@Test
@@ -187,11 +167,8 @@ public class GradeControllerFuntionalTesting {
 		gradeRestService.postGrade();
 		gradeRestService.postGrade2();
 
-		gradeRestService.getGradeDto().setTitle(gradeRestService.getGradeDto2().getTitle());
-		gradeRestService.getGradeDto().setType(gradeRestService.getGradeDto2().getType());
 		gradeRestService.getGradeDto().setStudent(gradeRestService.getGradeDto2().getStudent());
-		gradeRestService.getGradeDto().setSubject(gradeRestService.getGradeDto2().getSubject());
-		gradeRestService.getGradeDto().setDate(gradeRestService.getGradeDto2().getDate());
+		gradeRestService.getGradeDto().setEvaluation(gradeRestService.getGradeDto2().getEvaluation());
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.putGrade();
@@ -218,25 +195,6 @@ public class GradeControllerFuntionalTesting {
 
 	}
 
-	@Test
-	public void testPutGradeTitleNull() {
-		gradeRestService.postGrade();
-
-		gradeRestService.getGradeDto().setTitle(null);
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.putGrade();
-	}
-
-	@Test
-	public void testPutGradeTypeNull() {
-		gradeRestService.postGrade();
-
-		gradeRestService.getGradeDto().setType(null);
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.putGrade();
-	}
 
 	@Test
 	public void testPutGradeStudentNull() {
@@ -249,24 +207,15 @@ public class GradeControllerFuntionalTesting {
 	}
 
 	@Test
-	public void testPutGradeSubjectNull() {
+	public void testPutGradeEvaluationNull() {
 		gradeRestService.postGrade();
 
-		gradeRestService.getGradeDto().setSubject(null);
+		gradeRestService.getGradeDto().setEvaluation(null);
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		gradeRestService.putGrade();
 	}
 
-	@Test
-	public void testPutGradeDateNull() {
-		gradeRestService.postGrade();
-
-		gradeRestService.getGradeDto().setDate(null);
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.putGrade();
-	}
 
 	// DELETE
 	@Test
@@ -363,6 +312,15 @@ public class GradeControllerFuntionalTesting {
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
 		restService.restBuilder().path(GradeController.GRADE).get().build();
 
+	}
+	
+	@Test
+	public void testGetGradesBySubject() {
+		gradeRestService.postGrade();
+	    String sjcId = subjectRestService.getSubjectDto().getId();
+	    gradeRestService.getGradesBySubject(sjcId);
+
+		Assert.assertTrue(gradeRestService.getListGradeDto().size() > 0);
 	}
 
 }

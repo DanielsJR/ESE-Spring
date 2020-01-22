@@ -14,6 +14,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	
 	CourseControllerFuntionalTesting.class,
 	SubjectControllerFuntionalTesting.class,
+	EvaluationControllerFuntionalTesting.class,
 	GradeControllerFuntionalTesting.class,
 	
 	

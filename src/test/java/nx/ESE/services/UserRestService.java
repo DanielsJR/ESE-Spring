@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import lombok.Getter;
+import lombok.Setter;
 import nx.ESE.controllers.UserController;
 import nx.ESE.documents.Role;
+import nx.ESE.documents.core.CourseName;
 import nx.ESE.dtos.UserDto;
 
 @Service
@@ -19,207 +22,67 @@ public class UserRestService {
 	private RestService restService;
 
 	// managerDTOS
+	@Getter
+	@Setter
 	private UserDto managerDto;
 
+	@Getter
+	@Setter
 	@Value("${nx.test.managerDto.username}")
 	private String managerDtoUsername;
 
-	@Value("${nx.test.managerDto.password}")
-	private String managerDtoPassword;
-
+	@Getter
+	@Setter
 	private UserDto managerDto2;
 
+	@Getter
+	@Setter
 	@Value("${nx.test.managerDto2.username}")
 	private String managerDto2Username;
 
-	@Value("${nx.test.managerDto.password}")
-	private String managerDto2Password;
-
 	// teacherDTOs
+	@Getter
+	@Setter
 	private UserDto teacherDto;
 
+	@Getter
+	@Setter
 	@Value("${nx.test.teacherDto.username}")
 	private String teacherDtoUsername;
 
-	@Value("${nx.test.teacherDto.password}")
-	private String teacherDtoPassword;
-
+	@Getter
+	@Setter
 	private UserDto teacherDto2;
 
+	@Getter
+	@Setter
 	@Value("${nx.test.teacherDto2.username}")
 	private String teacherDto2Username;
 
-	@Value("${nx.test.teacherDto.password}")
-	private String teacherDto2Password;
-
 	// studentDTOs
+	@Getter
+	@Setter
 	private UserDto studentDto;
 
+	@Getter
+	@Setter
 	@Value("${nx.test.studentDto.username}")
 	private String studentDtoUsername;
 
-	@Value("${nx.test.studentDto.password}")
-	private String studentDtoPassword;
-
+	@Getter
+	@Setter
 	private UserDto studentDto2;
 
+	@Getter
+	@Setter
 	@Value("${nx.test.studentDto2.username}")
 	private String studentDto2Username;
 
-	@Value("${nx.test.studentDto.password}")
-	private String studentDto2Password;
-
 	private static final Logger logger = LoggerFactory.getLogger(UserRestService.class);
 
-	public UserDto getManagerDto() {
-		return managerDto;
-	}
-
-	public void setManagerDto(UserDto managerDto) {
-		this.managerDto = managerDto;
-	}
-
-	public String getManagerDtoUsername() {
-		return managerDtoUsername;
-	}
-
-	public void setManagerDtoUsername(String managerDtoUsername) {
-		this.managerDtoUsername = managerDtoUsername;
-	}
-
-	public String getManagerDtoPassword() {
-		return managerDtoPassword;
-	}
-
-	public void setManagerDtoPassword(String managerDtoPassword) {
-		this.managerDtoPassword = managerDtoPassword;
-	}
-
-	public UserDto getManagerDto2() {
-		return managerDto2;
-	}
-
-	public void setManagerDto2(UserDto managerDto2) {
-		this.managerDto2 = managerDto2;
-	}
-
-	public String getManagerDto2Username() {
-		return managerDto2Username;
-	}
-
-	public void setManagerDto2Username(String managerDto2Username) {
-		this.managerDto2Username = managerDto2Username;
-	}
-
-	public String getManagerDto2Password() {
-		return managerDto2Password;
-	}
-
-	public void setManagerDto2Password(String managerDto2Password) {
-		this.managerDto2Password = managerDto2Password;
-	}
-
-	public UserDto getTeacherDto() {
-		return teacherDto;
-	}
-
-	public void setTeacherDto(UserDto teacherDto) {
-		this.teacherDto = teacherDto;
-	}
-
-	public String getTeacherDtoUsername() {
-		return teacherDtoUsername;
-	}
-
-	public void setTeacherDtoUsername(String teacherDtoUsername) {
-		this.teacherDtoUsername = teacherDtoUsername;
-	}
-
-	public String getTeacherDtoPassword() {
-		return teacherDtoPassword;
-	}
-
-	public void setTeacherDtoPassword(String teacherDtoPassword) {
-		this.teacherDtoPassword = teacherDtoPassword;
-	}
-
-	public UserDto getTeacherDto2() {
-		return teacherDto2;
-	}
-
-	public void setTeacherDto2(UserDto teacherDto2) {
-		this.teacherDto2 = teacherDto2;
-	}
-
-	public String getTeacherDto2Username() {
-		return teacherDto2Username;
-	}
-
-	public void setTeacherDto2Username(String teacherDto2Username) {
-		this.teacherDto2Username = teacherDto2Username;
-	}
-
-	public String getTeacherDto2Password() {
-		return teacherDto2Password;
-	}
-
-	public void setTeacherDto2Password(String teacherDto2Password) {
-		this.teacherDto2Password = teacherDto2Password;
-	}
-
-	public UserDto getStudentDto() {
-		return studentDto;
-	}
-
-	public void setStudentDto(UserDto studentDto) {
-		this.studentDto = studentDto;
-	}
-
-	public String getStudentDtoUsername() {
-		return studentDtoUsername;
-	}
-
-	public void setStudentDtoUsername(String studentDtoUsername) {
-		this.studentDtoUsername = studentDtoUsername;
-	}
-
-	public String getStudentDtoPassword() {
-		return studentDtoPassword;
-	}
-
-	public void setStudentDtoPassword(String studentDtoPassword) {
-		this.studentDtoPassword = studentDtoPassword;
-	}
-
-	public UserDto getStudentDto2() {
-		return studentDto2;
-	}
-
-	public void setStudentDto2(UserDto studentDto2) {
-		this.studentDto2 = studentDto2;
-	}
-
-	public String getStudentDto2Username() {
-		return studentDto2Username;
-	}
-
-	public void setStudentDto2Username(String studentDto2Username) {
-		this.studentDto2Username = studentDto2Username;
-	}
-
-	public String getStudentDto2Password() {
-		return studentDto2Password;
-	}
-
-	public void setStudentDto2Password(String studentDto2Password) {
-		this.studentDto2Password = studentDto2Password;
-	}
-
 	public void createUsersDto() {
-		logger.warn(
-				"*********************************CREATING_USERS**************************************************");
-
-		this.managerDto = new UserDto(managerDtoUsername);
+		logger.warn("*****************************CREATING_USERS********************************************");
+		this.managerDto = new UserDto(this.managerDtoUsername);
 		this.managerDto2 = new UserDto(managerDto2Username);
 
 		this.teacherDto = new UserDto(teacherDtoUsername);
@@ -227,9 +90,7 @@ public class UserRestService {
 
 		this.studentDto = new UserDto(studentDtoUsername);
 		this.studentDto2 = new UserDto(studentDto2Username);
-
-		logger.warn(
-				"****************************************************************************************************");
+		logger.warn("********************************************************************************************");
 
 	}
 
@@ -300,8 +161,7 @@ public class UserRestService {
 	}
 
 	public void deleteManagers() {
-		logger.warn(
-				"*********************************DELETING_MANAGERS**************************************************");
+		logger.warn("*********************************DELETING_MANAGERS*************************************");
 		this.restService.loginAdmin();
 
 		try {
@@ -315,7 +175,7 @@ public class UserRestService {
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
 		}
-		logger.warn("***********************************************************************************************");
+		logger.warn("**************************************************************************************");
 
 	}
 
@@ -386,8 +246,7 @@ public class UserRestService {
 	}
 
 	public void deleteTeachers() {
-		logger.warn(
-				"*********************************DELETING_TEACHERS**************************************************");
+		logger.warn("************************DELETING_TEACHERS**************************************************");
 		this.restService.loginManager();
 
 		try {
@@ -401,7 +260,7 @@ public class UserRestService {
 		} catch (Exception e) {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
 		}
-		logger.warn("***********************************************************************************************");
+		logger.warn("*******************************************************************************************");
 	}
 
 	// STUDENT*******************************************
@@ -464,8 +323,7 @@ public class UserRestService {
 	}
 
 	public void deleteStudents() {
-		logger.warn(
-				"*********************************DELETING_STUDENTS**************************************************");
+		logger.warn("*********************************DELETING_STUDENTS******************************************");
 		this.restService.loginManager();
 
 		try {
@@ -480,7 +338,7 @@ public class UserRestService {
 			logger.warn("error: " + e.getMessage() + "DTO2 nothing to delete");
 		}
 
-		logger.warn("***********************************************************************************************");
+		logger.warn("******************************************************************************************");
 	}
 
 	// USER****************************************

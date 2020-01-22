@@ -26,6 +26,7 @@ import nx.ESE.documents.Role;
 import nx.ESE.documents.Theme;
 import nx.ESE.documents.User;
 import nx.ESE.repositories.CourseRepository;
+import nx.ESE.repositories.EvaluationRepository;
 import nx.ESE.repositories.GradeRepository;
 import nx.ESE.repositories.PreferencesRepository;
 import nx.ESE.repositories.QuizRepository;
@@ -57,6 +58,9 @@ public class DatabaseSeederService {
 
 	@Autowired
 	private SubjectRepository subjectRepository;
+	
+	@Autowired
+	private EvaluationRepository evaluationRepository;
 	
 	@Autowired
 	private GradeRepository gradeRepository;
@@ -117,6 +121,10 @@ public class DatabaseSeederService {
 		
 		if (dbGraph.getQuizesStudentList() != null) {
 			this.quizStudentRepository.saveAll(dbGraph.getQuizesStudentList());
+		}
+		
+		if (dbGraph.getEvaluationsList() != null) {
+			this.evaluationRepository.saveAll(dbGraph.getEvaluationsList());
 		}
 		
 		if (dbGraph.getGradesList() != null) {

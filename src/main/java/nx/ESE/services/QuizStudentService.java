@@ -11,12 +11,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import nx.ESE.documents.User;
-import nx.ESE.documents.core.Quiz;
 import nx.ESE.documents.core.QuizStudent;
 import nx.ESE.documents.core.Subject;
 import nx.ESE.dtos.QuizDto;
 import nx.ESE.dtos.QuizStudentDto;
-import nx.ESE.repositories.QuizRepository;
+import nx.ESE.repositories.GradeRepository;
 import nx.ESE.repositories.QuizStudentRepository;
 import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
@@ -26,10 +25,6 @@ public class QuizStudentService {
 	
 	@Autowired
 	private UserRepository userRepository;
-
-
-	@Autowired
-	private QuizRepository quizRepository;
 	
 	@Autowired
 	private SubjectRepository subjectRepository;
@@ -37,40 +32,19 @@ public class QuizStudentService {
 	@Autowired
 	private QuizStudentRepository quizStudentRepository;
 	
+	@Autowired
+	private GradeRepository gradeRepository;
 	
-	private QuizStudent setQuizStudentFromDto(QuizStudent quizStudent, @Valid QuizStudentDto quizStudentDto) {
-		quizStudent.setDate(quizStudentDto.getDate());
-		quizStudent.setStudent(this.setStudent(quizStudentDto).get());
-	    quizStudent.setSubject(this.setSubject(quizStudentDto).get());
-	    quizStudent.setQuiz(this.setQuiz(quizStudentDto).get());
-        quizStudent.setCorrespondItemAnswers(quizStudentDto.getCorrespondItemAnswers());
-        quizStudent.setIncompleteTextItemAnswers(quizStudentDto.getIncompleteTextItemAnswers());
-        quizStudent.setTrueFalseItemAnswers(quizStudentDto.getTrueFalseItemAnswers());
-        quizStudent.setMultipleSelectionIitemAnswers(quizStudentDto.getCorrespondItemAnswers());
+	
+	public QuizStudent setQuizStudentFromDto(QuizStudent quizStudent, @Valid QuizStudentDto quizStudentDto) {
+        quizStudent.setCorrespondItems(quizStudentDto.getCorrespondItems());
+        quizStudent.setIncompleteTextItems(quizStudentDto.getIncompleteTextItems());
+        quizStudent.setTrueFalseItems(quizStudentDto.getTrueFalseItems());
+        quizStudent.setMultipleSelectionItems(quizStudentDto.getMultipleSelectionItems());
         
 		return quizStudent;
 	}
 
-	private Optional<Quiz> setQuiz(@Valid QuizStudentDto quizStudentDto) {
-		Optional<Quiz> quiz = quizRepository.findById(quizStudentDto.getQuizDto().getId());
-		if (quiz.isPresent())
-			return quiz;
-		return Optional.empty();
-	}
-
-	private Optional<Subject> setSubject(@Valid QuizStudentDto quizStudentDto) {
-		Optional<Subject> subject = subjectRepository.findById(quizStudentDto.getSubjectDto().getId());
-		if (subject.isPresent())
-			return subject;
-		return Optional.empty();
-	}
-
-	private Optional<User> setStudent(QuizStudentDto quizStudentDto) {
-		Optional<User> student = userRepository.findById(quizStudentDto.getStudentDto().getId());
-		if (student.isPresent())
-			return student;
-		return Optional.empty();
-	}
 
 	public boolean existsById(String id) {
 		return quizStudentRepository.existsById(id);
@@ -121,6 +95,21 @@ public class QuizStudentService {
 			return Optional.of(new QuizStudentDto(quizStudent.get()));
 		}
 		return Optional.empty();
+	}
+
+
+	public boolean isQuizStudentRepeated(@Valid QuizStudentDto quizStudentDto) {
+		QuizStudentDto quizStudentDB = this.quizStudentRepository
+				.findByCorrespondItemsAndTrueFalseItemsAndMultipleSelectionItemsAndIncompleteTextItems(
+						quizStudentDto.getCorrespondItems(), quizStudentDto.getTrueFalseItems(),
+						quizStudentDto.getMultipleSelectionItems(), quizStudentDto.getIncompleteTextItems());
+		
+		return quizStudentDB != null && !quizStudentDB.getId().equals(quizStudentDto.getId());
+	}
+
+
+	public boolean isQuizStudentInGrade(String id) {
+		return gradeRepository.findFirstByQuizStudent(id) !=null;
 	}
 
 }

@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nx.ESE.dtos.QuizDto;
+import nx.ESE.exceptions.DocumentAlreadyExistException;
 import nx.ESE.exceptions.DocumentNotFoundException;
 import nx.ESE.exceptions.FieldInvalidException;
 import nx.ESE.exceptions.FieldNotFoundException;
-import nx.ESE.exceptions.FieldNullException;
+import nx.ESE.exceptions.ForbiddenDeleteException;
 import nx.ESE.services.QuizService;
 
 
@@ -32,13 +33,50 @@ public class QuizController {
 	public static final String QUIZ = "/quizes";
 	
 	public static final String PATH_ID = "/{id}";
-	public static final String PATH_USERNAME = "/{username}";
+	public static final String USER = "/{user}";
 
 	
 	@Autowired
 	private QuizService quizService;
 	
-	// CRUD******************************
+	// POST
+	@PreAuthorize("hasRole('TEACHER')")
+	@PostMapping()
+	public QuizDto createQuiz(@Valid @RequestBody QuizDto quizDto) throws FieldInvalidException, DocumentAlreadyExistException {
+		
+		if (!this.quizService.isIdNull(quizDto))
+			throw new FieldInvalidException("Id");
+		
+		if (this.quizService.isQuizRepeated(quizDto))
+			throw new DocumentAlreadyExistException("Quiz");
+		
+		return this.quizService.createQuiz(quizDto);
+	}
+
+	// PUT
+	@PreAuthorize("hasRole('TEACHER')")
+	@PutMapping(PATH_ID)
+	public QuizDto modifyQuiz(@PathVariable String id, @Valid @RequestBody QuizDto quizDto)
+			throws FieldNotFoundException, DocumentAlreadyExistException {
+		
+		if (this.quizService.isQuizRepeated(quizDto))
+			throw new DocumentAlreadyExistException("Quiz");
+		
+		return this.quizService.modifyQuiz(id, quizDto).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+
+	// DELETE
+	@PreAuthorize("hasRole('TEACHER')")
+	@DeleteMapping(PATH_ID)
+	public QuizDto deleteQuiz(@PathVariable String id) throws FieldNotFoundException, ForbiddenDeleteException {
+		
+		if (this.quizService.isQuizInEvaluation(id))
+			throw new ForbiddenDeleteException("Quiz esta en una evaluación");
+		
+		return this.quizService.deleteQuiz(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+	}
+	
+	// GET
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(PATH_ID)
 	public QuizDto getQuizById(@PathVariable String id) throws FieldNotFoundException {
@@ -51,28 +89,11 @@ public class QuizController {
 		return this.quizService.getFullQuizes().orElseThrow(() -> new DocumentNotFoundException("Quiz"));
 	}
 	
-	@PreAuthorize("hasRole('TEACHER')")
-	@PostMapping()
-	public QuizDto createQuiz(@Valid @RequestBody QuizDto quizDto) throws FieldNotFoundException, FieldInvalidException, FieldNullException {
-		
-		if (!this.quizService.isIdNull(quizDto))
-			throw new FieldInvalidException("Id");
-		
-		return this.quizService.createQuiz(quizDto);
+	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+	@GetMapping(USER + PATH_ID)
+	public List<QuizDto> getFullQuizesByAuthor(@PathVariable String id) throws DocumentNotFoundException {
+		return this.quizService.getFullQuizesByAuthor(id).orElseThrow(() -> new DocumentNotFoundException("Quiz"));
 	}
-
-	@PreAuthorize("hasRole('TEACHER')")
-	@PutMapping(PATH_ID)
-	public QuizDto modifyQuiz(@PathVariable String id, @Valid @RequestBody QuizDto quizDto)
-			throws FieldNotFoundException, FieldNullException {
-		
-		return this.quizService.modifyQuiz(id, quizDto).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
-
-	@PreAuthorize("hasRole('TEACHER')")
-	@DeleteMapping(PATH_ID)
-	public QuizDto deleteQuiz(@PathVariable String id) throws FieldNotFoundException {
-		return this.quizService.deleteQuiz(id).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
+	
 }
 

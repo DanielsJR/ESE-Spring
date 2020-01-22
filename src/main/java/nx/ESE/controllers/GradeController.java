@@ -23,12 +23,13 @@ import nx.ESE.exceptions.FieldNotFoundException;
 import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.services.GradeService;
 
-@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
 @RestController
 @RequestMapping(GradeController.GRADE)
 public class GradeController {
 
 	public static final String GRADE = "/grades";
+	public static final String SUBJECT = "/subjects";
 
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_USERNAME = "/{username}";
@@ -80,6 +81,12 @@ public class GradeController {
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping()
 	public List<GradeDto> getFullGrades() throws DocumentNotFoundException {
-		return this.gradeService.getFullGrades().orElseThrow(() -> new DocumentNotFoundException("Grade"));
+		return this.gradeService.getFullGrades().orElseThrow(() -> new DocumentNotFoundException("Grade(s)"));
+	}
+	
+	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
+	@GetMapping(SUBJECT + PATH_ID)
+	public List<GradeDto> getGradesBySubject(@PathVariable String id) throws DocumentNotFoundException {
+		return this.gradeService.getGradesBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Grade(s)"));
 	}
 }

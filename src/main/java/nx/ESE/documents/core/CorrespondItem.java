@@ -21,9 +21,25 @@ public class CorrespondItem {
 	@Setter
 	private String correspond;
 
+	private boolean correct;
+
+	public CorrespondItem(@NotNull String item, @NotNull String correspond) {
+		super();
+		this.item = item;
+		this.correspond = correspond;
+	}
+
+	public boolean getCorrect() {
+		return correct;
+	}
+
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
+	}
+
 	@Override
 	public String toString() {
-		return "CorrespondItem [item=" + item + ", correspond=" + correspond + "]";
+		return "CorrespondItem [item=" + item + ", correspond=" + correspond + ", correct=" + correct + "]";
 	}
 
 	@Override

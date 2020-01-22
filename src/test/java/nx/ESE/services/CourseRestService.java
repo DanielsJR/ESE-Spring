@@ -7,8 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import lombok.Getter;
+import lombok.Setter;
 import nx.ESE.controllers.CourseController;
 import nx.ESE.documents.core.CourseName;
 import nx.ESE.dtos.CourseDto;
@@ -20,8 +21,12 @@ public class CourseRestService {
 	@Autowired
 	private RestService restService;
 
+	@Getter
+	@Setter
 	private CourseDto courseDto;
 
+	@Getter
+	@Setter
 	private CourseDto courseDto2;
 
 	@Autowired
@@ -29,32 +34,12 @@ public class CourseRestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CourseRestService.class);
 
-	public CourseDto getCourseDto() {
-		return courseDto;
-	}
-
-	public void setCourseDto(CourseDto courseDto) {
-		this.courseDto = courseDto;
-	}
-
-	public CourseDto getCourseDto2() {
-		return courseDto2;
-	}
-
-	public void setCourseDto2(CourseDto courseDto2) {
-		this.courseDto2 = courseDto2;
-	}
-
 	public void createCoursesDto() {
-		logger.warn(
-				"*********************************CREATING_COURSES**************************************************");
-
-		restService.loginManager();
-
 		userRestService.createUsersDto();
+		
+		restService.loginManager();
 		userRestService.postTeacher();
 		userRestService.postTeacher2();
-
 		userRestService.postStudent();
 		userRestService.postStudent2();
 
@@ -64,6 +49,7 @@ public class CourseRestService {
 		List<UserDto> students2 = new ArrayList<>();
 		students2.add(userRestService.getStudentDto2());
 
+		logger.warn("****************************CREATING_COURSES******************************************");
 		this.courseDto = new CourseDto();
 		this.courseDto.setName(CourseName.PRIMERO_H);
 		this.courseDto.setYear("2018");
@@ -75,14 +61,12 @@ public class CourseRestService {
 		this.courseDto2.setYear("2018");
 		this.courseDto2.setChiefTeacher(userRestService.getTeacherDto2());
 		this.courseDto2.setStudents(students2);
-
-		logger.warn("***********************************************************************************************");
+		logger.warn("**************************************************************************************");
 	}
 
 	public void deleteCourses() {
 		{
-			logger.warn(
-					"*********************************DELETING_COURSE**************************************************");
+			logger.warn("*********************************DELETING_COURSE***********************************");
 			this.restService.loginManager();
 
 			try {
@@ -100,8 +84,7 @@ public class CourseRestService {
 			this.userRestService.deleteTeachers();
 			this.userRestService.deleteStudents();
 
-			logger.warn(
-					"***********************************************************************************************");
+			logger.warn("************************************************************************************");
 
 		}
 

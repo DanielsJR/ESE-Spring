@@ -19,7 +19,7 @@ public class GradeDto {
 	@Getter
 	private String id;
 
-	@NotNull
+	//@NotNull
 	@Valid
 	@Getter
 	@Setter
@@ -29,27 +29,16 @@ public class GradeDto {
 	@Setter
 	private double grade;
 
-	@NotNull
+	//@NotNull
 	@Valid
 	@Getter
 	@Setter
-	private SubjectDto subject;
+	private EvaluationDto evaluation;
 
-	@NotNull
+	@Valid
 	@Getter
 	@Setter
-	private String title;
-
-	@NotNull
-	@Getter
-	@Setter
-	private String type;
-
-	@NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	@Getter
-	@Setter
-	private Date date;
+	private QuizStudentDto quizStudent;
 
 	@Getter
 	private String createdBy;
@@ -70,10 +59,10 @@ public class GradeDto {
 		this.id = grade.getId();
 		this.student = new UserDto(grade.getStudent());
 		this.grade = grade.getGrade();
-		this.subject = new SubjectDto(grade.getSubject());
-		this.title = grade.getTitle();
-		this.type = grade.getType();
-		this.date = grade.getDate();
+		this.evaluation = new EvaluationDto(grade.getEvaluation());
+		if (grade.getQuizStudent() != null) {
+			this.quizStudent = new QuizStudentDto(grade.getQuizStudent());
+		}
 		this.createdBy = grade.getCreatedBy();
 		this.createdDate = grade.getCreatedDate();
 		this.lastModifiedUser = grade.getLastModifiedUser();
@@ -83,10 +72,6 @@ public class GradeDto {
 	@Override
 	public String toString() {
 
-		String fDate = "null";
-		if (this.date != null)
-			fDate = new SimpleDateFormat("dd-MMM-yyyy").format(date.getTime());
-
 		String cDate = "null";
 		if (this.createdDate != null)
 			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
@@ -95,20 +80,21 @@ public class GradeDto {
 		if (this.lastModifiedDate != null)
 			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
 
-		return "GradeDto [id=" + id + ", student=" + student + ", grade=" + grade + ", subject=" + subject + ", title="
-				+ title + ", type=" + type + ", date=" + fDate + ", createdBy=" + createdBy + ", createdDate=" + cDate
-				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
+		return "GradeDto [id=" + id + ", student=" + student + ", grade=" + grade + ", evaluation=" + evaluation
+				+ ", quizStudent=" + quizStudent + ", createdBy=" + createdBy + ", createdDate="
+				+ cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lModified + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((evaluation == null) ? 0 : evaluation.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(grade);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((quizStudent == null) ? 0 : quizStudent.hashCode());
 		result = prime * result + ((student == null) ? 0 : student.hashCode());
-		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -121,30 +107,22 @@ public class GradeDto {
 		if (getClass() != obj.getClass())
 			return false;
 		GradeDto other = (GradeDto) obj;
-		if (date == null) {
-			if (other.date != null)
+		if (evaluation == null) {
+			if (other.evaluation != null)
 				return false;
-		} else if (!date.equals(other.date))
+		} else if (!evaluation.equals(other.evaluation))
+			return false;
+		if (Double.doubleToLongBits(grade) != Double.doubleToLongBits(other.grade))
+			return false;
+		if (quizStudent == null) {
+			if (other.quizStudent != null)
+				return false;
+		} else if (!quizStudent.equals(other.quizStudent))
 			return false;
 		if (student == null) {
 			if (other.student != null)
 				return false;
 		} else if (!student.equals(other.student))
-			return false;
-		if (subject == null) {
-			if (other.subject != null)
-				return false;
-		} else if (!subject.equals(other.subject))
-			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else if (!title.equals(other.title))
-			return false;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
 			return false;
 		return true;
 	}

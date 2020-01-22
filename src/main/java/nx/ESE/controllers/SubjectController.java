@@ -29,17 +29,19 @@ import nx.ESE.exceptions.FieldNullException;
 import nx.ESE.exceptions.ForbiddenDeleteException;
 import nx.ESE.services.SubjectService;
 
-@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
 @RestController
 @RequestMapping(SubjectController.SUBJECT)
 public class SubjectController {
 
 	public static final String SUBJECT = "/subjects";
 	public static final String NAME = "/name";
+	public static final String TEACHER = "/teacher";
+	public static final String COURSE = "/course";
 
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_NAME = "/{name}";
-	public static final String PATH_COURSE_ID = "/{courseId}";
+	//public static final String PATH_COURSE_ID = "/{courseId}";
 
 	@Autowired
 	private SubjectService subjectService;
@@ -77,8 +79,8 @@ public class SubjectController {
 	@DeleteMapping(PATH_ID)
 	public SubjectDto deleteSubject(@PathVariable String id) throws FieldNotFoundException, ForbiddenDeleteException {
 
-		if (this.subjectService.isSubjectInGrade(id))
-			throw new ForbiddenDeleteException("Asignatura tiene nota(s)");
+		if (this.subjectService.isSubjectInEvaluation(id))
+			throw new ForbiddenDeleteException("Asignatura esta en una evaluación");
 
 		return this.subjectService.deleteSubject(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
@@ -91,7 +93,7 @@ public class SubjectController {
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(PATH_NAME + PATH_COURSE_ID)
+	@GetMapping(PATH_NAME + PATH_ID)
 	public SubjectDto getSubjectByNameAndCourse(@PathVariable SubjectName name, @PathVariable String courseId)
 			throws DocumentNotFoundException {
 		return this.subjectService.getSubjectByNameAndCourse(name, courseId)
@@ -102,6 +104,18 @@ public class SubjectController {
 	@GetMapping()
 	public List<SubjectDto> getFullSubjects() throws DocumentNotFoundException {
 		return this.subjectService.getFullSubjects().orElseThrow(() -> new DocumentNotFoundException("Subject"));
+	}
+
+	@PreAuthorize("hasRole('TEACHER')")
+	@GetMapping(TEACHER + PATH_ID)
+	public List<SubjectDto> getSubjectsByTeacher(@PathVariable String id) throws DocumentNotFoundException {
+		return this.subjectService.getSubjectsByTeacher(id).orElseThrow(() -> new DocumentNotFoundException("Subject"));
+	}
+	
+	@PreAuthorize("hasRole('STUDENT')")
+	@GetMapping(COURSE + PATH_ID)
+	public List<SubjectDto> getSubjectsByCourse(@PathVariable String id) throws DocumentNotFoundException {
+		return this.subjectService.getSubjectsByCourse(id).orElseThrow(() -> new DocumentNotFoundException("Subject"));
 	}
 
 }

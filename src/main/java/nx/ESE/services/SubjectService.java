@@ -8,21 +8,20 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import nx.ESE.documents.User;
 import nx.ESE.documents.core.Course;
-import nx.ESE.documents.core.Grade;
 import nx.ESE.documents.core.Subject;
 import nx.ESE.documents.core.SubjectName;
-import nx.ESE.dtos.CourseDto;
 import nx.ESE.dtos.SubjectDto;
 import nx.ESE.repositories.CourseRepository;
-import nx.ESE.repositories.GradeRepository;
+import nx.ESE.repositories.EvaluationRepository;
+import nx.ESE.repositories.QuizStudentRepository;
 import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
 
-@Controller
+@Service
 public class SubjectService {
 
 	@Autowired
@@ -35,7 +34,10 @@ public class SubjectService {
 	private CourseRepository courseRepository;
 
 	@Autowired
-	private GradeRepository gradeRepository;
+	private QuizStudentRepository quizStudentRepository;
+
+	@Autowired
+	private EvaluationRepository evaluationRepository;
 
 	private Subject setSubjectFromDto(Subject subject, SubjectDto subjectDto) {
 		subject.setName(subjectDto.getName());
@@ -61,7 +63,8 @@ public class SubjectService {
 	// CRUD******************************
 	public Optional<List<SubjectDto>> getFullSubjects() {
 		List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name")).stream()
-				.map(s -> new SubjectDto(s)).parallel()
+				.map(s -> new SubjectDto(s))
+				.parallel()
 				.sorted((s1, s2) -> s1.getName().toString().compareTo(s2.getName().toString()))
 				.collect(Collectors.toList());
 		if (list.isEmpty())
@@ -70,6 +73,31 @@ public class SubjectService {
 		return Optional.of(list);
 
 	}
+	
+	public Optional<List<SubjectDto>> getSubjectsByTeacher(String id) {
+		List<SubjectDto> list = subjectRepository.findByTeacher(id);
+				//.stream()
+				//.parallel()
+				//.sorted((s1, s2) -> s1.getName().toString().compareTo(s2.getName().toString()))
+				//.collect(Collectors.toList())
+		if (list.isEmpty())
+			return Optional.empty();
+		// list.forEach(s-> System.out.println(s.getName()));
+		return Optional.of(list);
+	}
+	
+	public Optional<List<SubjectDto>> getSubjectsByCourse(String id) {
+		List<SubjectDto> list = subjectRepository.findByCourse(id);
+				//.stream()
+				//.parallel()
+				//.sorted((s1, s2) -> s1.getName().toString().compareTo(s2.getName().toString()))
+				//.collect(Collectors.toList())
+		if (list.isEmpty())
+			return Optional.empty();
+		// list.forEach(s-> System.out.println(s.getName()));
+		return Optional.of(list);
+	}
+
 
 	public Optional<SubjectDto> getSubjectById(String id) {
 		Optional<Subject> subject = subjectRepository.findById(id);
@@ -77,7 +105,7 @@ public class SubjectService {
 			return Optional.of(new SubjectDto(subject.get()));
 		return Optional.empty();
 	}
-	
+
 	public Optional<SubjectDto> getSubjectByNameAndCourse(SubjectName name, String courseId) {
 		SubjectDto subjectDto = subjectRepository.findByNameAndCourse(name, courseId);
 		if (subjectDto != null)
@@ -139,20 +167,8 @@ public class SubjectService {
 		return subjectDB != null && !subjectDB.getId().equals(subjectDto.getId());
 	}
 
-	public boolean isSubjectInGrade(String subjectId) {
-		Boolean[] found = { false };
-
-		List<Grade> grades;
-		if (!courseRepository.findAll().isEmpty()) {
-			grades = gradeRepository.findAll();
-
-			grades.stream().forEach(g -> {
-				if (g.getSubject().getId().equals(subjectId))
-					found[0] = true;
-			});
-		}
-		System.out.println("----------------------------------------isSubjectInGrade " + found[0]);
-		return found[0];
+	public boolean isSubjectInEvaluation(String subjectId) {
+		return evaluationRepository.findFirstBySubject(subjectId) != null;
 	}
 
 
