@@ -36,7 +36,7 @@ public class UserDto {
 	@Getter
 	private String username;
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  
+	//@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  
 	@Pattern(regexp = nx.ESE.dtos.validators.Pattern.PASSWORD)
 	@Getter
 	@Setter

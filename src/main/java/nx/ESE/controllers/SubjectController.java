@@ -41,7 +41,7 @@ public class SubjectController {
 
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_NAME = "/{name}";
-	//public static final String PATH_COURSE_ID = "/{courseId}";
+
 
 	@Autowired
 	private SubjectService subjectService;
@@ -93,10 +93,11 @@ public class SubjectController {
 	}
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(PATH_NAME + PATH_ID)
-	public SubjectDto getSubjectByNameAndCourse(@PathVariable SubjectName name, @PathVariable String courseId)
+	@GetMapping(NAME + PATH_NAME + PATH_ID)
+	public SubjectDto getSubjectByNameAndCourse(@PathVariable SubjectName name, @PathVariable String id)
 			throws DocumentNotFoundException {
-		return this.subjectService.getSubjectByNameAndCourse(name, courseId)
+		
+		return this.subjectService.getSubjectByNameAndCourse(name, id)
 				.orElseThrow(() -> new DocumentNotFoundException("Asignatura"));
 	}
 

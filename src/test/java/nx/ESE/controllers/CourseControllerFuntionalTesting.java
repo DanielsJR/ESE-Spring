@@ -310,7 +310,7 @@ public class CourseControllerFuntionalTesting {
 
 	// GET******************************************
 	@Test
-	public void testGetCourseByName() {
+	public void testGetCourseByNameAndYear() {
 		courseRestService.postCourse();
 
 		CourseDto cDto = courseRestService.getCourseByNameAndYear(courseRestService.getCourseDto().getName(),

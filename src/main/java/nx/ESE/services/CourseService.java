@@ -111,7 +111,7 @@ public class CourseService {
 
 	}
 
-	public Optional<CourseDto> getCourseByName(CourseName name, String year) {
+	public Optional<CourseDto> getCourseByNameAndYear(CourseName name, String year) {
 		CourseDto courseDto = courseRepository.findByNameAndYear(name, year);
 		if (courseDto != null)
 			return Optional.of(courseDto);

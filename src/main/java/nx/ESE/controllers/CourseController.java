@@ -116,10 +116,10 @@ public class CourseController {
 
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(NAME + PATH_NAME + PATH_YEAR)
-	public CourseDto getCourseByName(@PathVariable CourseName name, @PathVariable String year)
+	public CourseDto getCourseByNameAndYear(@PathVariable CourseName name, @PathVariable String year)
 			throws DocumentNotFoundException {
 
-		return this.courseService.getCourseByName(name, year)
+		return this.courseService.getCourseByNameAndYear(name, year)
 				.orElseThrow(() -> new DocumentNotFoundException("Course"));
 	}
 

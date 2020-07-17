@@ -25,6 +25,7 @@ import nx.ESE.documents.Preferences;
 import nx.ESE.documents.Role;
 import nx.ESE.documents.Theme;
 import nx.ESE.documents.User;
+import nx.ESE.repositories.AttendanceRepository;
 import nx.ESE.repositories.CourseRepository;
 import nx.ESE.repositories.EvaluationRepository;
 import nx.ESE.repositories.GradeRepository;
@@ -70,6 +71,9 @@ public class DatabaseSeederService {
 	
 	@Autowired
 	private QuizStudentRepository quizStudentRepository;
+	
+	@Autowired
+	private AttendanceRepository attendanceRepository;
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -129,6 +133,10 @@ public class DatabaseSeederService {
 		
 		if (dbGraph.getGradesList() != null) {
 			this.gradeRepository.saveAll(dbGraph.getGradesList());
+		}
+		
+		if (dbGraph.getAttendancesList() != null) {
+			this.attendanceRepository.saveAll(dbGraph.getAttendancesList());
 		}
 
 		logger.warn("------------------------- Seed: " + ymlFileName + "-----------");

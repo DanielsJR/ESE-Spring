@@ -345,7 +345,7 @@ userList:
 preferencesList:
   - user: *u010
     theme:
-       name: grey-indigo
+       name: indigo-lightblue
        isDark: false
        color: '#9E9E9E' 
     
@@ -363,7 +363,7 @@ preferencesList:
 
   - user: *u020
     theme:
-       name: pink-purple-dark
+       name: purple-pink-dark
        isDark: true
        color: '#E91E63' 
     
@@ -375,7 +375,7 @@ preferencesList:
  
   - user: *u022
     theme:
-       name: red-indigo-dark
+       name: bluegrey-light-blue
        isDark: true
        color: '#F44336'  
 
@@ -387,31 +387,31 @@ preferencesList:
     
   - user: *u031
     theme:
-       name: lime-pink
+       name: yellow-deeppurple
        isDark: false
        color: '#CDDC39' 
  
   - user: *u032
     theme:
-       name: blue-orange-dark
+       name: green-purple-dark
        isDark: true
        color: '#2196F3'  
 
   - user: *u033
     theme:
-       name: indigo-pink-dark
+       name: lightblue-purple-dark
        isDark: true
        color: '#3F51B5' 
     
   - user: *u034
     theme:
-       name: lime-pink
+       name: amber-blue
        isDark: false
        color: '#CDDC39' 
  
   - user: *u035
     theme:
-       name: blue-orange-dark
+       name: orange-indigo-dark
        isDark: true
        color: '#2196F3'   
        
@@ -1056,3 +1056,15 @@ gradesList:
     student: *u032
     evaluation: *e03
             
+
+
+# ATTENDANCES*********************************************************** 
+attendancesList:   
+
+  - &a01
+    subjectId: someId
+    students:
+      - *u030
+      - *u031
+      - *u032
+    date: 2018-11-12

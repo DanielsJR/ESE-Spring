@@ -115,11 +115,14 @@ public class SubjectRestService {
 				.bearerAuth(restService.getAuthToken().getToken()).get().build();
 	}
 
-	public SubjectDto getSubjectByNameAndCourse(SubjectName name, String courseId) {
+	public SubjectDto getSubjectByNameAndCourse(SubjectName name, String id) {
 		return restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-				.path(SubjectController.SUBJECT).path(SubjectController.PATH_NAME).expand(name)
-				.path(SubjectController.PATH_COURSE_ID).expand(courseId)
-				.bearerAuth(restService.getAuthToken().getToken()).get().build();
+				.path(SubjectController.SUBJECT)
+				.path(SubjectController.NAME)
+				.path(SubjectController.PATH_NAME).expand(name)
+				.path(SubjectController.PATH_ID).expand(id)
+				.bearerAuth(restService.getAuthToken().getToken()).get()
+				.build();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

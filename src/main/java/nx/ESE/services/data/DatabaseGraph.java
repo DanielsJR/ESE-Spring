@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nx.ESE.documents.Preferences;
 import nx.ESE.documents.User;
+import nx.ESE.documents.core.Attendance;
 import nx.ESE.documents.core.Course;
 import nx.ESE.documents.core.Evaluation;
 import nx.ESE.documents.core.Grade;
@@ -48,5 +49,9 @@ public class DatabaseGraph {
 	@Getter
 	@Setter
 	private List<QuizStudent> quizesStudentList;
+	
+	@Getter
+	@Setter
+	private List<Attendance> attendancesList;
 
 }

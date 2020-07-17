@@ -127,8 +127,11 @@ public class CourseRestService {
 	// GET
 	public CourseDto getCourseByNameAndYear(CourseName name, String year) {
 		return restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
-				.path(CourseController.COURSE).path(CourseController.NAME).path(CourseController.PATH_NAME).expand(name)
-				.path(CourseController.PATH_YEAR).expand(year).bearerAuth(restService.getAuthToken().getToken()).get()
+				.path(CourseController.COURSE)
+				.path(CourseController.NAME)
+				.path(CourseController.PATH_NAME).expand(name)
+				.path(CourseController.PATH_YEAR).expand(year)
+				.bearerAuth(restService.getAuthToken().getToken()).get()
 				.build();
 	}
 

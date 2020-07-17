@@ -285,7 +285,7 @@ public class SubjectControllerFuntionalTesting {
 
 		SubjectDto sDto = subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
 
-		assertEquals(subjectRestService.getSubjectDto(), (sDto));
+		assertEquals(subjectRestService.getSubjectDto(), sDto);
 	}
 
 	@Test
@@ -324,7 +324,8 @@ public class SubjectControllerFuntionalTesting {
 		SubjectDto sDto = subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(),
 				subjectRestService.getSubjectDto().getCourse().getId());
 
-		assertEquals(subjectRestService.getSubjectDto(), (sDto));
+		assertEquals(subjectRestService.getSubjectDto(), sDto);
+		
 	}
 
 	@Test
@@ -346,7 +347,7 @@ public class SubjectControllerFuntionalTesting {
 
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
 		restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_NAME)
-				.expand(subjectRestService.getSubjectDto().getName()).path(SubjectController.PATH_COURSE_ID)
+				.expand(subjectRestService.getSubjectDto().getName()).path(SubjectController.PATH_ID)
 				.expand(subjectRestService.getSubjectDto().getCourse().getId()).get().build();
 
 	}
