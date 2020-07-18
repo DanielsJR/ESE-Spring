@@ -78,23 +78,23 @@ public class QuizStudentRestService {
 		Date date2 = new Date();
 		
 		List<CorrespondItem> correspondItems2 = new ArrayList<CorrespondItem>();
-		correspondItems2.add(new CorrespondItem("", ""));
-		correspondItems2.add(new CorrespondItem("", ""));
+		correspondItems2.add(new CorrespondItem("2", "2"));
+		correspondItems2.add(new CorrespondItem("2", "2"));
 		this.quizStudentDto2.setCorrespondItems(correspondItems2);
 			
 		List<TrueFalseItem> trueFalseItems2 = new ArrayList<TrueFalseItem>();
-		trueFalseItems2.add(new TrueFalseItem("", true));
-		trueFalseItems2.add(new TrueFalseItem("", true));
+		trueFalseItems2.add(new TrueFalseItem("2", true));
+		trueFalseItems2.add(new TrueFalseItem("2", true));
 		this.quizStudentDto2.setTrueFalseItems(trueFalseItems2);
 			
 		List<MultipleSelectionItem> multipleSelectionItems2 = new ArrayList<MultipleSelectionItem>();
-		multipleSelectionItems2.add(new MultipleSelectionItem("", "", "", "", "", ""));
-		multipleSelectionItems2.add(new MultipleSelectionItem("", "", "", "", "", ""));
+		multipleSelectionItems2.add(new MultipleSelectionItem("2", "", "", "", "", ""));
+		multipleSelectionItems2.add(new MultipleSelectionItem("2", "", "", "", "", ""));
 		this.quizStudentDto2.setMultipleSelectionItems(multipleSelectionItems2);
 			
 		List<IncompleteTextItem> incompleteTextItems2 = new ArrayList<IncompleteTextItem>();
-		incompleteTextItems2.add(new IncompleteTextItem("", ""));
-		incompleteTextItems2.add(new IncompleteTextItem("", ""));
+		incompleteTextItems2.add(new IncompleteTextItem("2", ""));
+		incompleteTextItems2.add(new IncompleteTextItem("2", ""));
 		this.quizStudentDto2.setIncompleteTextItems(incompleteTextItems2);
 
 		
@@ -129,13 +129,19 @@ public class QuizStudentRestService {
 	// POST
 	public QuizStudentDto postQuizStudent() {
 		return quizStudentDto = restService.restBuilder(new RestBuilder<QuizStudentDto>()).clazz(QuizStudentDto.class)
-				.path(QuizStudentController.QUIZ_STUDENT).bearerAuth(restService.getAuthToken().getToken()).body(quizStudentDto).post()
+				.path(QuizStudentController.QUIZ_STUDENT)
+				.bearerAuth(restService.getAuthToken().getToken())
+				.body(quizStudentDto)
+				.post()
 				.build();
 	}
 
 	public QuizStudentDto postQuizStudent2() {
 		return quizStudentDto2 = restService.restBuilder(new RestBuilder<QuizStudentDto>()).clazz(QuizStudentDto.class)
-				.path(QuizStudentController.QUIZ_STUDENT).bearerAuth(restService.getAuthToken().getToken()).body(quizStudentDto2).post()
+				.path(QuizStudentController.QUIZ_STUDENT)
+				.bearerAuth(restService.getAuthToken().getToken())
+				.body(quizStudentDto2)
+				.post()
 				.build();
 
 	}

@@ -38,7 +38,7 @@ public class QuizStudentControllerFuntionalTesting {
 	@Before
 	public void before() {
 		quizStudentRestService.createQuizStudentsDto();
-		restService.loginTeacher();
+		//restService.loginTeacher();
 	}
 
 	@After
@@ -49,12 +49,13 @@ public class QuizStudentControllerFuntionalTesting {
 	// POST********************************
 	@Test
 	public void testPostQuizStudent() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
+		quizStudentRestService.postQuizStudent2();
 
+		restService.loginTeacher();
 		QuizStudentDto qsDto = quizStudentRestService.getQuizStudentById(quizStudentRestService.getQuizStudentDto().getId());
 		assertEquals(qsDto, quizStudentRestService.getQuizStudentDto());
-
-		quizStudentRestService.postQuizStudent2();
 
 		QuizStudentDto qsDto2 = quizStudentRestService.getQuizStudentById(quizStudentRestService.getQuizStudentDto2().getId());
 		assertEquals(qsDto2.getId(), quizStudentRestService.getQuizStudentDto2().getId());
@@ -62,7 +63,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPostQuizStudentPreAuthorize() {
-		restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
+		restService.loginManager();// PreAuthorize("hasRole('STUDENT')")
 
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		quizStudentRestService.postQuizStudent();
@@ -70,6 +71,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPostQuizStudentNoBearerAuth() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
@@ -78,6 +80,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPostQuizStudentFieldInvalidExceptionId() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
@@ -86,13 +89,13 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPostQuizStudentDocumentAlreadyExistException() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
-		
+
 		quizStudentRestService.getQuizStudentDto2().setCorrespondItems(quizStudentRestService.getQuizStudentDto().getCorrespondItems());
 		quizStudentRestService.getQuizStudentDto2().setTrueFalseItems(quizStudentRestService.getQuizStudentDto().getTrueFalseItems());
 		quizStudentRestService.getQuizStudentDto2().setMultipleSelectionItems(quizStudentRestService.getQuizStudentDto().getMultipleSelectionItems());
 		quizStudentRestService.getQuizStudentDto2().setIncompleteTextItems(quizStudentRestService.getQuizStudentDto().getIncompleteTextItems());
-		
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		quizStudentRestService.postQuizStudent2();
@@ -101,6 +104,8 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPostQuizStudentBodyNull() {
+		restService.loginStudent();
+
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
 		restService.restBuilder().path(QuizStudentController.QUIZ_STUDENT).bearerAuth(restService.getAuthToken().getToken())
 				.body(null).post().build();
@@ -111,22 +116,25 @@ public class QuizStudentControllerFuntionalTesting {
 	// PUT********************************
 	@Test
 	public void testPutQuizStudent() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		quizStudentRestService.getQuizStudentDto().setCorrespondItems(null);
 		quizStudentRestService.putQuizStudent();
 
+		restService.loginTeacher();
 		QuizStudentDto qsDto = quizStudentRestService.getQuizStudentById(quizStudentRestService.getQuizStudentDto().getId());
 		Assert.assertEquals(null, qsDto.getCorrespondItems());
 	}
 
 	@Test
 	public void testPutQuizStudentPreAuthorize() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		quizStudentRestService.getQuizStudentDto().setCorrespondItems(null);
 
-		restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
+		restService.loginManager();// PreAuthorize("hasRole('STUDENT')")
 
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		quizStudentRestService.putQuizStudent();
@@ -134,6 +142,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPutQuizStudentNoBearerAuth() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		quizStudentRestService.getQuizStudentDto().setCorrespondItems(null);
@@ -146,6 +155,7 @@ public class QuizStudentControllerFuntionalTesting {
 
     @Test
 	public void testPutQuizStudentDocumentAlreadyExistException() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 		quizStudentRestService.postQuizStudent2();
 		
@@ -162,6 +172,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPutQuizStudentFieldNotFoundExceptionId() {
+		restService.loginStudent();
 		quizStudentRestService.getQuizStudentDto().setCorrespondItems(null);
 
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
@@ -171,6 +182,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testPutQuizStudentBodyNull() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
@@ -184,23 +196,26 @@ public class QuizStudentControllerFuntionalTesting {
 	// DELETE
 	@Test
 	public void testDeleteQuizStudent() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
+		restService.loginTeacher();
 		quizStudentRestService.deleteQuizStudent(quizStudentRestService.getQuizStudentDto().getId());
 	}
 
 	@Test
 	public void testDeleteQuizStudentPreAuthorize() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
-		restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
-
+		restService.loginManager();// PreAuthorize("hasRole('STUDENT')")
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		quizStudentRestService.deleteQuizStudent(quizStudentRestService.getQuizStudentDto().getId());
 	}
 
 	@Test
 	public void testDeleteQuizStudentNoBearerAuth() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
@@ -210,6 +225,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testDeleteQuizStudentFieldNotFoundExceptionId() {
+		restService.loginTeacher();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
 		quizStudentRestService.deleteQuizStudent("xxx");
 	}
@@ -224,17 +240,20 @@ public class QuizStudentControllerFuntionalTesting {
 	// GET********************************
 	@Test
 	public void testGetQuizStudentById() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
+
+		restService.loginTeacher();
 		QuizStudentDto Gdto = quizStudentRestService.getQuizStudentById(quizStudentRestService.getQuizStudentDto().getId());
 		Assert.assertEquals(Gdto, quizStudentRestService.getQuizStudentDto());
 	}
 
 	@Test
 	public void testGetQuizStudentByIdPreAuthorize() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
-		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
-									// MANAGER")
+		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or MANAGER")
 
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		quizStudentRestService.getQuizStudentById(quizStudentRestService.getQuizStudentDto().getId());
@@ -243,16 +262,22 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testGetQuizStudentByIdNoBearerAuth() {
+		restService.loginStudent();
 		quizStudentRestService.postQuizStudent();
 
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(QuizStudentController.QUIZ_STUDENT).path(QuizStudentController.PATH_ID)
-				.expand(quizStudentRestService.getQuizStudentDto().getId()).body(quizStudentRestService.getQuizStudentDto().getId()).get()
+		restService.restBuilder().path(QuizStudentController.QUIZ_STUDENT)
+				.path(QuizStudentController.PATH_ID)
+				.expand(quizStudentRestService
+				.getQuizStudentDto().getId())
+				.body(quizStudentRestService.getQuizStudentDto().getId())
+				.get()
 				.build();
 	}
 
 	@Test
 	public void testGetQuizStudentByIdFieldNotFoundExceptionId() {
+		restService.loginTeacher();
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
 		quizStudentRestService.getQuizStudentById("xxx");
 
@@ -261,6 +286,7 @@ public class QuizStudentControllerFuntionalTesting {
 	//
 	@Test
 	public void testGetFullQuizStudents() {
+		restService.loginTeacher();
 		quizStudentRestService.getFullQuizStudents();
 
 		Assert.assertTrue(quizStudentRestService.getListQuizStudentDto().size() > 0);
@@ -268,8 +294,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testGetFullQuizStudentsPreAuthorize() {
-		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
-									// MANAGER")
+		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or MANAGER")
 
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		quizStudentRestService.getFullQuizStudents();
@@ -278,6 +303,7 @@ public class QuizStudentControllerFuntionalTesting {
 
 	@Test
 	public void testGetFullQuizStudentsNoBearerAuth() {
+		restService.loginTeacher();
 		quizStudentRestService.getFullQuizStudents();
 
 		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));

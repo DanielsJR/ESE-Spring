@@ -358,8 +358,7 @@ public class QuizControllerFuntionalTesting {
 
 	@Test
 	public void testGetFullQuizesPreAuthorize() {
-		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
-									// MANAGER")
+		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or MANAGER")
 
 		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
 		quizRestService.getFullQuizes();

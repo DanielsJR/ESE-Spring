@@ -56,7 +56,7 @@ public class QuizStudentController {
 	}
 
 	// PUT
-	@PreAuthorize("hasRole('TEACHER')")
+	@PreAuthorize("hasRole('STUDENT')")
 	@PutMapping(PATH_ID)
 	public QuizStudentDto modifyQuizStudent(@PathVariable String id, @Valid @RequestBody QuizStudentDto quizStudentDto)
 			throws FieldNotFoundException, FieldNullException, DocumentAlreadyExistException {
