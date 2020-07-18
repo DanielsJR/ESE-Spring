@@ -13,3 +13,5 @@ notifications:
 services:
   - mongodb
 
+script:
+  - mvn org.jacoco:jacoco-maven-plugin:prepare-agent verify
