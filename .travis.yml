@@ -13,8 +13,6 @@ notifications:
 services:
   - mongodb
 
-before_install:
-  - chmod +x mvnw
 script:
   # Test
   - mvn -Dtest=**/*Test test
