@@ -99,7 +99,7 @@ public class DatabaseSeederService {
 		assert ymlFileName != null && !ymlFileName.isEmpty();
 		Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
 		InputStream input = new ClassPathResource(ymlFileName).getInputStream();
-		DatabaseGraph dbGraph = (DatabaseGraph) yamlParser.load(input);
+		DatabaseGraph dbGraph = yamlParser.load(input);
 
 		// Save Repositories
 		if (dbGraph.getUserList() != null) {
@@ -117,8 +117,7 @@ public class DatabaseSeederService {
 		if (dbGraph.getSubjectsList() != null) {
 			this.subjectRepository.saveAll(dbGraph.getSubjectsList());
 		}
-	
-		
+
 		if (dbGraph.getQuizesList() != null) {
 			this.quizRepository.saveAll(dbGraph.getQuizesList());
 		}

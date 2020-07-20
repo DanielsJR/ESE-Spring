@@ -18,8 +18,6 @@ public class DatabaseSeederServiceIT {
     
     @Test
     public void testUserSeedDatabase() {
-        // this.databaseSeederService.deleteAllAndCreateAdmin();
-        // this.databaseSeederService.seedDatabase("ESE-db-test.yml");
         User user = userRepository.findByUsername("u010");
         assertNotNull(user);
         assertEquals("u010", user.getUsername());
