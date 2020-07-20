@@ -198,6 +198,11 @@
 						<version>${junit.platform.version}</version>
 					</dependency>
 				</dependencies>
+				<configuration>
+					<includes>
+						<include>**/*IT</include>
+					</includes>
+				</configuration>
 			</plugin>
 
 			<plugin>
