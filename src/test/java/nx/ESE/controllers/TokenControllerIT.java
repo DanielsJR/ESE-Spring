@@ -1,7 +1,5 @@
 package nx.ESE.controllers;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -18,6 +16,8 @@ import nx.ESE.services.RestBuilder;
 import nx.ESE.services.RestService;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
