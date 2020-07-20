@@ -3,10 +3,12 @@ package nx.ESE.controllers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
 import nx.ESE.documents.Role;
@@ -14,8 +16,12 @@ import nx.ESE.dtos.UserDto;
 import nx.ESE.services.HttpMatcher;
 import nx.ESE.services.RestBuilder;
 import nx.ESE.services.RestService;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@ApiTestConfig
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = "classpath:test.properties")
 public class TokenControllerIT {
 
     @Rule
