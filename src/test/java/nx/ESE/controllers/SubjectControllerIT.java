@@ -32,7 +32,7 @@ import nx.ESE.services.UserRestService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class SubjectControllerFuntionalTesting {
+public class SubjectControllerIT {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();

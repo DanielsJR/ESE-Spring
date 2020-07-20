@@ -28,7 +28,7 @@ import nx.ESE.services.RestService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class CourseControllerFuntionalTesting {
+public class CourseControllerIT {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
