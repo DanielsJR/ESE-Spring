@@ -1,9 +1,10 @@
 package nx.ESE.documents;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+
+import nx.ESE.utils.NX_DateFormatter;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,86 +22,77 @@ import lombok.Setter;
 @Document
 public class Preferences {
 
-	@Id
-	private String id;
+    @Id
+    private String id;
 
-	@DBRef
-	@NotNull
-	@Setter
-	@Getter
-	private User user;
+    @DBRef
+    @NotNull
+    @Setter
+    @Getter
+    private User user;
 
-	@Setter
-	@Getter
-	private Theme theme;
+    @Setter
+    @Getter
+    private Theme theme;
 
-	@CreatedBy
-	@Getter
-	private String createdBy;
+    @CreatedBy
+    @Getter
+    private String createdBy;
 
-	@CreatedDate
-	@Getter
-	private Date createdDate;
+    @CreatedDate
+    @Getter
+    private Date createdDate;
 
-	@LastModifiedBy
-	@Getter
-	private String lastModifiedUser;
+    @LastModifiedBy
+    @Getter
+    private String lastModifiedUser;
 
-	@LastModifiedDate
-	@Getter
-	private Date lastModifiedDate;
+    @LastModifiedDate
+    @Getter
+    private Date lastModifiedDate;
 
-	public Preferences(User user, Theme theme) {
-		super();
-		this.user = user;
-		this.theme = theme;
-	}
+    public Preferences(User user, Theme theme) {
+        super();
+        this.user = user;
+        this.theme = theme;
+    }
 
-	@Override
-	public String toString() {
+    @Override
+    public String toString() {
+        return "Preferences [id=" + id + ", user=" + user + ", theme=" + theme + ", createdBy=" + createdBy
+                + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate="
+                + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+    }
 
-		String cDate = "null";
-		if (this.createdDate != null)
-			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        return result;
+    }
 
-		String lModified = "null";
-		if (this.lastModifiedDate != null)
-			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-
-		return "Preferences [id=" + id + ", user=" + user + ", theme=" + theme + ", createdBy=" + createdBy
-				+ ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate="
-				+ lModified + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Preferences other = (Preferences) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Preferences other = (Preferences) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
+            return false;
+        return true;
+    }
 
 }

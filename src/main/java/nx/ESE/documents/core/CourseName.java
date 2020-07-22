@@ -3,9 +3,6 @@ package nx.ESE.documents.core;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-
-import nx.ESE.utils.Capitalizer;
-
 public enum CourseName {
 	
 	PRIMERO_A("1-A"), SEGUNDO_A("2-A"), TERCERO_A("3-A"), CUARTO_A("4-A"), QUINTO_A("5-A"),SEXTO_A("6-A"),SEPTIMO_A("7-A"),OCTAVO_A("8-A"),

@@ -1,8 +1,8 @@
 package nx.ESE.documents.core;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import nx.ESE.utils.NX_DateFormatter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -63,18 +63,9 @@ public class Subject {
 
 	@Override
 	public String toString() {
-
-		String cDate = "null";
-		if (this.createdDate != null)
-			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
-
-		String lModified = "null";
-		if (this.lastModifiedDate != null)
-			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-
 		return "Subject [id=" + id + ", name=" + name + ", teacher=" + teacher + ", course=" + course + ", createdBy="
-				+ createdBy + ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser
-				+ ", lastModifiedDate=" + lModified + "]";
+				+ createdBy + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser
+				+ ", lastModifiedDate=" + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
 	}
 
 	@Override

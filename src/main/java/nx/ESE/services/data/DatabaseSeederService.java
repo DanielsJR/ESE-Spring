@@ -34,7 +34,7 @@ import nx.ESE.repositories.QuizRepository;
 import nx.ESE.repositories.QuizStudentRepository;
 import nx.ESE.repositories.SubjectRepository;
 import nx.ESE.repositories.UserRepository;
-import nx.ESE.utils.UtilBase64Image;
+import nx.ESE.utils.NX_UtilBase64Image;
 
 @Service
 public class DatabaseSeederService {
@@ -172,7 +172,7 @@ public class DatabaseSeederService {
 			User user = it.next();
 			if (user.getAvatar() != null) {
 				String path = Avatar.SERVER_AVATAR_PATH + user.getAvatar().getName();
-				String avatarBase64 = UtilBase64Image.encoder(path);
+				String avatarBase64 = NX_UtilBase64Image.encoder(path);
 				user.getAvatar().setData(avatarBase64);
                 userRepository.save(user); 
 			}
