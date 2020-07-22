@@ -12,6 +12,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = RUTValidator.class)
 public @interface RUTValid {
+
     String message() default "Expected RUT match";
 
     Class<?>[] groups() default {};
