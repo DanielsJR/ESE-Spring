@@ -1,9 +1,12 @@
 package nx.ese.controllers;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import nx.ese.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,14 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import nx.ese.documents.Role;
 import nx.ese.dtos.UserDto;
 import nx.ese.dtos.UserMinDto;
-import nx.ese.exceptions.FieldAlreadyExistException;
-import nx.ese.exceptions.FieldInvalidException;
-import nx.ese.exceptions.FieldNotFoundException;
-import nx.ese.exceptions.FieldNullException;
-import nx.ese.exceptions.ForbiddenChangeRoleException;
-import nx.ese.exceptions.ForbiddenDeleteException;
-import nx.ese.exceptions.ForbiddenException;
-import nx.ese.exceptions.PasswordNotMatchException;
 import nx.ese.services.UserService;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
@@ -36,493 +31,486 @@ import nx.ese.services.UserService;
 @RequestMapping(UserController.USERS)
 public class UserController {
 
-	public static final String USERS = "/users";
-	public static final String ADMINS = "/admins";
-	public static final String MANAGERS = "/managers";
-	public static final String TEACHERS = "/teachers";
-	public static final String STUDENTS = "/students";
+    public static final String USERS = "/users";
+    public static final String ADMINS = "/admins";
+    public static final String MANAGERS = "/managers";
+    public static final String TEACHERS = "/teachers";
+    public static final String STUDENTS = "/students";
 
-	public static final String USER_MIN = "/user-min";
+    public static final String USER_MIN = "/user-min";
 
-	public static final String ID = "/id";
-	public static final String USER_NAME = "/username";
-	public static final String ROLE = "/role";
-	public static final String PASS = "/pass";
+    public static final String ID = "/id";
+    public static final String USER_NAME = "/username";
+    public static final String ROLE = "/role";
+    public static final String PASS = "/pass";
 
-	public static final String PATH_ID = "/{id}";
-	public static final String PATH_USERNAME = "/{username}";
+    public static final String PATH_ID = "/{id}";
+    public static final String PATH_USERNAME = "/{username}";
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	// ***************MANAGERS*********************
-	// POST
-	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping(MANAGERS)
-	@ResponseStatus(HttpStatus.CREATED)
-	public UserDto createManager(@Valid @RequestBody UserDto userDto)
-			throws FieldAlreadyExistException, FieldNullException, FieldInvalidException {
 
-		if (!this.userService.isIdNull(userDto))
-			throw new FieldInvalidException("Id");
+    // ***************MANAGERS*********************
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(MANAGERS)
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto createManager(@Valid @RequestBody UserDto userDto)
+            throws FieldAlreadyExistException, FieldNullException, FieldInvalidException {
 
-		if (this.userService.isPassNull(userDto))
-			throw new FieldNullException("Password");
+        if (!this.userService.isIdNull(userDto))
+            throw new FieldInvalidException("Id");
 
-		if (this.userService.dniRepeated(userDto))
-			throw new FieldAlreadyExistException("RUT");
+        if (this.userService.isPassNull(userDto))
+            throw new FieldNullException("Password");
 
-		if (this.userService.mobileRepeated(userDto))
-			throw new FieldAlreadyExistException("Telefono");
+        if (this.userService.dniRepeated(userDto))
+            throw new FieldAlreadyExistException("RUT");
 
-		if (this.userService.emailRepeated(userDto))
-			throw new FieldAlreadyExistException("Email");
+        if (this.userService.mobileRepeated(userDto))
+            throw new FieldAlreadyExistException("Telefono");
 
-		return this.userService.createUser(userDto, new Role[] { Role.MANAGER });
-	}
+        if (this.userService.emailRepeated(userDto))
+            throw new FieldAlreadyExistException("Email");
 
-	// PUT
-	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping(MANAGERS + PATH_USERNAME)
-	public UserDto modifyManager(@PathVariable String username, @Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
+        return this.userService.createUser(userDto, new Role[]{Role.MANAGER});
+    }
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(MANAGERS + PATH_USERNAME)
+    public UserDto modifyManager(@PathVariable String username, @Valid @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (this.userService.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		if (this.userService.dniRepeated(userDto))
-			throw new FieldAlreadyExistException("RUT");
+        if (this.userService.usernameRepeated(userDto))
+            throw new FieldAlreadyExistException("Nombre de usuario");
 
-		if (this.userService.mobileRepeated(userDto))
-			throw new FieldAlreadyExistException("Telefono");
+        if (this.userService.dniRepeated(userDto))
+            throw new FieldAlreadyExistException("RUT");
 
-		if (this.userService.emailRepeated(userDto))
-			throw new FieldAlreadyExistException("Email");
+        if (this.userService.mobileRepeated(userDto))
+            throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(userDto.getUsername(),
-				new Role[] { Role.MANAGER, Role.TEACHER }))
-			throw new ForbiddenException();
+        if (this.userService.emailRepeated(userDto))
+            throw new FieldAlreadyExistException("Email");
 
-		return this.userService.modifyUser(username, userDto);
-	}
+        if (this.userService.hasUserGreaterPrivilegesByUsername(userDto.getUsername(),
+                new Role[]{Role.MANAGER, Role.TEACHER}))
+            throw new ForbiddenException();
 
-	// PATCH
-	@PreAuthorize("hasRole('ADMIN')")
-	@PatchMapping(MANAGERS + PASS + PATH_USERNAME)
-	public boolean resetPassManager(@PathVariable String username, @RequestBody String resetedPass)
-			throws ForbiddenException, FieldNotFoundException {
+        return this.userService.modifyUser(username, userDto).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping(MANAGERS + PASS + PATH_USERNAME)
+    public boolean resetPassManager(@PathVariable String username, @RequestBody String resetedPass)
+            throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
-			throw new ForbiddenException();
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		return this.userService.resetPassUser(username, resetedPass);
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.MANAGER, Role.TEACHER}))
+            throw new ForbiddenException();
 
-	}
+        return this.userService.resetPassUser(username, resetedPass).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@PatchMapping(MANAGERS + ROLE + PATH_USERNAME)
-	public UserDto setRoleManager(@PathVariable String username, @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldNotFoundException, ForbiddenChangeRoleException {
+    }
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping(MANAGERS + ROLE + PATH_USERNAME)
+    public UserDto setRoleManager(@PathVariable String username, @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldNotFoundException, ForbiddenChangeRoleException, DocumentNotFoundException {
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
-			throw new ForbiddenException();
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		if (this.userService.isChiefTeacherSetRoles(userDto))
-			throw new ForbiddenChangeRoleException("Docente es Profesor Jefe");
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.MANAGER, Role.TEACHER}))
+            throw new ForbiddenException();
 
-		if (this.userService.isTeacherInSubjectSetRoles(userDto))
-			throw new ForbiddenChangeRoleException("Docente imparte asignatura(s)");
+        if (this.userService.isChiefTeacherSetRoles(userDto))
+            throw new ForbiddenChangeRoleException("Docente es Profesor Jefe");
 
-		return this.userService.setRoleUser(userDto);
-	}
+        if (this.userService.isTeacherInSubjectSetRoles(userDto))
+            throw new ForbiddenChangeRoleException("Docente imparte asignatura(s)");
 
-	// DELETE
-	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping(MANAGERS + PATH_USERNAME)
-	public boolean deleteManager(@PathVariable String username)
-			throws ForbiddenException, FieldNotFoundException, ForbiddenDeleteException {
+        return this.userService.setRoleUser(userDto).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping(MANAGERS + PATH_USERNAME)
+    public UserDto deleteManager(@PathVariable String username)
+            throws ForbiddenException, FieldNotFoundException, ForbiddenDeleteException, DocumentNotFoundException {
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
-			throw new ForbiddenException();
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		if (this.userService.isChiefTeacher(username))
-			throw new ForbiddenDeleteException("Docente es Profesor Jefe");
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.MANAGER, Role.TEACHER}))
+            throw new ForbiddenException();
 
-		if (this.userService.isTeacherInSubject(username))
-			throw new ForbiddenDeleteException("Docente imparte asignatura(s)");
+        if (this.userService.isChiefTeacher(username))
+            throw new ForbiddenDeleteException("Docente es Profesor Jefe");
 
-		return this.userService.deleteUser(username);
-	}
+        if (this.userService.isTeacherInSubject(username))
+            throw new ForbiddenDeleteException("Docente imparte asignatura(s)");
 
-	// GET
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(MANAGERS + ID + PATH_ID)
-	public UserDto getManagerById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
+        return this.userService.deleteUser(username).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		if (!this.userService.existsUserId(id))
-			throw new FieldNotFoundException("Id");
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(MANAGERS + ID + PATH_ID)
+    public UserDto getManagerById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (this.userService.hasUserGreaterPrivilegesById(id, new Role[] { Role.MANAGER, Role.TEACHER }))
-			throw new ForbiddenException();
+        if (!this.userService.existsUserId(id))
+            throw new FieldNotFoundException("Id");
 
-		return this.userService.getUserById(id);
-	}
+        if (this.userService.hasUserGreaterPrivilegesById(id, new Role[]{Role.MANAGER, Role.TEACHER}))
+            throw new ForbiddenException();
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(MANAGERS + USER_NAME + PATH_USERNAME)
-	public UserDto getManagerByUsername(@PathVariable String username)
-			throws ForbiddenException, FieldNotFoundException {
+        return this.userService.getUserById(id).orElseThrow(() -> new DocumentNotFoundException("Administrador"));
+    }
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(MANAGERS + USER_NAME + PATH_USERNAME)
+    public UserDto getManagerByUsername(@PathVariable String username)
+            throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
-			throw new ForbiddenException();
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		return this.userService.getUserByUsername(username);
-	}
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.MANAGER, Role.TEACHER}))
+            throw new ForbiddenException();
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(MANAGERS)
-	public List<UserDto> getFullManagers() {
-		return this.userService.getFullUsers(Role.MANAGER);
-	}
+        return this.userService.getUserByUsername(username).orElseThrow(() -> new DocumentNotFoundException("Administrador"));
+    }
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(MANAGERS + USER_MIN)
-	public List<UserMinDto> getMinManagers() {
-		return this.userService.getMinUsers(Role.MANAGER);
-	}
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(MANAGERS)
+    public List<UserDto> getFullManagers() {
+        return this.userService.getFullUsers(Role.MANAGER).orElse(Collections.emptyList());
+    }
 
-	// **************TEACHERS****************
-	// POST
-	@PreAuthorize("hasRole('MANAGER')")
-	@PostMapping(TEACHERS)
-	@ResponseStatus(HttpStatus.CREATED)
-	public UserDto createTeacher(@Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException, FieldNullException, FieldInvalidException {
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(MANAGERS + USER_MIN)
+    public List<UserMinDto> getMinManagers() {
+        return this.userService.getMinUsers(Role.MANAGER).orElse(Collections.emptyList());
+    }
 
-		if (!this.userService.isIdNull(userDto))
-			throw new FieldInvalidException("Id");
 
-		if (this.userService.isPassNull(userDto))
-			throw new FieldNullException("Password");
+    // **************TEACHERS****************
+    @PreAuthorize("hasRole('MANAGER')")
+    @PostMapping(TEACHERS)
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto createTeacher(@Valid @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldAlreadyExistException, FieldNullException, FieldInvalidException {
 
-		if (this.userService.dniRepeated(userDto))
-			throw new FieldAlreadyExistException("RUT");
+        if (!this.userService.isIdNull(userDto))
+            throw new FieldInvalidException("Id");
 
-		if (this.userService.mobileRepeated(userDto))
-			throw new FieldAlreadyExistException("Telefono");
+        if (this.userService.isPassNull(userDto))
+            throw new FieldNullException("Password");
 
-		if (this.userService.emailRepeated(userDto))
-			throw new FieldAlreadyExistException("Email");
+        if (this.userService.dniRepeated(userDto))
+            throw new FieldAlreadyExistException("RUT");
 
-		return this.userService.createUser(userDto, new Role[] { Role.TEACHER });
-	}
+        if (this.userService.mobileRepeated(userDto))
+            throw new FieldAlreadyExistException("Telefono");
 
-	// PUT
-	@PreAuthorize("hasRole('MANAGER')")
-	@PutMapping(TEACHERS + PATH_USERNAME)
-	public UserDto modifyTeacher(@PathVariable String username, @Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
+        if (this.userService.emailRepeated(userDto))
+            throw new FieldAlreadyExistException("Email");
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        return this.userService.createUser(userDto, new Role[]{Role.TEACHER});
+    }
 
-		if (this.userService.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
+    @PreAuthorize("hasRole('MANAGER')")
+    @PutMapping(TEACHERS + PATH_USERNAME)
+    public UserDto modifyTeacher(@PathVariable String username, @Valid @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (this.userService.dniRepeated(userDto))
-			throw new FieldAlreadyExistException("RUT");
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		if (this.userService.mobileRepeated(userDto))
-			throw new FieldAlreadyExistException("Telefono");
+        if (this.userService.usernameRepeated(userDto))
+            throw new FieldAlreadyExistException("Nombre de usuario");
 
-		if (this.userService.emailRepeated(userDto))
-			throw new FieldAlreadyExistException("Email");
+        if (this.userService.dniRepeated(userDto))
+            throw new FieldAlreadyExistException("RUT");
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(userDto.getUsername(), new Role[] { Role.TEACHER }))
-			throw new ForbiddenException();
+        if (this.userService.mobileRepeated(userDto))
+            throw new FieldAlreadyExistException("Telefono");
 
-		return this.userService.modifyUser(username, userDto);
-	}
+        if (this.userService.emailRepeated(userDto))
+            throw new FieldAlreadyExistException("Email");
 
-	// PATCH
-	@PreAuthorize("hasRole('MANAGER')")
-	@PatchMapping(TEACHERS + PASS + PATH_USERNAME)
-	public boolean resetPassTeacher(@PathVariable String username, @RequestBody String resetedPass)
-			throws ForbiddenException, FieldNotFoundException {
+        if (this.userService.hasUserGreaterPrivilegesByUsername(userDto.getUsername(), new Role[]{Role.TEACHER}))
+            throw new ForbiddenException();
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        return this.userService.modifyUser(username, userDto).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
-			throw new ForbiddenException();
+    @PreAuthorize("hasRole('MANAGER')")
+    @PatchMapping(TEACHERS + PASS + PATH_USERNAME)
+    public boolean resetPassTeacher(@PathVariable String username, @RequestBody String resetedPass)
+            throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		return this.userService.resetPassUser(username, resetedPass);
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-	}
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.TEACHER}))
+            throw new ForbiddenException();
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@PatchMapping(TEACHERS + ROLE + PATH_USERNAME)
-	public UserDto setRoleTeacher(@PathVariable String username, @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldNotFoundException, ForbiddenChangeRoleException {
+        return this.userService.resetPassUser(username, resetedPass).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+    }
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.MANAGER, Role.TEACHER }))
-			throw new ForbiddenException();
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping(TEACHERS + ROLE + PATH_USERNAME)
+    public UserDto setRoleTeacher(@PathVariable String username, @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldNotFoundException, ForbiddenChangeRoleException, DocumentNotFoundException {
 
-		if (this.userService.isChiefTeacherSetRoles(userDto))
-			throw new ForbiddenChangeRoleException("Docente es Profesor Jefe");
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		if (this.userService.isTeacherInSubjectSetRoles(userDto))
-			throw new ForbiddenChangeRoleException("Docente imparte asignatura(s)");
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.MANAGER, Role.TEACHER}))
+            throw new ForbiddenException();
 
-		return this.userService.setRoleUser(userDto);
-	}
+        if (this.userService.isChiefTeacherSetRoles(userDto))
+            throw new ForbiddenChangeRoleException("Docente es Profesor Jefe");
 
-	// DELETE
-	@PreAuthorize("hasRole('MANAGER')")
-	@DeleteMapping(TEACHERS + PATH_USERNAME)
-	public boolean deleteTeacher(@PathVariable String username)
-			throws ForbiddenException, FieldNotFoundException, ForbiddenDeleteException {
+        if (this.userService.isTeacherInSubjectSetRoles(userDto))
+            throw new ForbiddenChangeRoleException("Docente imparte asignatura(s)");
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        return this.userService.setRoleUser(userDto).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
-			throw new ForbiddenException();
+    @PreAuthorize("hasRole('MANAGER')")
+    @DeleteMapping(TEACHERS + PATH_USERNAME)
+    public UserDto deleteTeacher(@PathVariable String username)
+            throws ForbiddenException, FieldNotFoundException, ForbiddenDeleteException, DocumentNotFoundException {
 
-		if (this.userService.isChiefTeacher(username))
-			throw new ForbiddenDeleteException("Docente es Profesor Jefe");
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		if (this.userService.isTeacherInSubject(username))
-			throw new ForbiddenDeleteException("Docente imparte asignatura(s)");
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.TEACHER}))
+            throw new ForbiddenException();
 
-		return this.userService.deleteUser(username);
-	}
+        if (this.userService.isChiefTeacher(username))
+            throw new ForbiddenDeleteException("Docente es Profesor Jefe");
 
-	// GET
-	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping(TEACHERS + ID + PATH_ID)
-	public UserDto getTeacherById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
+        if (this.userService.isTeacherInSubject(username))
+            throw new ForbiddenDeleteException("Docente imparte asignatura(s)");
 
-		if (!this.userService.existsUserId(id))
-			throw new FieldNotFoundException("Id");
+        return this.userService.deleteUser(username).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		if (this.userService.hasUserGreaterPrivilegesById(id, new Role[] { Role.TEACHER }))
-			throw new ForbiddenException();
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(TEACHERS + ID + PATH_ID)
+    public UserDto getTeacherById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		return this.userService.getUserById(id);
-	}
+        if (!this.userService.existsUserId(id))
+            throw new FieldNotFoundException("Id");
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping(TEACHERS + USER_NAME + PATH_USERNAME)
-	public UserDto getTeacherByUsername(@PathVariable String username)
-			throws ForbiddenException, FieldNotFoundException {
+        if (this.userService.hasUserGreaterPrivilegesById(id, new Role[]{Role.TEACHER}))
+            throw new ForbiddenException();
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        return this.userService.getUserById(id).orElseThrow(() -> new DocumentNotFoundException("Docente"));
+    }
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.TEACHER }))
-			throw new ForbiddenException();
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(TEACHERS + USER_NAME + PATH_USERNAME)
+    public UserDto getTeacherByUsername(@PathVariable String username)
+            throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		return this.userService.getUserByUsername(username);
-	}
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-	@GetMapping(TEACHERS)
-	public List<UserDto> getFullTeachers() {
-		return this.userService.getFullUsers(Role.TEACHER);
-	}
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.TEACHER}))
+            throw new ForbiddenException();
 
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-	@GetMapping(TEACHERS + USER_MIN)
-	public List<UserMinDto> getMinTeachers() {
-		return this.userService.getMinUsers(Role.TEACHER);
-	}
+        return this.userService.getUserByUsername(username).orElseThrow(() -> new DocumentNotFoundException("Docente"));
+    }
 
-	// ****************STUDENTS********************
-	// POST
-	@PreAuthorize("hasRole('MANAGER')")
-	@PostMapping(STUDENTS)
-	@ResponseStatus(HttpStatus.CREATED)
-	public UserDto createStudent(@Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException, FieldNullException, FieldInvalidException {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @GetMapping(TEACHERS)
+    public List<UserDto> getFullTeachers() {
 
-		if (!this.userService.isIdNull(userDto))
-			throw new FieldInvalidException("Id");
+        return this.userService.getFullUsers(Role.TEACHER).orElse(Collections.emptyList());
+    }
 
-		if (this.userService.isPassNull(userDto))
-			throw new FieldNullException("Password");
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @GetMapping(TEACHERS + USER_MIN)
+    public List<UserMinDto> getMinTeachers() {
 
-		if (this.userService.dniRepeated(userDto))
-			throw new FieldAlreadyExistException("RUT");
+        return this.userService.getMinUsers(Role.TEACHER).orElse(Collections.emptyList());
+    }
 
-		if (this.userService.mobileRepeated(userDto))
-			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userService.emailRepeated(userDto))
-			throw new FieldAlreadyExistException("Email");
+    // ****************STUDENTS********************
+    @PreAuthorize("hasRole('MANAGER')")
+    @PostMapping(STUDENTS)
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto createStudent(@Valid @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldAlreadyExistException, FieldNullException, FieldInvalidException {
 
-		return this.userService.createUser(userDto, new Role[] { Role.STUDENT });
-	}
+        if (!this.userService.isIdNull(userDto))
+            throw new FieldInvalidException("Id");
 
-	// PUT
-	@PreAuthorize("hasRole('MANAGER')")
-	@PutMapping(STUDENTS + PATH_USERNAME)
-	public UserDto modifyStudent(@PathVariable String username, @Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
+        if (this.userService.isPassNull(userDto))
+            throw new FieldNullException("Password");
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        if (this.userService.dniRepeated(userDto))
+            throw new FieldAlreadyExistException("RUT");
 
-		if (this.userService.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
+        if (this.userService.mobileRepeated(userDto))
+            throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userService.dniRepeated(userDto))
-			throw new FieldAlreadyExistException("RUT");
+        if (this.userService.emailRepeated(userDto))
+            throw new FieldAlreadyExistException("Email");
 
-		if (this.userService.mobileRepeated(userDto))
-			throw new FieldAlreadyExistException("Telefono");
+        return this.userService.createUser(userDto, new Role[]{Role.STUDENT});
+    }
 
-		if (this.userService.emailRepeated(userDto))
-			throw new FieldAlreadyExistException("Email");
+    @PreAuthorize("hasRole('MANAGER')")
+    @PutMapping(STUDENTS + PATH_USERNAME)
+    public UserDto modifyStudent(@PathVariable String username, @Valid @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.STUDENT }))
-			throw new ForbiddenException();
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		return this.userService.modifyUser(username, userDto);
-	}
+        if (this.userService.usernameRepeated(userDto))
+            throw new FieldAlreadyExistException("Nombre de usuario");
 
-	// PATCH
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@PatchMapping(STUDENTS + PASS + PATH_USERNAME)
-	public boolean resetPassStudent(@PathVariable String username, @RequestBody String resetedPass)
-			throws ForbiddenException, FieldNotFoundException {
+        if (this.userService.dniRepeated(userDto))
+            throw new FieldAlreadyExistException("RUT");
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        if (this.userService.mobileRepeated(userDto))
+            throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.STUDENT }))
-			throw new ForbiddenException();
+        if (this.userService.emailRepeated(userDto))
+            throw new FieldAlreadyExistException("Email");
 
-		return this.userService.resetPassUser(username, resetedPass);
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.STUDENT}))
+            throw new ForbiddenException();
 
-	}
+        return this.userService.modifyUser(username, userDto).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-	// DELETE
-	@PreAuthorize("hasRole('MANAGER')")
-	@DeleteMapping(STUDENTS + PATH_USERNAME)
-	public boolean deleteStudent(@PathVariable String username)
-			throws ForbiddenException, FieldNotFoundException, ForbiddenDeleteException {
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @PatchMapping(STUDENTS + PASS + PATH_USERNAME)
+    public boolean resetPassStudent(@PathVariable String username, @RequestBody String resetedPass)
+            throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		if (this.userService.isStudentInACourse(username))
-			throw new ForbiddenDeleteException("Estudiante pertence a un curso.");
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.STUDENT}))
+            throw new ForbiddenException();
 
-		if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[] { Role.STUDENT }))
-			throw new ForbiddenException();
+        return this.userService.resetPassUser(username, resetedPass).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
 
-		return this.userService.deleteUser(username);
-	}
+    }
 
-	// GET
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(STUDENTS + ID + PATH_ID)
-	public UserDto getStudentById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException {
+    @PreAuthorize("hasRole('MANAGER')")
+    @DeleteMapping(STUDENTS + PATH_USERNAME)
+    public UserDto deleteStudent(@PathVariable String username)
+            throws ForbiddenException, FieldNotFoundException, ForbiddenDeleteException, DocumentNotFoundException {
 
-		if (!this.userService.existsUserId(id))
-			throw new FieldNotFoundException("Id");
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		return this.userService.getUserById(id);
-	}
+        if (this.userService.isStudentInACourse(username))
+            throw new ForbiddenDeleteException("Estudiante pertence a un curso.");
 
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(STUDENTS + USER_NAME + PATH_USERNAME)
-	public UserDto getStudentByUsername(@PathVariable String username)
-			throws ForbiddenException, FieldNotFoundException {
+        if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.STUDENT}))
+            throw new ForbiddenException();
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        return this.userService.deleteUser(username).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		return this.userService.getUserByUsername(username);
-	}
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(STUDENTS + ID + PATH_ID)
+    public UserDto getStudentById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(STUDENTS)
-	public List<UserDto> getFullStudents() {
-		return this.userService.getFullUsers(Role.STUDENT);
-	}
+        if (!this.userService.existsUserId(id))
+            throw new FieldNotFoundException("Id");
 
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(STUDENTS + USER_MIN)
-	public List<UserMinDto> getMinStudents() {
-		return this.userService.getMinUsers(Role.STUDENT);
-	}
+        return this.userService.getUserById(id).orElseThrow(() -> new DocumentNotFoundException("Estudiante"));
+    }
 
-	// ***************ALL-USERS*******************
-	@PreAuthorize("authentication.name == #username")
-	@GetMapping(PATH_USERNAME)
-	public UserDto getUserByUsername(@PathVariable String username) throws FieldNotFoundException {
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(STUDENTS + USER_NAME + PATH_USERNAME)
+    public UserDto getStudentByUsername(@PathVariable String username)
+            throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		return this.userService.getUserByUsername(username);
-	}
+        return this.userService.getUserByUsername(username).orElseThrow(() -> new DocumentNotFoundException("Estudiante"));
+    }
 
-	@PreAuthorize("authentication.name == #username")
-	@PutMapping(PATH_USERNAME)
-	public UserDto modifyUser(@PathVariable String username, @Valid @RequestBody UserDto userDto)
-			throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException {
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(STUDENTS)
+    public List<UserDto> getFullStudents() {
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+        return this.userService.getFullUsers(Role.STUDENT).orElse(Collections.emptyList());
+    }
 
-		if (this.userService.usernameRepeated(userDto))
-			throw new FieldAlreadyExistException("Nombre de usuario");
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(STUDENTS + USER_MIN)
+    public List<UserMinDto> getMinStudents() {
 
-		if (this.userService.dniRepeated(userDto))
-			throw new FieldAlreadyExistException("RUT");
+        return this.userService.getMinUsers(Role.STUDENT).orElse(Collections.emptyList());
+    }
 
-		if (this.userService.mobileRepeated(userDto))
-			throw new FieldAlreadyExistException("Telefono");
 
-		if (this.userService.emailRepeated(userDto))
-			throw new FieldAlreadyExistException("Email");
+    // ***************ALL-USERS*******************
+    @PreAuthorize("authentication.name == #username")
+    @GetMapping(PATH_USERNAME)
+    public UserDto getUserByUsername(@PathVariable String username) throws FieldNotFoundException, DocumentNotFoundException {
 
-		return this.userService.modifyUser(username, userDto);
-	}
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-	@PreAuthorize("authentication.name == #username")
-	@PatchMapping(PATH_USERNAME)
-	public boolean setUserPass(@PathVariable String username, @RequestBody String[] setPass)
-			throws PasswordNotMatchException, FieldNotFoundException {
+        return this.userService.getUserByUsername(username).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
-		if (!this.userService.existsUserUsername(username))
-			throw new FieldNotFoundException("Username");
+    @PreAuthorize("authentication.name == #username")
+    @PutMapping(PATH_USERNAME)
+    public UserDto modifyUser(@PathVariable String username, @Valid @RequestBody UserDto userDto)
+            throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException, DocumentNotFoundException {
 
-		if (!this.userService.passMatch(username, setPass[0]))
-			throw new PasswordNotMatchException();
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
 
-		return this.userService.setPassUser(username, setPass);
-	}
+        if (this.userService.usernameRepeated(userDto))
+            throw new FieldAlreadyExistException("Nombre de usuario");
+
+        if (this.userService.dniRepeated(userDto))
+            throw new FieldAlreadyExistException("RUT");
+
+        if (this.userService.mobileRepeated(userDto))
+            throw new FieldAlreadyExistException("Telefono");
+
+        if (this.userService.emailRepeated(userDto))
+            throw new FieldAlreadyExistException("Email");
+
+        return this.userService.modifyUser(username, userDto).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
+
+    @PreAuthorize("authentication.name == #username")
+    @PatchMapping(PATH_USERNAME)
+    public boolean setUserPass(@PathVariable String username, @RequestBody String[] setPass)
+            throws PasswordNotMatchException, FieldNotFoundException, DocumentNotFoundException {
+
+        if (!this.userService.existsUserUsername(username))
+            throw new FieldNotFoundException("Username");
+
+        if (!this.userService.passMatch(username, setPass[0]))
+            throw new PasswordNotMatchException();
+
+        return this.userService.setPassUser(username, setPass).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+    }
 
 }

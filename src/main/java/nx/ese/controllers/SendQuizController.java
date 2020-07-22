@@ -50,6 +50,7 @@ public class SendQuizController {
 	public GradeDto getQuizNotification(@DestinationVariable String cId, String eId)
 			throws FieldInvalidException, DocumentAlreadyExistException {
 
+        //TODO service
 		EvaluationDto eDto = evaluationService.getEvaluationById(eId).get();
 
 		QuizStudentDto qsDto = new QuizStudentDto(eDto.getQuiz());
@@ -92,14 +93,12 @@ public class SendQuizController {
 	@MessageMapping("/grade-to-teacher/course/{cId}/evaluation/{eId}/student/{sId}")
 	@SendTo("/topic/grade-to-teacher/course/{cId}")
 	public GradeDto gradeNotificationToTeacher(@DestinationVariable String cId, @DestinationVariable String eId,
-			@DestinationVariable String sId, GradeDto gradeDto) throws FieldNotFoundException {
+			@DestinationVariable String sId, GradeDto gradeDto) throws FieldNotFoundException, DocumentNotFoundException {
 
 		EvaluationDto eDto = evaluationService.getEvaluationById(eId).orElseThrow(() -> new FieldNotFoundException("eId"));
 		gradeDto.setEvaluation(eDto);
 
-		if (!this.userService.existsUserId(sId))
-			throw new FieldNotFoundException("sId");
-		UserDto sDto = userService.getUserById(sId);
+		UserDto sDto = userService.getUserById(sId).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
 		gradeDto.setStudent(sDto);
 		
 		//TODO calculate

@@ -2,6 +2,7 @@ package nx.ese.services;
 
 import java.util.List;
 
+import nx.ese.services.data.DatabaseSeederService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class UserRestService {
 
 	@Autowired
 	private RestService restService;
+
+	@Autowired
+	private DatabaseSeederService dbSeederService;
 
 	// managerDTOS
 	@Getter

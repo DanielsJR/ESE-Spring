@@ -2,6 +2,7 @@ package nx.ese.controllers;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
@@ -411,10 +412,8 @@ public class CourseControllerIT {
 	}
 
 	@Test
-	public void testGetFullCoursesByYearDocumentNotFoundException() {
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		courseRestService.getFullCoursesByYear("2050");
-
+	public void testGetFullCoursesByYearEmptyList() {
+		assertEquals(courseRestService.getFullCoursesByYear("2050"), Collections.emptyList());
 	}
 
 	//

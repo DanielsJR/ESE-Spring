@@ -1,5 +1,6 @@
 package nx.ese.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -80,7 +81,7 @@ public class CourseController {
 	@PreAuthorize("hasRole('MANAGER')")
 	@PutMapping(PATH_ID)
 	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
-			throws FieldNotFoundException, FieldNullException, FieldAlreadyExistException,
+			throws FieldNotFoundException, FieldAlreadyExistException,
 			DocumentAlreadyExistException {
 
 		if (this.courseService.nameAndYearRepeated(courseDto))
@@ -124,8 +125,8 @@ public class CourseController {
 
 	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
 	@GetMapping(YEAR + PATH_YEAR)
-	public List<CourseDto> getFullCoursesByYear(@PathVariable String year) throws DocumentNotFoundException {
-		return this.courseService.getFullCoursesByYear(year).orElseThrow(() -> new DocumentNotFoundException("Course"));
+	public List<CourseDto> getFullCoursesByYear(@PathVariable String year) {
+		return this.courseService.getFullCoursesByYear(year).orElse(Collections.emptyList());
 	}
 
 	@PreAuthorize("hasRole('MANAGER')")
