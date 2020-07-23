@@ -9,7 +9,7 @@ branches:
   only:
     - master
     - "/^release-[0-999].[0-999]$/"
-    - dev
+    - develop
 
 notifications:
   email:
@@ -26,7 +26,7 @@ script:
 deploy:
   provider: heroku
   on:
-    branch: dev
+    branch: develop
   app: nx-ese-mongo
   api_key:
     secure: R+OwIhrAbY3BSYLRsKd1zaGlOpHZgYx/y6WbpCkvDvVDpmQqlI6RnN1DdvwZLOK2Wgc6keHaAk4f35JrdNRbHvI26amwV/cjyaqj6dTwnQ4C+jnwAH9dW42CCLihmWhbdaMt0tOuN3kEClagILw0SdL5/h5PocFGXUIVAHv2pd8MKm1HhAqTyZkWaIFQu8HtNGlio4xKrvSmzxsiWxeHELvHUwxBJyfizU2g74ywnKLDoCAgPGM1tF+g9X3MypeTbZ2APPiYVs7K2r3P6Q0ZIOC70yRqHaIM/9PavF+QUzl8TshzMh5HeWjEucw3u9DZhDVRiGt5U4MtUVx/Ueas0J758p/5gbKgbYdrvIzKr2+Tp3pFZHm5ydBH3EJ09Zo0dvDwWDmiRsE7SZ4STug6MYpDBkQgmJnjXiV1PfzZUlrmX+3Szv+6EIkuPdBzqeiAWtFobgO0AuldsOPFKwRCUxewze2bjdyFBP4geYkUhHZGf7yC8h3syW6jw9nfqyggH7Nm5vldisAAmxLW77asRRn5ZpingQDkpoOdGiuYHIt6vGqvWda89ZH2Kn6rQStX7HtUYPUL4d9kVKV7Y9YMHtVgnmxGleHzM5BN5szJ9uJaXLil07k9MIYfosLFcGhW5MAkvAo0MFR6oU5U8Pc2Gq7Spl52oRbOJWC5Buja1G8=
