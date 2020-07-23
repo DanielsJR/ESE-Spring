@@ -16,9 +16,6 @@ notifications:
     recipients:
       - d.rubio@outlook.com
 
-services:
-  - mongodb
-
 script:
   - mvn -Dtest=**/*Test test
   - if [ $TRAVIS_TEST_RESULT == 0 ]; then  mvn -Dtest=**/*IT package; else  echo "ERRORES!!!
