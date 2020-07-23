@@ -60,7 +60,7 @@ public class SubjectService {
     // CRUD******************************
     public Optional<List<SubjectDto>> getFullSubjects() {
         List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name")).stream()
-                .map(s -> new SubjectDto(s))
+                .map(SubjectDto::new)
                 .parallel()
                 .sorted(Comparator.comparing(s -> s.getName().toString()))
                 .collect(Collectors.toList());
@@ -97,9 +97,7 @@ public class SubjectService {
 
     public Optional<SubjectDto> getSubjectById(String id) {
         Optional<Subject> subject = subjectRepository.findById(id);
-        if (subject.isPresent())
-            return Optional.of(new SubjectDto(subject.get()));
-        return Optional.empty();
+        return subject.map(SubjectDto::new);
     }
 
     public Optional<SubjectDto> getSubjectByNameAndCourse(SubjectName name, String courseId) {

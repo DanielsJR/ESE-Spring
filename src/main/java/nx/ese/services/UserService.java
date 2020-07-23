@@ -113,12 +113,11 @@ public class UserService {
     public boolean hasUserGreaterPrivilegesByUsername(String username, Role[] roles) {
         User user = this.userRepository.findByUsername(username);
         return user != null && !Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
-
     }
 
     public boolean hasUserGreaterPrivilegesById(String id, Role[] roles) {
-        User user = this.userRepository.findById(id).get();
-        return user != null && !Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
+        Optional<User> user = this.userRepository.findById(id);
+        return user.isPresent() && !Arrays.asList(roles).containsAll(Arrays.asList(user.get().getRoles()));
     }
 
     public boolean passMatch(String username, String pass) {
@@ -133,17 +132,13 @@ public class UserService {
     public boolean isChiefTeacher(String username) {
         User user = this.userRepository.findByUsername(username);
         return user != null && courseRepository.findFirstByChiefTeacher(user.getId()) != null;
-
     }
 
     public boolean isChiefTeacherSetRoles(UserDto userDto) {
         boolean roleTeacher = Stream.of(userDto.getRoles())
-                .filter(r -> r.toString() == Role.TEACHER.toString())
-                .findFirst()
-                .isPresent();
+                .anyMatch(r -> r.toString().equals(Role.TEACHER.toString()));
 
         return (!roleTeacher) && (this.courseRepository.findFirstByChiefTeacher(userDto.getId()) != null);
-
     }
 
     public boolean isTeacherInSubject(String username) {
@@ -153,12 +148,9 @@ public class UserService {
 
     public boolean isTeacherInSubjectSetRoles(UserDto userDto) {
         boolean roleTeacher = Stream.of(userDto.getRoles())
-                .filter(r -> r.toString() == Role.TEACHER.toString())
-                .findFirst()
-                .isPresent();
+                .anyMatch(r -> r.toString().equals(Role.TEACHER.toString()));
 
         return (!roleTeacher) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null);
-
     }
 
     public boolean isStudentInACourse(String username) {
@@ -167,9 +159,8 @@ public class UserService {
         List<Course> courses;
         if (!courseRepository.findAll().isEmpty()) {
             courses = courseRepository.findAll();
-
             courses.stream()
-                    .map(c -> c.getStudents())
+                    .map(Course::getStudents)
                     .forEach(sts -> sts.forEach(s -> {
                         if (s.getUsername().equals(username)) {
                             found[0] = true;
@@ -203,11 +194,7 @@ public class UserService {
 
     public Optional<UserDto> getUserById(String id) {
         Optional<User> user = this.userRepository.findById(id);
-        if (user.isPresent())
-            return Optional.of(new UserDto(user.get()));
-
-        return Optional.empty();
-
+        return user.map(UserDto::new);
     }
 
     public Optional<UserDto> getUserByUsername(String username) {
@@ -216,7 +203,6 @@ public class UserService {
             return Optional.of(new UserDto(user));
 
         return Optional.empty();
-
     }
 
     public UserDto createUser(UserDto userDto, Role[] roles) {
@@ -233,7 +219,6 @@ public class UserService {
             User su = this.userRepository.save(this.setUserFromDto(user, userDto));
             return Optional.of(new UserDto(su));
         }
-
         return Optional.empty();
     }
 
@@ -243,7 +228,6 @@ public class UserService {
             this.userRepository.delete(user);
             return Optional.of(new UserDto(user));
         }
-
         return Optional.empty();
     }
 
@@ -255,7 +239,6 @@ public class UserService {
             User su = this.userRepository.save(user);
             return Optional.of(new UserDto(su));
         }
-
         return Optional.empty();
     }
 
@@ -266,7 +249,6 @@ public class UserService {
             this.userRepository.save(user);
             return Optional.of(true);
         }
-
         return Optional.empty();
     }
 
@@ -277,7 +259,6 @@ public class UserService {
             this.userRepository.save(user);
             return Optional.of(true);
         }
-
         return Optional.empty();
     }
 

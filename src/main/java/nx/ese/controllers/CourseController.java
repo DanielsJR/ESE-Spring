@@ -40,7 +40,6 @@ public class CourseController {
 	public static final String YEAR = "/year";
 	public static final String TEACHER_NAME = "/teacherName";
 	public static final String STUDENT_NAME = "/studentName";
-	
 
 	public static final String PATH_ID = "/{id}";
 	public static final String PATH_NAME = "/{name}";
@@ -55,7 +54,6 @@ public class CourseController {
 	@Autowired
 	private UserService userService;
 
-	// POST
 	@PreAuthorize("hasRole('MANAGER')")
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
@@ -77,7 +75,6 @@ public class CourseController {
 		return this.courseService.createCourse(courseDto);
 	}
 
-	// PUT
 	@PreAuthorize("hasRole('MANAGER')")
 	@PutMapping(PATH_ID)
 	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
@@ -96,7 +93,6 @@ public class CourseController {
 		return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
-	// DELETE
 	@PreAuthorize("hasRole('MANAGER')")
 	@DeleteMapping(PATH_ID)
 	public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException, ForbiddenDeleteException {
@@ -107,7 +103,6 @@ public class CourseController {
 		return this.courseService.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
 	}
 
-	// GET
 	@PreAuthorize("hasRole('MANAGER')")
 	@GetMapping(PATH_ID)
 	public CourseDto getCourseById(@PathVariable String id) throws FieldNotFoundException {
