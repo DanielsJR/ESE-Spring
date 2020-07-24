@@ -97,11 +97,23 @@ public class DatabaseSeederService {
                 } catch (IOException e) {
                     logger.error("File " + ymlFileName + " doesn't exist or can't be opened");
                 }
+            } else {
+                this.createAdminIfNotExist();
             }
 
         } else if (Arrays.asList(profiles).contains("prod")) {
-            this.createAdminIfNotExist();
+            if (ymlFileName.isPresent()) {
+                try {
+                    this.seedDatabase(ymlFileName.get());
+                } catch (IOException e) {
+                    logger.error("File " + ymlFileName + " doesn't exist or can't be opened");
+                }
+            } else {
+                this.createAdminIfNotExist();
+            }
+
         }
+
 
     }
 
