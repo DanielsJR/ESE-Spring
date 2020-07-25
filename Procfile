@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar  target/ESE-mongo-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT -jar  target/ESE-Spring-0.0.1-SNAPSHOT.jar
