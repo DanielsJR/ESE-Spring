@@ -89,6 +89,7 @@ public class DatabaseSeederService {
     public void seedDatabase() {
         String[] profiles = this.environment.getActiveProfiles();
         if (Arrays.asList(profiles).contains("dev")) {
+            logger.warn("------------------------- Profile DEV -------------------------");
             if (ymlFileName.isPresent()) {
                 this.deleteAllAndCreateAdmin();
                 try {
@@ -102,14 +103,8 @@ public class DatabaseSeederService {
             }
 
         } else if (Arrays.asList(profiles).contains("prod")) {
+            logger.warn("------------------------- Profile PROD -------------------------");
             this.createAdminIfNotExist();
-            if (ymlFileName.isPresent()) {
-                try {
-                    this.seedDatabase(ymlFileName.get());
-                } catch (IOException e) {
-                    logger.error("File " + ymlFileName + " doesn't exist or can't be opened");
-                }
-            }
         }
 
 
@@ -120,6 +115,8 @@ public class DatabaseSeederService {
         Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
         InputStream input = new ClassPathResource(ymlFileName).getInputStream();
         DatabaseGraph dbGraph = yamlParser.load(input);
+
+        logger.warn("------------------------- Seeding with: " + ymlFileName + " -------------------------");
 
         if (dbGraph.getUserList() != null) {
             this.userRepository.saveAll(dbGraph.getUserList());
@@ -156,18 +153,17 @@ public class DatabaseSeederService {
         if (dbGraph.getAttendancesList() != null) {
             this.attendanceRepository.saveAll(dbGraph.getAttendancesList());
         }
-
-        logger.warn("------------------------- Seed: " + ymlFileName + "-----------");
     }
 
     public void deleteAllAndCreateAdmin() {
-        logger.warn("------------------------- delete DB and Create Admin-----------");
+        logger.warn("------------------------- Deleting DB -------------------------");
         mongoTemplate.getDb().drop();
         this.createAdminIfNotExist();
     }
 
     public void createAdminIfNotExist() {
         if (this.userRepository.findByUsername(this.username) == null) {
+            logger.warn("------------------------- Creating Admin -------------------------");
             User user = new User(this.username, this.password);
             user.setFirstName("Daniel Jesús");
             user.setLastName("Rubio Parra");
@@ -184,7 +180,7 @@ public class DatabaseSeederService {
     }
 
     public void setAvatars() {
-        logger.warn("------------------------- setting avatars-----------");
+        logger.warn("------------------------- Setting Avatars -------------------------");
         List<User> users = userRepository.findAll();
         Iterator<User> it = users.iterator();
         while (it.hasNext()) {
