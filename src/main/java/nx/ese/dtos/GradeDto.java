@@ -20,7 +20,6 @@ public class GradeDto {
     @Getter
     private String id;
 
-    //@NotNull
     @Valid
     @Getter
     @Setter
@@ -30,7 +29,6 @@ public class GradeDto {
     @Setter
     private double grade;
 
-    //@NotNull
     @Valid
     @Getter
     @Setter

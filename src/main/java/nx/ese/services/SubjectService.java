@@ -59,16 +59,16 @@ public class SubjectService {
 
     // CRUD******************************
     public Optional<List<SubjectDto>> getFullSubjects() {
-        List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name")).stream()
+        List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
+                .stream()
                 .map(SubjectDto::new)
-                .parallel()
-                .sorted(Comparator.comparing(s -> s.getName().toString()))
+                //.parallel()
+                //.sorted(Comparator.comparing(s -> s.getName().toString()))
                 .collect(Collectors.toList());
         if (list.isEmpty())
             return Optional.empty();
 
         return Optional.of(list);
-
     }
 
     public Optional<List<SubjectDto>> getSubjectsByTeacher(String id) {
@@ -101,10 +101,7 @@ public class SubjectService {
     }
 
     public Optional<SubjectDto> getSubjectByNameAndCourse(SubjectName name, String courseId) {
-        SubjectDto subjectDto = subjectRepository.findByNameAndCourse(name, courseId);
-        if (subjectDto != null)
-            return Optional.of(subjectDto);
-        return Optional.empty();
+        return subjectRepository.findByNameAndCourse(name, courseId);
     }
 
     public SubjectDto createSubject(@Valid SubjectDto subjectDto) {
@@ -116,8 +113,7 @@ public class SubjectService {
     public Optional<SubjectDto> modifySubject(String id, @Valid SubjectDto subjectDto) {
         Optional<Subject> subject = subjectRepository.findById(id);
         if (subject.isPresent()) {
-            Subject ss = subjectRepository.save(setSubjectFromDto(subject.get(), subjectDto));
-            return Optional.of(new SubjectDto(ss));
+            return subject.map(s -> new SubjectDto(subjectRepository.save(setSubjectFromDto(s, subjectDto))));
         }
         return Optional.empty();
     }
@@ -126,7 +122,7 @@ public class SubjectService {
         Optional<Subject> subject = subjectRepository.findById(id);
         if (subject.isPresent()) {
             subjectRepository.deleteById(id);
-            return Optional.of(new SubjectDto(subject.get()));
+            return subject.map(SubjectDto::new);
         }
         return Optional.empty();
     }
@@ -153,12 +149,11 @@ public class SubjectService {
     }
 
     public boolean isSubjectRepeated(@Valid SubjectDto subjectDto) {
-        if (this.isNameNull(subjectDto) || this.isCourseNull(subjectDto)) {
+        if (this.isNameNull(subjectDto) || this.isCourseNull(subjectDto))
             return false;
-        }
-        SubjectDto subjectDB = this.subjectRepository.findByNameAndCourse(subjectDto.getName(),
-                subjectDto.getCourse().getId());
-        return subjectDB != null && !subjectDB.getId().equals(subjectDto.getId());
+
+        Optional<SubjectDto> subjectDB = this.subjectRepository.findByNameAndCourse(subjectDto.getName(), subjectDto.getCourse().getId());
+        return subjectDB.isPresent() && !subjectDB.get().getId().equals(subjectDto.getId());
     }
 
     public boolean isSubjectInEvaluation(String subjectId) {

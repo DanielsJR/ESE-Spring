@@ -25,8 +25,11 @@ public class AuthenticationService {
 
 		final Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+
 		final String token = jwtTokenProvider.generateToken(authentication);
+
 		return ResponseEntity.ok(new AuthToken(token));
 	}
 

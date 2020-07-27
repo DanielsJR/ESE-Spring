@@ -1,6 +1,7 @@
 package nx.ese.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -10,7 +11,7 @@ import nx.ese.dtos.SubjectDto;
 
 public interface SubjectRepository extends MongoRepository<Subject, String> {
 	
-	public SubjectDto findByNameAndCourse(SubjectName name, String courseId);
+	public Optional<SubjectDto> findByNameAndCourse(SubjectName name, String courseId);
 	
 	public SubjectDto findFirstByTeacher(String teacherId);
 	

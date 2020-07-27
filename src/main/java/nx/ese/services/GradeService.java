@@ -24,133 +24,119 @@ import nx.ese.repositories.UserRepository;
 @Service
 public class GradeService {
 
-	@Autowired
-	private GradeRepository gradeRepository;
+    @Autowired
+    private GradeRepository gradeRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private EvaluationRepository evaluationRepository;
+    @Autowired
+    private EvaluationRepository evaluationRepository;
 
-	@Autowired
-	private QuizStudentRepository quizStudentRepository;
+    @Autowired
+    private QuizStudentRepository quizStudentRepository;
 
-	private Grade setGradeFromDto(Grade grade, @Valid GradeDto gradeDto) {
-		grade.setGrade(gradeDto.getGrade());
-		grade.setStudent(this.setStudent(gradeDto).get());
-		grade.setEvaluation(this.setEvaluation(gradeDto).get());
-		if (gradeDto.getQuizStudent() != null) {
-			grade.setQuizStudent(this.setQuizStudent(gradeDto).get());
-		}
-		return grade;
-	}
 
-	private Optional<User> setStudent(GradeDto gradeDto) {
-		Optional<User> student = userRepository.findById(gradeDto.getStudent().getId());
-		if (student.isPresent())
-			return student;
-		return Optional.empty();
-	}
+    private Grade setGradeFromDto(Grade grade, @Valid GradeDto gradeDto) {
+        grade.setGrade(gradeDto.getGrade());
+        grade.setStudent(this.setStudent(gradeDto));
+        grade.setEvaluation(this.setEvaluation(gradeDto));
+        if (gradeDto.getQuizStudent() != null) {
+            grade.setQuizStudent(this.setQuizStudent(gradeDto));
+        }
+        return grade;
+    }
 
-	private Optional<Evaluation> setEvaluation(GradeDto gradeDto) {
-		Optional<Evaluation> evaluation = evaluationRepository.findById(gradeDto.getEvaluation().getId());
+    private User setStudent(GradeDto gradeDto) {
+        return userRepository.findById(gradeDto.getStudent().getId())
+                .orElseThrow(() -> new RuntimeException("StudentNotFound"));
+    }
 
-		if (evaluation.isPresent())
-			return evaluation;
-		return Optional.empty();
-	}
+    private Evaluation setEvaluation(GradeDto gradeDto) {
+        return evaluationRepository.findById(gradeDto.getEvaluation().getId())
+                .orElseThrow(() -> new RuntimeException("EvaluationNotFound"));
+    }
 
-	private Optional<QuizStudent> setQuizStudent(GradeDto gradeDto) {
-		Optional<QuizStudent> quizStudent = quizStudentRepository.findById(gradeDto.getQuizStudent().getId());
+    private QuizStudent setQuizStudent(GradeDto gradeDto) {
+        return quizStudentRepository.findById(gradeDto.getQuizStudent().getId())
+                .orElseThrow(() -> new RuntimeException("QuizStudentNotFound"));
+    }
 
-		if (quizStudent.isPresent())
-			return quizStudent;
-		return Optional.empty();
-	}
+    // Exceptions*********************
+    public boolean existsById(String id) {
+        return gradeRepository.existsById(id);
+    }
 
-	// CRUD******************************
-	public GradeDto createGrade(@Valid GradeDto gradeDto) {
-		Grade grade = new Grade();
+    public boolean isIdNull(@Valid GradeDto gradeDto) {
+        return gradeDto.getId() == null;
+    }
 
-		gradeRepository.insert(setGradeFromDto(grade, gradeDto));
-		return new GradeDto(gradeRepository.findById(grade.getId()).get());
-	}
+    public boolean isStudentNull(@Valid GradeDto gradeDto) {
+        return gradeDto.getStudent() == null;
+    }
 
-	public Optional<GradeDto> modifyGrade(String id, @Valid GradeDto gradeDto) {
-		Optional<Grade> grade = gradeRepository.findById(id);
-		if (grade.isPresent()) {
-			gradeRepository.save(setGradeFromDto(grade.get(), gradeDto));
-			return Optional.of(new GradeDto(gradeRepository.findById(id).get()));
-		}
-		return Optional.empty();
-	}
+    public boolean isEvaluationNull(@Valid GradeDto gradeDto) {
+        return gradeDto.getEvaluation() == null;
+    }
 
-	public Optional<GradeDto> deleteGrade(String id) {
-		Optional<Grade> grade = gradeRepository.findById(id);
-		if (grade.isPresent()) {
-			gradeRepository.deleteById(id);
-			return Optional.of(new GradeDto(grade.get()));
-		}
-		return Optional.empty();
-	}
+    public boolean isGradeRepeated(@Valid GradeDto gradeDto) {
+        if (isStudentNull(gradeDto) || isEvaluationNull(gradeDto))
+            return false;
+        GradeDto gradeDB = gradeRepository.findByStudentAndEvaluation(gradeDto.getStudent().getId(),
+                gradeDto.getEvaluation().getId());
+        return gradeDB != null && !gradeDB.getId().equals(gradeDto.getId());
+    }
 
-	public Optional<List<GradeDto>> getFullGrades() {
-		List<GradeDto> list = gradeRepository.findAll(new Sort(Sort.Direction.ASC, "title")).stream()
-				.map(g -> new GradeDto(g)).collect(Collectors.toList());
-		if (list.isEmpty())
-			return Optional.empty();
-		// list.forEach(g-> System.out.println(g.getStudent().getFirstName()));
-		return Optional.of(list);
-	}
+    // CRUD******************************
+    public GradeDto createGrade(@Valid GradeDto gradeDto) {
+        Grade grade = new Grade();
+        return new GradeDto(gradeRepository.insert(setGradeFromDto(grade, gradeDto)));
+    }
 
-	public Optional<List<GradeDto>> getGradesBySubject(String id) {
-		// List<EvaluationDto> evaluationList =
-		// this.evaluationService.getEvaluationsBySubject(id).get();
-		List<EvaluationDto> evaluationList = this.evaluationRepository.findBySubject(id);
+    public Optional<GradeDto> modifyGrade(String id, @Valid GradeDto gradeDto) {
+        Optional<Grade> grade = gradeRepository.findById(id);
+        return grade.map(value -> new GradeDto(gradeRepository.save(setGradeFromDto(value, gradeDto))));
+    }
 
-		List<GradeDto> list = evaluationList.stream().map(e -> gradeRepository.findByEvaluation(e.getId()))
-				.flatMap(List::stream).collect(Collectors.toList());
+    public Optional<GradeDto> deleteGrade(String id) {
+        Optional<Grade> grade = gradeRepository.findById(id);
+        if (grade.isPresent()) {
+            gradeRepository.deleteById(id);
+            return grade.map(GradeDto::new);
+        }
+        return Optional.empty();
+    }
 
-		if (list.isEmpty())
-			return Optional.empty();
-		// list.forEach(g-> System.out.println(g.getStudent().getFirstName()));
-		return Optional.of(list);
-	}
+    public Optional<List<GradeDto>> getFullGrades() {
+        List<GradeDto> list = gradeRepository.findAll(new Sort(Sort.Direction.ASC, "title"))
+                .stream()
+                .map(GradeDto::new)
+                .collect(Collectors.toList());
+        if (list.isEmpty())
+            return Optional.empty();
 
-	public Optional<GradeDto> getGradeById(String id) {
-		Optional<Grade> grade = gradeRepository.findById(id);
-		if (grade.isPresent())
-			return Optional.of(new GradeDto(grade.get()));
-		return Optional.empty();
+        return Optional.of(list);
+    }
 
-	}
+    public Optional<List<GradeDto>> getGradesBySubject(String id) {
+        Optional<List<EvaluationDto>> evaluationList = this.evaluationRepository.findBySubject(id);
 
-	// Exceptions*********************
-	public boolean existsById(String id) {
-		return gradeRepository.existsById(id);
-	}
+        List<GradeDto> list = evaluationList.orElseThrow(() -> new RuntimeException("List<GradeDto>NotFound"))
+                .stream()
+                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(() -> new RuntimeException("List<EvaluationDto>NotFound")))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
-	public boolean isIdNull(@Valid GradeDto gradeDto) {
-		return gradeDto.getId() == null;
-	}
+        if (list.isEmpty())
+            return Optional.empty();
 
-	public boolean isStudentNull(@Valid GradeDto gradeDto) {
-		return gradeDto.getStudent() == null;
-	}
+        return Optional.of(list);
+    }
 
-	public boolean isEvaluationNull(@Valid GradeDto gradeDto) {
-		return gradeDto.getEvaluation() == null;
-	}
+    public Optional<GradeDto> getGradeById(String id) {
+        Optional<Grade> grade = gradeRepository.findById(id);
+        return grade.map(GradeDto::new);
+    }
 
-	public boolean isGradeRepeated(@Valid GradeDto gradeDto) {
-		if (isStudentNull(gradeDto) || isEvaluationNull(gradeDto)) {
-			return false;
-		}
-
-		GradeDto gradeDB = gradeRepository.findByStudentAndEvaluation(gradeDto.getStudent().getId(),
-				gradeDto.getEvaluation().getId());
-		return gradeDB != null && !gradeDB.getId().equals(gradeDto.getId());
-	}
 
 }

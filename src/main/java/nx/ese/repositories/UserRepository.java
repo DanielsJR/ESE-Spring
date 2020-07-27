@@ -12,9 +12,7 @@ import nx.ese.dtos.UserDto;
 import nx.ese.dtos.UserMinDto;
 
 public interface UserRepository extends MongoRepository<User, String> {
-	
 
-	
 	public User findByUsername(String username);
 	
 	public User findByDni(String dni);

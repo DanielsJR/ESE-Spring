@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
+	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
 		return new JwtAuthenticationFilter();
 	}
 
@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		   .anyRequest().authenticated();
 		http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
 	    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		
 	}
 

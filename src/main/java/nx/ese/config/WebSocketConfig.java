@@ -17,7 +17,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Autowired
-	private AuthChannelInterceptorAdapter authChannelInterceptorAdapter;
+	private WebSocketAuthChannelInterceptorAdapter webSocketAuthChannelInterceptorAdapter;
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
@@ -32,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
-		registration.interceptors(authChannelInterceptorAdapter);
+		registration.interceptors(webSocketAuthChannelInterceptorAdapter);
 	} 
 
 }

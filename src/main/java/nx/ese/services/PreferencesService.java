@@ -11,60 +11,61 @@ import nx.ese.dtos.ThemeDto;
 import nx.ese.repositories.PreferencesRepository;
 import nx.ese.repositories.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class PreferencesService {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private PreferencesRepository preferencesRepository;
+    @Autowired
+    private PreferencesRepository preferencesRepository;
 
-	public ThemeDto getUserTheme(String id) {
-		ThemeDto themeDto = new ThemeDto();
-		User user = userRepository.findById(id).get();
-		if (preferencesRepository.findByUserId(id) != null
-				&& preferencesRepository.findByUserId(id).getTheme() != null) {
-			Theme themeDb = preferencesRepository.findByUserId(id).getTheme();
-			themeDto.setName(themeDb.getName());
-			themeDto.setIsDark(themeDb.getIsDark());
-			themeDto.setColor(themeDb.getColor());
-			return themeDto;
-		} else {
-			// System.out.println("setting default theme!:::::: ");
-			themeDto.setIsDark(false);
-			if (user.getGender().equals(Gender.MUJER)) {
-				themeDto.setName("pink-purple");
-				themeDto.setColor("#E91E63");
-			} else {
-				themeDto.setName("indigo-pink");
-				themeDto.setColor("#3F51B5");
-			}
-			return themeDto;
-		}
-	}
+    public ThemeDto getUserTheme(String id) {
+        ThemeDto themeDto = new ThemeDto();
+        User user = userRepository.findById(id).get();
+        if (preferencesRepository.findByUserId(id) != null
+                && preferencesRepository.findByUserId(id).getTheme() != null) {
+            Theme themeDb = preferencesRepository.findByUserId(id).getTheme();
+            themeDto.setName(themeDb.getName());
+            themeDto.setIsDark(themeDb.getIsDark());
+            themeDto.setColor(themeDb.getColor());
+            return themeDto;
+        } else {
+            // System.out.println("setting default theme!");
+            themeDto.setIsDark(false);
+            if (user.getGender().equals(Gender.MUJER)) {
+                themeDto.setName("pink-purple");
+                themeDto.setColor("#E91E63");
+            } else {
+                themeDto.setName("indigo-pink");
+                themeDto.setColor("#3F51B5");
+            }
+            return themeDto;
+        }
+    }
 
-	public boolean saveUserTheme(String id, ThemeDto theme) {
-		Theme nTheme = new Theme();
-		nTheme.setName(theme.getName());
-		nTheme.setIsDark(theme.getIsDark());
-		nTheme.setColor(theme.getColor());
+    public boolean saveUserTheme(String id, ThemeDto theme) {
+        Theme nTheme = new Theme(theme.getName(), theme.getIsDark(), theme.getColor());
 
-		Preferences preferences = preferencesRepository.findByUserId(id);
-		if (preferences != null) {
-			preferences.setTheme(nTheme);
-			preferencesRepository.save(preferences);
-			return true;
-		}
+        Optional<Preferences> preferences = preferencesRepository.findById(id);
+        if (preferences.isPresent()) {
+            preferences.ifPresent(p -> {
+                p.setTheme(nTheme);
+                preferencesRepository.save(p);
+            });
+            return true;
 
-		User user = this.userRepository.findById(id).get();
-		if (user != null) {
-			preferences = new Preferences(user, nTheme);
-			preferencesRepository.save(preferences);
-			return true;
-		}
-		return false;
-
-	}
+        } else {
+            Optional<User> user = this.userRepository.findById(id);
+            if (user.isPresent()) {
+                Preferences prefUser = new Preferences(user.get(), nTheme);
+                preferencesRepository.save(prefUser);
+                return true;
+            }
+            return false;
+        }
+    }
 
 }

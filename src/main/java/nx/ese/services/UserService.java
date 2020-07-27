@@ -153,22 +153,20 @@ public class UserService {
         return (!roleTeacher) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null);
     }
 
-    public boolean isStudentInACourse(String username) {
-        Boolean[] found = {false};
+    public boolean isStudentInACourse(String username, Course course) {
+        return course.getStudents()
+                .stream()
+                .anyMatch(s -> s.getUsername().equals(username));
+    }
 
-        List<Course> courses;
+    public boolean isStudentInCourses(String username) {
         if (!courseRepository.findAll().isEmpty()) {
-            courses = courseRepository.findAll();
-            courses.stream()
-                    .map(Course::getStudents)
-                    .forEach(sts -> sts.forEach(s -> {
-                        if (s.getUsername().equals(username)) {
-                            found[0] = true;
-                        }
-                    }));
+            return courseRepository.findAll()
+                    .stream()
+                    .anyMatch(c -> this.isStudentInACourse(username, c));
+        } else {
+            return false;
         }
-        //System.out.println("----------------------------------------isStudentInACourse " + found[0]);
-        return found[0];
     }
 
     // CRUD***********************************
@@ -210,7 +208,7 @@ public class UserService {
         this.setUserFromDto(user, userDto);
         user.setUsername(uniqueUsername(userDto.getUsername()));
         user.setRoles(roles);
-        return new UserDto(this.userRepository.save(user));
+        return new UserDto(this.userRepository.insert(user));
     }
 
     public Optional<UserDto> modifyUser(String username, UserDto userDto) {

@@ -420,7 +420,7 @@ public class UserController {
         if (!this.userService.existsUserUsername(username))
             throw new FieldNotFoundException("Username");
 
-        if (this.userService.isStudentInACourse(username))
+        if (this.userService.isStudentInCourses(username))
             throw new ForbiddenDeleteException("Estudiante pertence a un curso.");
 
         if (this.userService.hasUserGreaterPrivilegesByUsername(username, new Role[]{Role.STUDENT}))

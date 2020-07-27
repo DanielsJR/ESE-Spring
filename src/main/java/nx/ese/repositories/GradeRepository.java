@@ -1,6 +1,7 @@
 package nx.ese.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -14,6 +15,6 @@ public interface GradeRepository extends MongoRepository<Grade, String> {
 	
 	public GradeDto findFirstByQuizStudent(String qsId);
 	
-	public List<GradeDto> findByEvaluation(String evaluationId);
+	public Optional<List<GradeDto>> findByEvaluation(String evaluationId);
 
 }

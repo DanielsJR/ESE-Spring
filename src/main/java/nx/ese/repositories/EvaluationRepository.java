@@ -3,6 +3,7 @@ package nx.ese.repositories;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -19,7 +20,7 @@ public interface EvaluationRepository extends MongoRepository<Evaluation, String
 
 	public EvaluationDto findByTitleAndTypeAndSubjectAndDate(String title, EvaluationType type, String id, Date date);
 	
-	public List<EvaluationDto> findBySubject(String subjectId);
+	public Optional<List<EvaluationDto>> findBySubject(String subjectId);
 	
 
 }

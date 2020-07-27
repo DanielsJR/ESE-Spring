@@ -19,94 +19,83 @@ import nx.ese.repositories.UserRepository;
 
 @Service
 public class QuizStudentService {
-	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private SubjectRepository subjectRepository;
-	
-	@Autowired
-	private QuizStudentRepository quizStudentRepository;
-	
-	@Autowired
-	private GradeRepository gradeRepository;
-	
-	
-	public QuizStudent setQuizStudentFromDto(QuizStudent quizStudent, @Valid QuizStudentDto quizStudentDto) {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
+    private QuizStudentRepository quizStudentRepository;
+
+    @Autowired
+    private GradeRepository gradeRepository;
+
+    public QuizStudent setQuizStudentFromDto(QuizStudent quizStudent, @Valid QuizStudentDto quizStudentDto) {
         quizStudent.setCorrespondItems(quizStudentDto.getCorrespondItems());
         quizStudent.setIncompleteTextItems(quizStudentDto.getIncompleteTextItems());
         quizStudent.setTrueFalseItems(quizStudentDto.getTrueFalseItems());
         quizStudent.setMultipleSelectionItems(quizStudentDto.getMultipleSelectionItems());
-        
-		return quizStudent;
-	}
 
+        return quizStudent;
+    }
 
-	public boolean existsById(String id) {
-		return quizStudentRepository.existsById(id);
-	}
+    // Exceptions*********************
+    public boolean existsById(String id) {
+        return quizStudentRepository.existsById(id);
+    }
 
-	public boolean isIdNull(@Valid QuizStudentDto quizStudentDto) {
-		return quizStudentDto.getId() == null;
-	}
-	
-	// CRUD******************************
-	public Optional<QuizStudentDto> getQuizStudentById(String id) {
-		Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
-		if (quizStudent.isPresent())
-			return Optional.of(new QuizStudentDto(quizStudent.get()));
-		return Optional.empty();
-	}
+    public boolean isIdNull(@Valid QuizStudentDto quizStudentDto) {
+        return quizStudentDto.getId() == null;
+    }
 
-	public Optional<List<QuizStudentDto>> getFullQuizesStudent() {
-		List<QuizStudentDto> list = quizStudentRepository.findAll(new Sort(Sort.Direction.ASC, "grade"))
-				.stream()
-				.map(qs -> new QuizStudentDto(qs))
-				.collect(Collectors.toList());
-		if (list.isEmpty())
-			return Optional.empty();
-		return Optional.of(list);
-	}
+    public boolean isQuizStudentRepeated(@Valid QuizStudentDto quizStudentDto) {
+        QuizStudentDto quizStudentDB = this.quizStudentRepository
+                .findByCorrespondItemsAndTrueFalseItemsAndMultipleSelectionItemsAndIncompleteTextItems(
+                        quizStudentDto.getCorrespondItems(), quizStudentDto.getTrueFalseItems(),
+                        quizStudentDto.getMultipleSelectionItems(), quizStudentDto.getIncompleteTextItems());
 
+        return quizStudentDB != null && !quizStudentDB.getId().equals(quizStudentDto.getId());
+    }
 
-	public QuizStudentDto createQuizStudent(@Valid QuizStudentDto quizStudentDto) {
-		QuizStudent quizStudent = new QuizStudent();
-		quizStudentRepository.insert(setQuizStudentFromDto(quizStudent, quizStudentDto));
-		return new QuizStudentDto(quizStudentRepository.findById(quizStudent.getId()).get());
-	}
+    public boolean isQuizStudentInGrade(String id) {
+        return gradeRepository.findFirstByQuizStudent(id) != null;
+    }
 
-	public Optional<QuizStudentDto> modifyQuizStudent(String id, @Valid QuizStudentDto quizStudentDto) {
-		Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
-		if (quizStudent.isPresent()) {
-			quizStudentRepository.save(setQuizStudentFromDto(quizStudent.get(), quizStudentDto));
-			return Optional.of(new QuizStudentDto(quizStudentRepository.findById(id).get()));
-		}
-		return Optional.empty();
-	}
+    // CRUD******************************
+    public QuizStudentDto createQuizStudent(@Valid QuizStudentDto quizStudentDto) {
+        QuizStudent quizStudent = new QuizStudent();
+        return new QuizStudentDto(quizStudentRepository.insert(setQuizStudentFromDto(quizStudent, quizStudentDto)));
+    }
 
-	public Optional<QuizStudentDto> deleteQuizStudent(String id) {
-		Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
-		if (quizStudent.isPresent()) {
-			quizStudentRepository.deleteById(id);
-			return Optional.of(new QuizStudentDto(quizStudent.get()));
-		}
-		return Optional.empty();
-	}
+    public Optional<QuizStudentDto> modifyQuizStudent(String id, @Valid QuizStudentDto quizStudentDto) {
+        Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
+        return quizStudent.map(student -> new QuizStudentDto(quizStudentRepository.save(setQuizStudentFromDto(student, quizStudentDto))));
+    }
 
+    public Optional<QuizStudentDto> deleteQuizStudent(String id) {
+        Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
+        if (quizStudent.isPresent()) {
+            quizStudentRepository.deleteById(id);
+            return quizStudent.map(QuizStudentDto::new);
+        }
+        return Optional.empty();
+    }
 
-	public boolean isQuizStudentRepeated(@Valid QuizStudentDto quizStudentDto) {
-		QuizStudentDto quizStudentDB = this.quizStudentRepository
-				.findByCorrespondItemsAndTrueFalseItemsAndMultipleSelectionItemsAndIncompleteTextItems(
-						quizStudentDto.getCorrespondItems(), quizStudentDto.getTrueFalseItems(),
-						quizStudentDto.getMultipleSelectionItems(), quizStudentDto.getIncompleteTextItems());
-		
-		return quizStudentDB != null && !quizStudentDB.getId().equals(quizStudentDto.getId());
-	}
+    public Optional<QuizStudentDto> getQuizStudentById(String id) {
+        Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
+        return quizStudent.map(QuizStudentDto::new);
+    }
 
-
-	public boolean isQuizStudentInGrade(String id) {
-		return gradeRepository.findFirstByQuizStudent(id) !=null;
-	}
+    public Optional<List<QuizStudentDto>> getFullQuizesStudent() {
+        List<QuizStudentDto> list = quizStudentRepository.findAll(new Sort(Sort.Direction.ASC, "grade"))
+                .stream()
+                .map(QuizStudentDto::new)
+                .collect(Collectors.toList());
+        if (list.isEmpty())
+            return Optional.empty();
+        return Optional.of(list);
+    }
 
 }
