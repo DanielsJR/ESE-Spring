@@ -1,6 +1,7 @@
 package nx.ese.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ public class QuizService {
 
     private User setAuthor(QuizDto quizDto) {
         return userRepository.findById(quizDto.getAuthor().getId())
-                .orElseThrow(() -> new RuntimeException("AuthorNotFound"));
+                .orElseThrow(NoSuchElementException::new);
     }
 
     // Exceptions*********************

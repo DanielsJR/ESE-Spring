@@ -1,6 +1,7 @@
 package nx.ese.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -121,9 +122,9 @@ public class GradeService {
     public Optional<List<GradeDto>> getGradesBySubject(String id) {
         Optional<List<EvaluationDto>> evaluationList = this.evaluationRepository.findBySubject(id);
 
-        List<GradeDto> list = evaluationList.orElseThrow(() -> new RuntimeException("List<GradeDto>NotFound"))
+        List<GradeDto> list = evaluationList.orElseThrow(NoSuchElementException::new)
                 .stream()
-                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(() -> new RuntimeException("List<EvaluationDto>NotFound")))
+                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(NoSuchElementException::new))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 

@@ -8,6 +8,8 @@ import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +34,7 @@ public class UserDto {
     @Getter
     private String username;
 
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = NX_Pattern.PASSWORD)
     @Getter
     @Setter
@@ -124,10 +126,19 @@ public class UserDto {
     }
 
     // for tests
-    public UserDto(String usernamePass) {
-        this(null, usernamePass, usernamePass + "@ESE1", usernamePass, usernamePass, null, null, null, null, null, null,
+    /*public UserDto(String usernamePass) {
+        this(null, usernamePass, usernamePass + "@ESE1" , usernamePass, usernamePass, null, null, null, null, null, null,
                 null, null, null, true);
+    }*/
+
+    // for tests
+    public UserDto(String usernamePass) {
+        this.setUsername(usernamePass);
+        this.password = usernamePass + "@ESE1";
+        this.setFirstName(usernamePass);
+        this.setLastName(usernamePass);
     }
+
 
     // output
     public UserDto(User user) {
@@ -152,27 +163,15 @@ public class UserDto {
     }
 
     public void setUsername(String username) {
-        if (username != null) {
-            this.username = username.toLowerCase();
-        } else {
-            this.username = username;
-        }
+        this.username = username.toLowerCase();
     }
 
     public void setFirstName(String firstName) {
-        if (firstName != null) {
-            this.firstName = NX_Capitalizer.capitalizer(firstName);
-        } else {
-            this.firstName = firstName;
-        }
+        this.firstName = NX_Capitalizer.capitalizer(firstName);
     }
 
     public void setLastName(String lastName) {
-        if (lastName != null) {
-            this.lastName = NX_Capitalizer.capitalizer(lastName);
-        } else {
-            this.lastName = lastName;
-        }
+        this.lastName = NX_Capitalizer.capitalizer(lastName);
     }
 
     public String getDni() {

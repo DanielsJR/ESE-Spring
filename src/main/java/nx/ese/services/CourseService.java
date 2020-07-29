@@ -1,9 +1,6 @@
 package nx.ese.services;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +41,7 @@ public class CourseService {
 
     private User setChiefTeacher(CourseDto courseDto) {
         return userRepository.findById(courseDto.getChiefTeacher().getId())
-                .orElseThrow(() -> new RuntimeException("ChiefTeacherNotFound"));
+                .orElseThrow(NoSuchElementException::new);
     }
 
     private List<User> setStudentsList(CourseDto courseDto) {
@@ -72,16 +69,12 @@ public class CourseService {
         return courseDB != null && !courseDB.getId().equals(courseDto.getId());
     }
 
-    private boolean isStudentInACourse(UserDto student, CourseDto course) {
-        return course.getStudents()
-                .stream()
-                .anyMatch(s -> s.getId().equals(student.getId()));
-    }
-
     private boolean isStudentInCourses(UserDto student, String courseIdExclude, List<CourseDto> courses) {
         return courses
-                .stream()
-                .anyMatch(c -> this.isStudentInACourse(student, c) && !c.getId().equals(courseIdExclude));
+                .parallelStream()
+                .filter(c -> !c.getId().equals(courseIdExclude))
+                .flatMap(c -> c.getStudents().parallelStream())
+                .anyMatch(s -> s.getId().equals(student.getId()));
     }
 
     public boolean studentsRepeatedInCoursesByYear(CourseDto course) {

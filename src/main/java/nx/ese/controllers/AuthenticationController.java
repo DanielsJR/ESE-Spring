@@ -1,5 +1,6 @@
 package nx.ese.controllers;
 
+import nx.ese.documents.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -19,7 +20,7 @@ public class AuthenticationController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping(GENERATE_TOKEN)
-	public ResponseEntity<?> register(@RequestBody LoginUser loginUser) throws AuthenticationException {
+	public ResponseEntity<AuthToken> register(@RequestBody LoginUser loginUser) {
 		return authenticationService.register(loginUser);
 	}
 

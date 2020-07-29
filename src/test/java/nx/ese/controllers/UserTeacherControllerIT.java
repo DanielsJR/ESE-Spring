@@ -130,14 +130,6 @@ public class UserTeacherControllerIT {
 	}
 
 	@Test
-	public void testPostTeacherUsernameNull() {
-		userRestService.getTeacherDto().setUsername(null);
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.postTeacher();
-	}
-
-	@Test
 	public void testPostTeacherPassNull() {
 		userRestService.getTeacherDto().setPassword(null);
 

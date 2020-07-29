@@ -5,7 +5,6 @@ import io.jsonwebtoken.SignatureException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,8 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-
         String header = req.getHeader(HEADER_STRING);
         String username = null;
         String authToken = null;
@@ -55,17 +52,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.warn("couldn't find bearer string, will ignore the header");
         }
 
-        if (username != null && securityContext.getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtProvider.validateToken(authToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = jwtProvider.getAuthentication(authToken,
-                        securityContext.getAuthentication(), userDetails);
+                UsernamePasswordAuthenticationToken authentication = jwtProvider.getAuthentication(authToken, userDetails);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
 
-                securityContext.setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
                 logger.info("Access granted to: " + username);
             }
         }

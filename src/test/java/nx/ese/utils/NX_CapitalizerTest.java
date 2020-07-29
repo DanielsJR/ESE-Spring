@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class NXCapitalizerTest {
+public class NX_CapitalizerTest {
 
     @Test
     public void testCapitalizer() {

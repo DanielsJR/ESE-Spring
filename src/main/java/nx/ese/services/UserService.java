@@ -153,17 +153,12 @@ public class UserService {
         return (!roleTeacher) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null);
     }
 
-    public boolean isStudentInACourse(String username, Course course) {
-        return course.getStudents()
-                .stream()
-                .anyMatch(s -> s.getUsername().equals(username));
-    }
-
     public boolean isStudentInCourses(String username) {
         if (!courseRepository.findAll().isEmpty()) {
             return courseRepository.findAll()
                     .stream()
-                    .anyMatch(c -> this.isStudentInACourse(username, c));
+                    .flatMap(c -> c.getStudents().parallelStream())
+                    .anyMatch(s -> s.getUsername().equals(username));
         } else {
             return false;
         }
@@ -180,8 +175,7 @@ public class UserService {
 
     public Optional<List<UserDto>> getFullUsers(Role role) {
         List<UserDto> list = this.userRepository.findUsersFullAll(role)
-                .stream()
-                .parallel()
+                .parallelStream()
                 .sorted(Comparator.comparing(UserDto::getFirstName))
                 .collect(Collectors.toList());
         if (list.isEmpty())

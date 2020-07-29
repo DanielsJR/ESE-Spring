@@ -21,7 +21,7 @@ public class AuthenticationService {
 	@Autowired
 	private TokenProvider jwtTokenProvider;
 	
-	public ResponseEntity<?> register(LoginUser loginUser) {
+	public ResponseEntity<AuthToken> register(LoginUser loginUser) {
 
 		final Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));

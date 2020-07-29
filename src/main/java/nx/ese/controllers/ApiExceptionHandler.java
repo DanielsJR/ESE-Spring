@@ -29,7 +29,7 @@ public class ApiExceptionHandler {
 	@ExceptionHandler({ FieldNotFoundException.class, FileException.class, DocumentNotFoundException.class })
 	@ResponseBody
 	public ErrorMessage notFoundRequest(HttpServletRequest request, Exception exception) {
-		return new ErrorMessage(exception, request.getRequestURI());
+		return new ErrorMessage(exception,"");
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

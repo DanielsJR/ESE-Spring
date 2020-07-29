@@ -1,6 +1,7 @@
 package nx.ese.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -74,12 +75,12 @@ public class EvaluationService {
 
     private Quiz setQuiz(EvaluationDto evaluationDto) {
         return quizRepository.findById(evaluationDto.getQuiz().getId())
-                .orElseThrow(() -> new RuntimeException("QuizNotFound"));
+                .orElseThrow(NoSuchElementException::new);
     }
 
     private Subject setSubject(EvaluationDto evaluationDto) {
         return subjectRepository.findById(evaluationDto.getSubject()
-                .getId()).orElseThrow(() -> new RuntimeException("SubjectNotFound"));
+                .getId()).orElseThrow(NoSuchElementException::new);
     }
 
     // CRUD******************************

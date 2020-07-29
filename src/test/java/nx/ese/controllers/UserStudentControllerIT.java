@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -49,6 +51,7 @@ public class UserStudentControllerIT {
 		this.userRestService.deleteStudents();
 	}
 
+	private static final Logger logger = LoggerFactory.getLogger(UserStudentControllerIT.class);
 	// POST--------------------------------------------
 	@Test
 	public void testPostStudent() {
@@ -131,13 +134,6 @@ public class UserStudentControllerIT {
 				.bearerAuth(restService.getAuthToken().getToken()).post().build();
 	}
 
-	@Test
-	public void testPostStudentUsernameNull() {
-		userRestService.getStudentDto().setUsername(null);
-
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		userRestService.postStudent();
-	}
 
 	@Test
 	public void testPostStudentPassNull() {

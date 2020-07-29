@@ -203,7 +203,7 @@ public class UserController {
     @PostMapping(TEACHERS)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createTeacher(@Valid @RequestBody UserDto userDto)
-            throws ForbiddenException, FieldAlreadyExistException, FieldNullException, FieldInvalidException {
+            throws FieldAlreadyExistException, FieldNullException, FieldInvalidException {
 
         if (!this.userService.isIdNull(userDto))
             throw new FieldInvalidException("Id");
@@ -334,14 +334,12 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping(TEACHERS)
     public List<UserDto> getFullTeachers() {
-
         return this.userService.getFullUsers(Role.TEACHER).orElse(Collections.emptyList());
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping(TEACHERS + USER_MIN)
     public List<UserMinDto> getMinTeachers() {
-
         return this.userService.getMinUsers(Role.TEACHER).orElse(Collections.emptyList());
     }
 
@@ -351,7 +349,7 @@ public class UserController {
     @PostMapping(STUDENTS)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createStudent(@Valid @RequestBody UserDto userDto)
-            throws ForbiddenException, FieldAlreadyExistException, FieldNullException, FieldInvalidException {
+            throws FieldAlreadyExistException, FieldNullException, FieldInvalidException {
 
         if (!this.userService.isIdNull(userDto))
             throw new FieldInvalidException("Id");
@@ -431,7 +429,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
     @GetMapping(STUDENTS + ID + PATH_ID)
-    public UserDto getStudentById(@PathVariable String id) throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
+    public UserDto getStudentById(@PathVariable String id) throws FieldNotFoundException, DocumentNotFoundException {
 
         if (!this.userService.existsUserId(id))
             throw new FieldNotFoundException("Id");
@@ -442,7 +440,7 @@ public class UserController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
     @GetMapping(STUDENTS + USER_NAME + PATH_USERNAME)
     public UserDto getStudentByUsername(@PathVariable String username)
-            throws ForbiddenException, FieldNotFoundException, DocumentNotFoundException {
+            throws FieldNotFoundException, DocumentNotFoundException {
 
         if (!this.userService.existsUserUsername(username))
             throw new FieldNotFoundException("Username");
@@ -453,14 +451,12 @@ public class UserController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
     @GetMapping(STUDENTS)
     public List<UserDto> getFullStudents() {
-
         return this.userService.getFullUsers(Role.STUDENT).orElse(Collections.emptyList());
     }
 
     @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
     @GetMapping(STUDENTS + USER_MIN)
     public List<UserMinDto> getMinStudents() {
-
         return this.userService.getMinUsers(Role.STUDENT).orElse(Collections.emptyList());
     }
 
@@ -479,7 +475,7 @@ public class UserController {
     @PreAuthorize("authentication.name == #username")
     @PutMapping(PATH_USERNAME)
     public UserDto modifyUser(@PathVariable String username, @Valid @RequestBody UserDto userDto)
-            throws ForbiddenException, FieldAlreadyExistException, FieldNotFoundException, DocumentNotFoundException {
+            throws FieldAlreadyExistException, FieldNotFoundException, DocumentNotFoundException {
 
         if (!this.userService.existsUserUsername(username))
             throw new FieldNotFoundException("Username");

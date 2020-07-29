@@ -27,68 +27,62 @@ import nx.ese.services.EvaluationService;
 @RequestMapping(EvaluationController.EVALUATION)
 public class EvaluationController {
 
-	public static final String EVALUATION = "/evaluations";
-	public static final String SUBJECTS = "/subjects";
+    public static final String EVALUATION = "/evaluations";
+    public static final String SUBJECTS = "/subjects";
 
-	public static final String PATH_ID = "/{id}";
-	public static final String PATH_USERNAME = "/{username}";
+    public static final String PATH_ID = "/{id}";
+    public static final String PATH_USERNAME = "/{username}";
 
-	@Autowired
-	private EvaluationService evaluationService;
+    @Autowired
+    private EvaluationService evaluationService;
 
-	// POST
-	@PreAuthorize("hasRole('TEACHER')")
-	@PostMapping()
-	public EvaluationDto createEvaluation(@Valid @RequestBody EvaluationDto evaluationDto)
-			throws FieldInvalidException, DocumentAlreadyExistException {
+    @PreAuthorize("hasRole('TEACHER')")
+    @PostMapping()
+    public EvaluationDto createEvaluation(@Valid @RequestBody EvaluationDto evaluationDto)
+            throws FieldInvalidException, DocumentAlreadyExistException {
 
-		if (!this.evaluationService.isIdNull(evaluationDto))
-			throw new FieldInvalidException("Id");
+        if (!this.evaluationService.isIdNull(evaluationDto))
+            throw new FieldInvalidException("Id");
 
-		if (this.evaluationService.isEvaluationRepeated(evaluationDto))
-			throw new DocumentAlreadyExistException("Evaluation");
+        if (this.evaluationService.isEvaluationRepeated(evaluationDto))
+            throw new DocumentAlreadyExistException("Evaluation");
 
-		return this.evaluationService.createEvaluation(evaluationDto);
-	}
-	
-	
-	// PUT
-	@PreAuthorize("hasRole('TEACHER')")
-	@PutMapping(PATH_ID)
-	public EvaluationDto modifyEvaluation(@PathVariable String id, @Valid @RequestBody EvaluationDto evaluationDto)
-			throws FieldNotFoundException, DocumentAlreadyExistException {
+        return this.evaluationService.createEvaluation(evaluationDto);
+    }
 
-		if (this.evaluationService.isEvaluationRepeated(evaluationDto))
-			throw new DocumentAlreadyExistException("Evaluation");
+    @PreAuthorize("hasRole('TEACHER')")
+    @PutMapping(PATH_ID)
+    public EvaluationDto modifyEvaluation(@PathVariable String id, @Valid @RequestBody EvaluationDto evaluationDto)
+            throws FieldNotFoundException, DocumentAlreadyExistException {
 
-		return this.evaluationService.modifyEvaluation(id, evaluationDto).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
-	
-	
-	// DELETE
-	@PreAuthorize("hasRole('TEACHER')")
-	@DeleteMapping(PATH_ID)
-	public EvaluationDto deleteEvaluation(@PathVariable String id) throws FieldNotFoundException {
-		return this.evaluationService.deleteEvaluation(id).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
-	
-	// GET
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(PATH_ID)
-	public EvaluationDto getEvaluationById(@PathVariable String id) throws FieldNotFoundException {
-		return this.evaluationService.getEvaluationById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
+        if (this.evaluationService.isEvaluationRepeated(evaluationDto))
+            throw new DocumentAlreadyExistException("Evaluation");
 
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping()
-	public List<EvaluationDto> getFullEvaluations() throws DocumentNotFoundException {
-		return this.evaluationService.getFullEvaluations().orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
-	}
-	
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(SUBJECTS + PATH_ID)
-	public List<EvaluationDto> getEvaluationsBySubject(@PathVariable String id) throws DocumentNotFoundException {
-		return this.evaluationService.getEvaluationsBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
-	}
+        return this.evaluationService.modifyEvaluation(id, evaluationDto).orElseThrow(() -> new FieldNotFoundException("Id"));
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @DeleteMapping(PATH_ID)
+    public EvaluationDto deleteEvaluation(@PathVariable String id) throws FieldNotFoundException {
+        return this.evaluationService.deleteEvaluation(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(PATH_ID)
+    public EvaluationDto getEvaluationById(@PathVariable String id) throws FieldNotFoundException {
+        return this.evaluationService.getEvaluationById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping()
+    public List<EvaluationDto> getFullEvaluations() throws DocumentNotFoundException {
+        return this.evaluationService.getFullEvaluations().orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(SUBJECTS + PATH_ID)
+    public List<EvaluationDto> getEvaluationsBySubject(@PathVariable String id) throws DocumentNotFoundException {
+        return this.evaluationService.getEvaluationsBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
+    }
 
 }

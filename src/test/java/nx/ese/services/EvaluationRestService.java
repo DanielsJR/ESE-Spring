@@ -17,117 +17,112 @@ import nx.ese.dtos.EvaluationDto;
 @Service
 public class EvaluationRestService {
 
-	@Autowired
-	private RestService restService;
+    @Autowired
+    private RestService restService;
 
-	@Autowired
-	private SubjectRestService subjectRestService;
+    @Autowired
+    private SubjectRestService subjectRestService;
 
-	@Getter
-	@Setter
-	private EvaluationDto evaluationDto;
+    @Getter
+    @Setter
+    private EvaluationDto evaluationDto;
 
-	@Getter
-	@Setter
-	private EvaluationDto evaluationDto2;
+    @Getter
+    @Setter
+    private EvaluationDto evaluationDto2;
 
-	@Getter
-	@Setter
-	private List<EvaluationDto> listEvaluationDto;
+    @Getter
+    @Setter
+    private List<EvaluationDto> listEvaluationDto;
 
-	private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
+    private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
 
-	public void createEvaluationsDto() {
-		subjectRestService.createSubjectsDto();
-		
-		restService.loginManager();
-		subjectRestService.postSubject();
+    public void createEvaluationsDto() {
+        subjectRestService.createSubjectsDto();
 
-		logger.warn("*****************************CREATING_EVALUATIONS********************************************");
-		this.evaluationDto = new EvaluationDto();
-		this.evaluationDto.setType(EvaluationType.DISERTACION);
-		this.evaluationDto.setTitle("Test de evaluación-01");
-		Date date = new Date();
-		this.evaluationDto.setDate(date);
-		this.evaluationDto.setSubject(subjectRestService.getSubjectDto());
-		// this.evaluationDto.setQuiz(quiz);
+        restService.loginManager();
+        subjectRestService.postSubject();
 
-		this.evaluationDto2 = new EvaluationDto();
-		this.evaluationDto2.setType(EvaluationType.PRUEBA);
-		this.evaluationDto2.setTitle("Test de evaluación-02");
-		Date date2 = new Date();
-		this.evaluationDto2.setDate(date2);
-		this.evaluationDto2.setSubject(subjectRestService.getSubjectDto());
-		// this.evaluationDto2.setQuiz(quiz);
-		logger.warn("*****************************************************************************************");
-	}
+        logger.info("*****************************CREATING_EVALUATIONS********************************************");
+        this.evaluationDto = new EvaluationDto();
+        this.evaluationDto.setType(EvaluationType.DISERTACION);
+        this.evaluationDto.setTitle("Test de evaluación-01");
+        Date date = new Date();
+        this.evaluationDto.setDate(date);
+        this.evaluationDto.setSubject(subjectRestService.getSubjectDto());
 
-	public void deleteEvaluationsDto() {
-		logger.warn("*****************************DELETING_EVALUATIONS********************************************");
+        this.evaluationDto2 = new EvaluationDto();
+        this.evaluationDto2.setType(EvaluationType.PRUEBA);
+        this.evaluationDto2.setTitle("Test de evaluación-02");
+        Date date2 = new Date();
+        this.evaluationDto2.setDate(date2);
+        this.evaluationDto2.setSubject(subjectRestService.getSubjectDto());
 
-		this.restService.loginTeacher();
+        logger.info("*****************************************************************************************");
+    }
 
-		try {
-			this.deleteEvaluation(this.getEvaluationDto().getId());
-		} catch (Exception e) {
-			logger.warn("error: " + e.getMessage() + "evaluationDto: nothing to delete");
-		}
+    public void deleteEvaluationsDto() {
+        logger.info("*****************************DELETING_EVALUATIONS********************************************");
 
-		try {
-			this.deleteEvaluation(this.getEvaluationDto2().getId());
-		} catch (Exception e) {
-			logger.warn("error: " + e.getMessage() + "evaluationDto2: nothing to delete");
-		}
+        this.restService.loginTeacher();
 
-		this.subjectRestService.deleteSubjects();
+        try {
+            this.deleteEvaluation(this.getEvaluationDto().getId());
+        } catch (Exception e) {
+            logger.info("error: " + e.getMessage() + "evaluationDto: nothing to delete");
+        }
 
-		logger.warn("***************************************************************************************");
+        try {
+            this.deleteEvaluation(this.getEvaluationDto2().getId());
+        } catch (Exception e) {
+            logger.info("error: " + e.getMessage() + "evaluationDto2: nothing to delete");
+        }
 
-	}
+        this.subjectRestService.deleteSubjects();
 
-	// POST
-	public EvaluationDto postEvaluation() {
-		return evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-				.path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken())
-				.body(evaluationDto).post().build();
+        logger.info("***************************************************************************************");
 
-	}
+    }
 
-	public EvaluationDto postEvaluation2() {
-		return evaluationDto2 = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-				.path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken())
-				.body(evaluationDto2).post().build();
+    public EvaluationDto postEvaluation() {
+        return evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken())
+                .body(evaluationDto).post().build();
 
-	}
+    }
 
-	// PUT
-	public EvaluationDto putEvaluation() {
-		return evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-				.path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(evaluationDto.getId())
-				.bearerAuth(restService.getAuthToken().getToken()).body(evaluationDto).put().build();
+    public EvaluationDto postEvaluation2() {
+        return evaluationDto2 = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken())
+                .body(evaluationDto2).post().build();
 
-	}
+    }
 
-	// DELETE
-	public EvaluationDto deleteEvaluation(String id) {
-		return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-				.path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken()).delete().build();
+    public EvaluationDto putEvaluation() {
+        return evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(evaluationDto.getId())
+                .bearerAuth(restService.getAuthToken().getToken()).body(evaluationDto).put().build();
 
-	}
+    }
 
-	// GET
-	public EvaluationDto getEvaluationById(String id) {
-		return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-				.path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(id)
-				.bearerAuth(restService.getAuthToken().getToken()).get().build();
+    public EvaluationDto deleteEvaluation(String id) {
+        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken()).delete().build();
 
-	}
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<EvaluationDto> getFullEvaluations() {
-		return listEvaluationDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
-				.path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken()).get().build();
+    public EvaluationDto getEvaluationById(String id) {
+        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken()).get().build();
 
-	}
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<EvaluationDto> getFullEvaluations() {
+        return listEvaluationDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken()).get().build();
+
+    }
 }

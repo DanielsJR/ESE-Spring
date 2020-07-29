@@ -23,70 +23,67 @@ import javax.crypto.SecretKey;
 @Component
 public class TokenProvider implements Serializable {
 
-	private static final long serialVersionUID = -3528505550338355205L;
-	
-	public static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5 * 60 * 60;
-	
-	public static final String AUTHORITIES_KEY = "scopes";
-	
-	//public static final String SIGNING_KEY = "clave"; // not safe
-	SecretKey key = MacProvider.generateKey(SignatureAlgorithm.HS256);
-	
-	String base64EncodedKey = TextCodec.BASE64.encode(key.getEncoded());
+    private static final long serialVersionUID = -3528505550338355205L;
 
-	public String getUsernameFromToken(String token) {
-		return getClaimFromToken(token, Claims::getSubject);
-	}
+    public static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5 * 60 * 60L;
 
-	public Date getExpirationDateFromToken(String token) {
-		return getClaimFromToken(token, Claims::getExpiration);
-	}
+    public static final String AUTHORITIES_KEY = "scopes";
 
-	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-		final Claims claims = getAllClaimsFromToken(token);
-		return claimsResolver.apply(claims);
-	}
+    SecretKey key = MacProvider.generateKey(SignatureAlgorithm.HS256);
 
-	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(base64EncodedKey).parseClaimsJws(token).getBody();
-	}
+    String base64EncodedKey = TextCodec.BASE64.encode(key.getEncoded());
 
-	private Boolean isTokenExpired(String token) {
-		final Date expiration = getExpirationDateFromToken(token);
-		return expiration.before(new Date());
-	}
+    public String getUsernameFromToken(String token) {
+        return getClaimFromToken(token, Claims::getSubject);
+    }
 
-	public String generateToken(Authentication authentication){
-		//System.out.println("KEY64:::::: " + base64EncodedKey);
-		final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
-		return Jwts.builder()
-				.setSubject(authentication.getName())
-				.claim(AUTHORITIES_KEY, authorities)
-				.signWith(SignatureAlgorithm.HS256, base64EncodedKey)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 400))
-				.compact();
-	}
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getExpiration);
+    }
 
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-	}
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
 
-	public UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth,
-			final UserDetails userDetails) {
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(base64EncodedKey).parseClaimsJws(token).getBody();
+    }
 
-		final JwtParser jwtParser = Jwts.parser().setSigningKey(base64EncodedKey);
+    private Boolean isTokenExpired(String token) {
+        final Date expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
 
-		final Jws<Claims> claimsJws = jwtParser.parseClaimsJws(token);
+    public String generateToken(Authentication authentication) {
+        final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(SignatureAlgorithm.HS256, base64EncodedKey)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 400))
+                .compact();
+    }
 
-		final Claims claims = claimsJws.getBody();
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = getUsernameFromToken(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
 
-		final Collection<? extends GrantedAuthority> authorities = Arrays
-				.stream(claims.get(AUTHORITIES_KEY).toString().split(",")).map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
+    public UsernamePasswordAuthenticationToken getAuthentication(final String token, final UserDetails userDetails) {
 
-		return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
-	}
+        final JwtParser jwtParser = Jwts.parser().setSigningKey(base64EncodedKey);
+
+        final Jws<Claims> claimsJws = jwtParser.parseClaimsJws(token);
+
+        final Claims claims = claimsJws.getBody();
+
+        final Collection<? extends GrantedAuthority> authorities = Arrays
+                .stream(claims.get(AUTHORITIES_KEY).toString().split(",")).map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
+    }
 
 }

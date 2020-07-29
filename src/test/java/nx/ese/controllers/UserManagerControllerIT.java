@@ -50,7 +50,6 @@ public class UserManagerControllerIT {
     }
 
     // POST--------------------------------------------
-
     @Test
     public void testPostManager() {
         userRestService.postManager();
@@ -129,14 +128,6 @@ public class UserManagerControllerIT {
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
                 .bearerAuth(restService.getAuthToken().getToken()).post().build();
-    }
-
-    @Test
-    public void testPostManagerUsernameNull() {
-        userRestService.getManagerDto().setUsername(null);
-
-        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-        userRestService.postManager();
     }
 
     @Test

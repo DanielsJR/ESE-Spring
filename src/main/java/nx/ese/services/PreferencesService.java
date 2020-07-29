@@ -11,6 +11,7 @@ import nx.ese.dtos.ThemeDto;
 import nx.ese.repositories.PreferencesRepository;
 import nx.ese.repositories.UserRepository;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,7 @@ public class PreferencesService {
 
     public ThemeDto getUserTheme(String id) {
         ThemeDto themeDto = new ThemeDto();
-        User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
         if (preferencesRepository.findByUserId(id) != null
                 && preferencesRepository.findByUserId(id).getTheme() != null) {
             Theme themeDb = preferencesRepository.findByUserId(id).getTheme();
@@ -33,7 +34,6 @@ public class PreferencesService {
             themeDto.setColor(themeDb.getColor());
             return themeDto;
         } else {
-            // System.out.println("setting default theme!");
             themeDto.setIsDark(false);
             if (user.getGender().equals(Gender.MUJER)) {
                 themeDto.setName("pink-purple");

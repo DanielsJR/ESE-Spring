@@ -32,112 +32,97 @@ import nx.ese.services.UserService;
 @RestController
 public class SendQuizController {
 
-	@Autowired
-	private SimpMessagingTemplate template;
+    @Autowired
+    private SimpMessagingTemplate template;
 
-	@Autowired
-	private EvaluationService evaluationService;
+    @Autowired
+    private EvaluationService evaluationService;
 
-	@Autowired
-	private GradeService gradeService;
+    @Autowired
+    private GradeService gradeService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@PreAuthorize("hasRole('TEACHER')")
-	@MessageMapping("/send-quiz/course/{cId}")
-	@SendTo("/topic/send-quiz/course/{cId}")
-	public GradeDto getQuizNotification(@DestinationVariable String cId, String eId)
-			throws FieldInvalidException, DocumentAlreadyExistException {
+    @PreAuthorize("hasRole('TEACHER')")
+    @MessageMapping("/send-quiz/course/{cId}")
+    @SendTo("/topic/send-quiz/course/{cId}")
+    public GradeDto getQuizNotification(@DestinationVariable String cId, String eId) {
 
         //TODO service
-		EvaluationDto eDto = evaluationService.getEvaluationById(eId).get();
+        EvaluationDto eDto = evaluationService.getEvaluationById(eId).get();
 
-		QuizStudentDto qsDto = new QuizStudentDto(eDto.getQuiz());
+        QuizStudentDto qsDto = new QuizStudentDto(eDto.getQuiz());
 
-		List<CorrespondItem> correspondItems = qsDto.getCorrespondItems();
-		List<String> corresponds = correspondItems.stream().map(item -> item.getCorrespond())
-				.collect(Collectors.toList());
-		Collections.shuffle(corresponds);
+        List<CorrespondItem> correspondItems = qsDto.getCorrespondItems();
+        List<String> corresponds = correspondItems.stream().map(item -> item.getCorrespond())
+                .collect(Collectors.toList());
+        Collections.shuffle(corresponds);
 
-		int i = 0;
-		for (CorrespondItem co : correspondItems) {
-			co.setCorrespond(corresponds.toArray()[i].toString());
-			i++;
-		}
+        int i = 0;
+        for (CorrespondItem co : correspondItems) {
+            co.setCorrespond(corresponds.toArray()[i].toString());
+            i++;
+        }
 
-		qsDto.setCorrespondItems(correspondItems);
+        qsDto.setCorrespondItems(correspondItems);
 
-		List<TrueFalseItem> trueFalseItems = qsDto.getTrueFalseItems();
-		trueFalseItems.stream().forEach(item -> item.setAnswer(false));
+        List<TrueFalseItem> trueFalseItems = qsDto.getTrueFalseItems();
+        trueFalseItems.stream().forEach(item -> item.setAnswer(false));
 
-		List<MultipleSelectionItem> multipleSelectionItems = qsDto.getMultipleSelectionItems();
-		multipleSelectionItems.stream().forEach(item -> item.setAnswer(null));
+        List<MultipleSelectionItem> multipleSelectionItems = qsDto.getMultipleSelectionItems();
+        multipleSelectionItems.stream().forEach(item -> item.setAnswer(null));
 
-		List<IncompleteTextItem> incompleteTextItems = qsDto.getIncompleteTextItems();
-		incompleteTextItems.stream().forEach(item -> item.setAnswer(null));
+        List<IncompleteTextItem> incompleteTextItems = qsDto.getIncompleteTextItems();
+        incompleteTextItems.stream().forEach(item -> item.setAnswer(null));
 
-		GradeDto gradeDto = new GradeDto();
-		gradeDto.setEvaluation(eDto);
-		gradeDto.setGrade(0);
-		gradeDto.setQuizStudent(qsDto);
+        GradeDto gradeDto = new GradeDto();
+        gradeDto.setEvaluation(eDto);
+        gradeDto.setGrade(0);
+        gradeDto.setQuizStudent(qsDto);
 
-		// String course = eDto.getSubject().getCourse().getName().getCode();
-		// template.convertAndSend("/topic/send-quiz/" + course, grade);
+        // String course = eDto.getSubject().getCourse().getName().getCode();
+        // template.convertAndSend("/topic/send-quiz/" + course, grade);
 
-		return gradeDto;
+        return gradeDto;
 
-	}
+    }
 
-	// @PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
-	@MessageMapping("/grade-to-teacher/course/{cId}/evaluation/{eId}/student/{sId}")
-	@SendTo("/topic/grade-to-teacher/course/{cId}")
-	public GradeDto gradeNotificationToTeacher(@DestinationVariable String cId, @DestinationVariable String eId,
-			@DestinationVariable String sId, GradeDto gradeDto) throws FieldNotFoundException, DocumentNotFoundException {
+    // @PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
+    @MessageMapping("/grade-to-teacher/course/{cId}/evaluation/{eId}/student/{sId}")
+    @SendTo("/topic/grade-to-teacher/course/{cId}")
+    public GradeDto gradeNotificationToTeacher(@DestinationVariable String cId, @DestinationVariable String eId,
+                                               @DestinationVariable String sId, GradeDto gradeDto) throws FieldNotFoundException, DocumentNotFoundException {
 
-		EvaluationDto eDto = evaluationService.getEvaluationById(eId).orElseThrow(() -> new FieldNotFoundException("eId"));
-		gradeDto.setEvaluation(eDto);
+        EvaluationDto eDto = evaluationService.getEvaluationById(eId).orElseThrow(() -> new FieldNotFoundException("eId"));
+        gradeDto.setEvaluation(eDto);
 
-		UserDto sDto = userService.getUserById(sId).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
-		gradeDto.setStudent(sDto);
-		
-		//TODO calculate
-		gradeDto.setGrade(7.0);
+        UserDto sDto = userService.getUserById(sId).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
+        gradeDto.setStudent(sDto);
 
-		return gradeDto;
-	}
+        //TODO calculate
+        gradeDto.setGrade(7.0);
 
-	@PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
-	@MessageMapping("/grade-to-student/student/{sId}/grade/{gId}")
-	@SendTo("/topic/grade-to-student/student/{sId}")
-	public GradeDto gradeNotificationToStudent(@DestinationVariable String sId, @DestinationVariable String gId) throws DocumentNotFoundException {
-		
-		GradeDto gDto = this.gradeService.getGradeById(gId).orElseThrow(() -> new DocumentNotFoundException("Nota"));
-		
-		return gDto;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+        return gradeDto;
+    }
 
-	@PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
-	@MessageMapping("/notification-test")
-	public void notificationTest(MessageDto message) {
-		message.getNotification().increment();
+    @PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
+    @MessageMapping("/grade-to-student/student/{sId}/grade/{gId}")
+    @SendTo("/topic/grade-to-student/student/{sId}")
+    public GradeDto gradeNotificationToStudent(@DestinationVariable String sId, @DestinationVariable String gId) throws DocumentNotFoundException {
+        return this.gradeService.getGradeById(gId).orElseThrow(() -> new DocumentNotFoundException("Nota"));
+    }
 
-		template.convertAndSend("/topic/notification-test", message);
-	}
+    @PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
+    @MessageMapping("/notification-test")
+    public void notificationTest(MessageDto message) {
+        message.getNotification().increment();
+        template.convertAndSend("/topic/notification-test", message);
+    }
 
-	@PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
-	@MessageMapping("/cualquier-test")
-	public void cualquierTest(UserDto message) {
-
-		template.convertAndSend("/topic/cualquier-test", message);
-	}
+    @PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
+    @MessageMapping("/cualquier-test")
+    public void cualquierTest(UserDto message) {
+        template.convertAndSend("/topic/cualquier-test", message);
+    }
 }

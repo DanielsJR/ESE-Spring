@@ -2,6 +2,7 @@ package nx.ese.services;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,12 +50,12 @@ public class SubjectService {
 
     private User setTeacher(SubjectDto subjectDto) {
         return userRepository.findById(subjectDto.getTeacher().getId())
-                .orElseThrow(() -> new RuntimeException("TeacherNotFound"));
+                .orElseThrow(NoSuchElementException::new);
     }
 
     private Course setCourse(SubjectDto subjectDto) {
         return courseRepository.findById(subjectDto.getCourse().getId())
-                .orElseThrow(() -> new RuntimeException("CourseNotFound"));
+                .orElseThrow(NoSuchElementException::new);
     }
 
     // CRUD******************************

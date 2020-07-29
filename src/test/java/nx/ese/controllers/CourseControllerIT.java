@@ -105,11 +105,23 @@ public class CourseControllerIT {
 	}
 
 	@Test
-	public void testPostCourseStudentsRepeated() {
+	public void testPostCourseStudentsRepeatedInDto() {
 		courseRestService.postCourse();
 
 		List<UserDto> students = courseRestService.getCourseDto2().getStudents();
-		students.add(courseRestService.getCourseDto().getStudents().stream().findFirst().get());
+		students.add(courseRestService.getCourseDto2().getStudents().get(0));
+		courseRestService.getCourseDto2().setStudents(students);
+
+		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+		courseRestService.postCourse2();
+	}
+
+	@Test
+	public void testPostCourseStudentsRepeatedInOtherCourse() {
+		courseRestService.postCourse();
+
+		List<UserDto> students = courseRestService.getCourseDto2().getStudents();
+		students.add(courseRestService.getCourseDto().getStudents().get(0));
 		courseRestService.getCourseDto2().setStudents(students);
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
@@ -208,7 +220,7 @@ public class CourseControllerIT {
 		courseRestService.postCourse2();
 
 		List<UserDto> students = courseRestService.getCourseDto().getStudents();
-		students.add(courseRestService.getCourseDto2().getStudents().stream().findFirst().get());
+		students.add(courseRestService.getCourseDto2().getStudents().get(0));
 		courseRestService.getCourseDto().setStudents(students);
 
 		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
