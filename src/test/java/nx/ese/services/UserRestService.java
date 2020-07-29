@@ -274,7 +274,6 @@ public class UserRestService {
     public void postStudent() {
         studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
                 .path(UserController.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(new UserTestDto(studentDto)).post()
-                .log()
                 .build();
     }
 
