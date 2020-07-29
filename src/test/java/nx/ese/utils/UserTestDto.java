@@ -24,11 +24,9 @@ public class UserTestDto {
     @Setter
     private String password;
 
-
     @Getter
     @Setter
     private String firstName;
-
 
     @Getter
     @Setter
