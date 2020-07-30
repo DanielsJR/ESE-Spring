@@ -12,8 +12,8 @@ import lombok.Setter;
 
 import nx.ese.documents.core.Evaluation;
 import nx.ese.documents.core.EvaluationType;
-import nx.ese.dtos.validators.NX_Pattern;
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.dtos.validators.NxPattern;
+import nx.ese.utils.NxDateFormatter;
 
 @NoArgsConstructor
 public class EvaluationDto {
@@ -40,7 +40,7 @@ public class EvaluationDto {
     @Setter
     private QuizDto quiz;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @NotNull
     @Getter
     @Setter
@@ -53,14 +53,14 @@ public class EvaluationDto {
     @Getter
     private String createdBy;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date createdDate;
 
     @Getter
     private String lastModifiedUser;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date lastModifiedDate;
 
@@ -93,8 +93,8 @@ public class EvaluationDto {
     @Override
     public String toString() {
         return "EvaluationDto [id=" + id + ", type=" + type + ", title=" + title + ", subject=" + subject + ", quiz="
-                + quiz + ", date=" + NX_DateFormatter.formatterDate(this.date) + ", isOpen=" + isOpen + ", createdBy=" + createdBy + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate)
-                + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + quiz + ", date=" + NxDateFormatter.formatterDate(this.date) + ", isOpen=" + isOpen + ", createdBy=" + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate)
+                + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

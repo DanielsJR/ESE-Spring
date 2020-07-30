@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import nx.ese.documents.core.Grade;
-import nx.ese.dtos.validators.NX_Pattern;
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.dtos.validators.NxPattern;
+import nx.ese.utils.NxDateFormatter;
 
 @NoArgsConstructor
 public class GradeDto {
@@ -42,14 +42,14 @@ public class GradeDto {
     @Getter
     private String createdBy;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date createdDate;
 
     @Getter
     private String lastModifiedUser;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date lastModifiedDate;
 
@@ -72,7 +72,7 @@ public class GradeDto {
     public String toString() {
         return "GradeDto [id=" + id + ", student=" + student + ", grade=" + grade + ", evaluation=" + evaluation
                 + ", quizStudent=" + quizStudent + ", createdBy=" + createdBy + ", createdDate="
-                + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Component;
@@ -21,17 +22,20 @@ public class ApiLogs {
 
     @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
     public void allResources() {
+        //no code needed
     }
 
     @Before("allResources()")
     public void apiRequestLog(JoinPoint jp) {
-        LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName())
-                .info("------------------------- o -------------------------");
-        StringBuilder log = new StringBuilder(jp.getSignature().getName());
-        for (Object arg : jp.getArgs()) {
-            log.append(" >>>> arguments: ").append(arg);
+        Logger logger = LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName());
+        if (logger.isInfoEnabled()) {
+            logger.info("------------------------- o -------------------------");
+            StringBuilder log = new StringBuilder(jp.getSignature().getName());
+            for (Object arg : jp.getArgs()) {
+                log.append(" >>>> arguments: ").append(arg);
+            }
+            logger.info(log.toString());
         }
-        LoggerFactory.getLogger(jp.getSignature().getDeclaringTypeName()).info(log.toString());
 
     }
 

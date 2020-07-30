@@ -1,6 +1,6 @@
 package nx.ese.utils;
 
-public class NX_Capitalizer {
+public class NxCapitalizer {
 	
 	 public static String capitalizer(String word){
 	        String[] words = word.split(" ");

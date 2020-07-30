@@ -10,9 +10,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-public class NX_UtilBase64Image {
+public class NxUtilBase64Image {
 
-    private static final Logger logger = LoggerFactory.getLogger(NX_UtilBase64Image.class);
+    private static final Logger logger = LoggerFactory.getLogger(NxUtilBase64Image.class);
+
+    public NxUtilBase64Image() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String encoder(String imagePath) {
         File file = new File(imagePath);

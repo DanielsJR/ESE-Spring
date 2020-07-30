@@ -13,8 +13,8 @@ import lombok.Setter;
 
 import nx.ese.documents.core.Subject;
 import nx.ese.documents.core.SubjectName;
-import nx.ese.dtos.validators.NX_Pattern;
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.dtos.validators.NxPattern;
+import nx.ese.utils.NxDateFormatter;
 
 @NoArgsConstructor
 public class SubjectDto {
@@ -42,14 +42,14 @@ public class SubjectDto {
     @Getter
     private String createdBy;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date createdDate;
 
     @Getter
     private String lastModifiedUser;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date lastModifiedDate;
 
@@ -68,8 +68,8 @@ public class SubjectDto {
     @Override
     public String toString() {
         return "Subject [id=" + id + ", name=" + name + ", teacher=" + teacher + ", course=" + course + ", createdBy="
-                + createdBy + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser
-                + ", lastModifiedDate=" + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser
+                + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

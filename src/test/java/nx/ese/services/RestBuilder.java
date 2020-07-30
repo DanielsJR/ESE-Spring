@@ -197,7 +197,7 @@ public class RestBuilder<T> {
     public T build() {
         ResponseEntity<T> response;
         if (log) {
-            String msg = MessageFormat.format("method:{0}  path:{1}  headers:{2}  boty:{3}", method, this.path, this.headers(), this.body);
+            String msg = MessageFormat.format("method:{0}  path:{1}  headers:{2}  body:{3}", method, this.path, this.headers(), this.body);
             logger.info(msg);
         }
         if (body != null && !method.equals(HttpMethod.GET)) {

@@ -285,8 +285,10 @@ public class CourseControllerIT {
 	@Test
 	public void testDeleteCourse() {
 		courseRestService.postCourse();
-
 		courseRestService.deleteCourse(courseRestService.getCourseDto().getId());
+
+		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+		courseRestService.getCourseById(courseRestService.getCourseDto().getId());
 	}
 
 	@Test

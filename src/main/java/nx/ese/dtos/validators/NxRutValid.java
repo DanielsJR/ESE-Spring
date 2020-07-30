@@ -10,8 +10,8 @@ import javax.validation.Payload;
 
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = NX_RutValidator.class)
-public @interface NX_RutValid {
+@Constraint(validatedBy = NxRutValidator.class)
+public @interface NxRutValid {
 
     String message() default "Expected RUT match";
 

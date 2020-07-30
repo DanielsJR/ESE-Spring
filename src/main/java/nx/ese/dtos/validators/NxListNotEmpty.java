@@ -11,8 +11,8 @@ import java.lang.annotation.RetentionPolicy;
 
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = NX_ListNotEmptyValidator.class)
-public @interface NX_ListNotEmpty {
+@Constraint(validatedBy = NxListNotEmptyValidator.class)
+public @interface NxListNotEmpty {
     String message() default "Expected not empty";
 
     Class<?>[] groups() default {};

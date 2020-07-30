@@ -19,8 +19,8 @@ import nx.ese.documents.core.Quiz;
 import nx.ese.documents.core.QuizLevel;
 import nx.ese.documents.core.SubjectName;
 import nx.ese.documents.core.TrueFalseItem;
-import nx.ese.dtos.validators.NX_Pattern;
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.dtos.validators.NxPattern;
+import nx.ese.utils.NxDateFormatter;
 
 @NoArgsConstructor
 public class QuizDto {
@@ -72,14 +72,14 @@ public class QuizDto {
     @Getter
     private String createdBy;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date createdDate;
 
     @Getter
     private String lastModifiedUser;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date lastModifiedDate;
 
@@ -110,7 +110,7 @@ public class QuizDto {
                 + ", subjectName=" + subjectName + ", quizLevel=" + quizLevel + ", correspondItems=" + correspondItems
                 + ", incompleteTextItems=" + incompleteTextItems + ", trueFalseItems=" + trueFalseItems
                 + ", multipleSelectionItems=" + multipleSelectionItems + ", createdBy=" + createdBy + ", createdDate="
-                + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

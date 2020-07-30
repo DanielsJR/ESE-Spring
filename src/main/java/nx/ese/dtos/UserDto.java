@@ -17,10 +17,10 @@ import nx.ese.documents.Commune;
 import nx.ese.documents.Gender;
 import nx.ese.documents.Role;
 import nx.ese.documents.User;
-import nx.ese.dtos.validators.NX_Pattern;
-import nx.ese.dtos.validators.NX_RutValid;
-import nx.ese.utils.NX_Capitalizer;
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.dtos.validators.NxPattern;
+import nx.ese.dtos.validators.NxRutValid;
+import nx.ese.utils.NxCapitalizer;
+import nx.ese.utils.NxDateFormatter;
 
 @NoArgsConstructor
 public class UserDto {
@@ -29,12 +29,12 @@ public class UserDto {
     private String id;
 
     @NotNull
-    @Pattern(regexp = NX_Pattern.USERNAME)
+    @Pattern(regexp = NxPattern.USERNAME)
     @Getter
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Pattern(regexp = NX_Pattern.PASSWORD)
+    @Pattern(regexp = NxPattern.PASSWORD)
     @Getter
     @Setter
     private String password;
@@ -47,10 +47,10 @@ public class UserDto {
     @Getter
     private String lastName;
 
-    @NX_RutValid
+    @NxRutValid
     private String dni;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     @Setter
     private Date birthday;
@@ -63,12 +63,12 @@ public class UserDto {
     @Setter
     private Avatar avatar;
 
-    @Pattern(regexp = NX_Pattern.NINE_DIGITS)
+    @Pattern(regexp = NxPattern.NINE_DIGITS)
     @Getter
     @Setter
     private String mobile;
 
-    @Pattern(regexp = NX_Pattern.EMAIL)
+    @Pattern(regexp = NxPattern.EMAIL)
     @Getter
     private String email;
 
@@ -90,14 +90,14 @@ public class UserDto {
     @Getter
     private String createdBy;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date createdDate;
 
     @Getter
     private String lastModifiedUser;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NX_Pattern.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @Getter
     private Date lastModifiedDate;
 
@@ -157,11 +157,11 @@ public class UserDto {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = NX_Capitalizer.capitalizer(firstName);
+        this.firstName = NxCapitalizer.capitalizer(firstName);
     }
 
     public void setLastName(String lastName) {
-        this.lastName = NX_Capitalizer.capitalizer(lastName);
+        this.lastName = NxCapitalizer.capitalizer(lastName);
     }
 
     public String getDni() {
@@ -191,7 +191,7 @@ public class UserDto {
 
     public void setAddress(String address) {
         if (address != null) {
-            this.address = NX_Capitalizer.capitalizer(address);
+            this.address = NxCapitalizer.capitalizer(address);
         } else {
             this.address = address;
         }
@@ -201,11 +201,11 @@ public class UserDto {
     public String toString() {
 
         return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NX_DateFormatter.formatterDate(this.birthday) + ", gender=" + gender
+                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NxDateFormatter.formatterDate(this.birthday) + ", gender=" + gender
                 + ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
                 + ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
-                + createdBy + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
-                + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
+                + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

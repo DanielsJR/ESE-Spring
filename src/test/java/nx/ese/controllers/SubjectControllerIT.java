@@ -34,357 +34,360 @@ import nx.ese.services.UserRestService;
 @TestPropertySource(locations = "classpath:test.properties")
 public class SubjectControllerIT {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-	@Autowired
-	private RestService restService;
-
-	@Autowired
-	private UserRestService userRestService;
+    @Autowired
+    private RestService restService;
+
+    @Autowired
+    private UserRestService userRestService;
 
-	@Autowired
-	private CourseRestService courseRestService;
+    @Autowired
+    private CourseRestService courseRestService;
 
-	@Autowired
-	private SubjectRestService subjectRestService;
+    @Autowired
+    private SubjectRestService subjectRestService;
 
-	@Before
-	public void before() {
-		subjectRestService.createSubjectsDto();
-	}
+    @Before
+    public void before() {
+        subjectRestService.createSubjectsDto();
+    }
 
-	@After
-	public void delete() {
-		subjectRestService.deleteSubjects();
-	}
+    @After
+    public void delete() {
+        subjectRestService.deleteSubjects();
+    }
 
-	// POST
-	@Test
-	public void testPostSubject() {
-		subjectRestService.postSubject();
+    // POST
+    @Test
+    public void testPostSubject() {
+        subjectRestService.postSubject();
 
-		SubjectDto sDto = subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
-		assertEquals(sDto, subjectRestService.getSubjectDto());
-	}
+        SubjectDto sDto = subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
+        assertEquals(sDto, subjectRestService.getSubjectDto());
+    }
 
-	@Test
-	public void testPostSubjectPreAuthorize() {
-		restService.loginTeacher();// PreAuthorize("hasRole('MANAGER')")
+    @Test
+    public void testPostSubjectPreAuthorize() {
+        restService.loginTeacher();// PreAuthorize("hasRole('MANAGER')")
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		subjectRestService.postSubject();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        subjectRestService.postSubject();
 
-	}
+    }
 
-	@Test
-	public void testPostSubjectNoBearerAuth() {
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(SubjectController.SUBJECT).body(subjectRestService.getSubjectDto()).post()
-				.build();
-	}
+    @Test
+    public void testPostSubjectNoBearerAuth() {
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(SubjectController.SUBJECT).body(subjectRestService.getSubjectDto()).post()
+                .build();
+    }
 
-	@Test
-	public void testPostSubjectFieldInvalidExceptionId() {
-		subjectRestService.postSubject();
+    @Test
+    public void testPostSubjectFieldInvalidExceptionId() {
+        subjectRestService.postSubject();
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.postSubject();// it goes with Id
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.postSubject();// it goes with Id
 
-	}
+    }
 
-	@Test
-	public void testPostSubjectSubjectRepeated() {
-		subjectRestService.postSubject();
+    @Test
+    public void testPostSubjectSubjectRepeated() {
+        subjectRestService.postSubject();
 
-		subjectRestService.getSubjectDto2().setName(subjectRestService.getSubjectDto().getName());
-		subjectRestService.getSubjectDto2().setCourse(subjectRestService.getSubjectDto().getCourse());
+        subjectRestService.getSubjectDto2().setName(subjectRestService.getSubjectDto().getName());
+        subjectRestService.getSubjectDto2().setCourse(subjectRestService.getSubjectDto().getCourse());
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.postSubject2();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.postSubject2();
+    }
 
-	@Test
-	public void testPostSubjectBodyNull() {
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		restService.restBuilder().path(SubjectController.SUBJECT).body(null)
-				.bearerAuth(restService.getAuthToken().getToken()).post().build();
-	}
+    @Test
+    public void testPostSubjectBodyNull() {
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        restService.restBuilder().path(SubjectController.SUBJECT).body(null)
+                .bearerAuth(restService.getAuthToken().getToken()).post().build();
+    }
 
-	@Test
-	public void testPostSubjectNameNull() {
-		subjectRestService.getSubjectDto().setName(null);
+    @Test
+    public void testPostSubjectNameNull() {
+        subjectRestService.getSubjectDto().setName(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.postSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.postSubject();
+    }
 
-	@Test
-	public void testPostSubjectTeacherNull() {
-		subjectRestService.getSubjectDto().setTeacher(null);
+    @Test
+    public void testPostSubjectTeacherNull() {
+        subjectRestService.getSubjectDto().setTeacher(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.postSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.postSubject();
+    }
 
-	@Test
-	public void testPostSubjectCourseNull() {
-		subjectRestService.getSubjectDto().setCourse(null);
+    @Test
+    public void testPostSubjectCourseNull() {
+        subjectRestService.getSubjectDto().setCourse(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.postSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.postSubject();
+    }
 
-	// PUT
-	@Test
-	public void testPutSubject() {
-		subjectRestService.postSubject();
+    // PUT
+    @Test
+    public void testPutSubject() {
+        subjectRestService.postSubject();
 
-		subjectRestService.getSubjectDto().setTeacher(userRestService.getTeacherDto());
+        subjectRestService.getSubjectDto().setTeacher(userRestService.getTeacherDto());
 
-		subjectRestService.putSubject();
+        subjectRestService.putSubject();
 
-		Assert.assertEquals(subjectRestService.getSubjectDto().getTeacher(), userRestService.getTeacherDto());
-	}
+        Assert.assertEquals(subjectRestService.getSubjectDto().getTeacher(), userRestService.getTeacherDto());
+    }
 
-	@Test
-	public void testPutSubjectPreAuthorize() {
-		subjectRestService.postSubject();
+    @Test
+    public void testPutSubjectPreAuthorize() {
+        subjectRestService.postSubject();
 
-		subjectRestService.getSubjectDto().setTeacher(userRestService.getTeacherDto());
+        subjectRestService.getSubjectDto().setTeacher(userRestService.getTeacherDto());
 
-		restService.loginTeacher();// PreAuthorize("hasRole('MANAGER')")
+        restService.loginTeacher();// PreAuthorize("hasRole('MANAGER')")
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		subjectRestService.putSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        subjectRestService.putSubject();
+    }
 
-	@Test
-	public void testPutSubjectNoBearerAuth() {
-		subjectRestService.postSubject();
+    @Test
+    public void testPutSubjectNoBearerAuth() {
+        subjectRestService.postSubject();
 
-		subjectRestService.getSubjectDto().setTeacher(userRestService.getTeacherDto());
+        subjectRestService.getSubjectDto().setTeacher(userRestService.getTeacherDto());
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID)
-				.expand(subjectRestService.getSubjectDto().getId()).body(subjectRestService.getSubjectDto()).put()
-				.build();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID)
+                .expand(subjectRestService.getSubjectDto().getId()).body(subjectRestService.getSubjectDto()).put()
+                .build();
+    }
 
-	@Test
-	public void testPutSubjectDocumentAlreadyExistException() {
-		subjectRestService.postSubject();
-		subjectRestService.postSubject2();
+    @Test
+    public void testPutSubjectDocumentAlreadyExistException() {
+        subjectRestService.postSubject();
+        subjectRestService.postSubject2();
 
-		subjectRestService.getSubjectDto().setName(subjectRestService.getSubjectDto2().getName());
-		subjectRestService.getSubjectDto().setCourse(subjectRestService.getSubjectDto2().getCourse());
+        subjectRestService.getSubjectDto().setName(subjectRestService.getSubjectDto2().getName());
+        subjectRestService.getSubjectDto().setCourse(subjectRestService.getSubjectDto2().getCourse());
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.putSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.putSubject();
+    }
 
-	@Test
-	public void testPutSubjectFieldNotFoundExceptionId() {
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand("xxx")
-				.body(subjectRestService.getSubjectDto()).bearerAuth(restService.getAuthToken().getToken()).put()
-				.build();
+    @Test
+    public void testPutSubjectFieldNotFoundExceptionId() {
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand("xxx")
+                .body(subjectRestService.getSubjectDto()).bearerAuth(restService.getAuthToken().getToken()).put()
+                .build();
 
-	}
+    }
 
-	@Test
-	public void testPutSubjectIdNull() {
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.putSubject();
+    @Test
+    public void testPutSubjectIdNull() {
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.putSubject();
 
-	}
+    }
 
-	@Test
-	public void testPutSubjectBodyNull() {
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand("xxx")
-				.body(null).bearerAuth(restService.getAuthToken().getToken()).put().build();
-	}
+    @Test
+    public void testPutSubjectBodyNull() {
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand("xxx")
+                .body(null).bearerAuth(restService.getAuthToken().getToken()).put().build();
+    }
 
-	@Test
-	public void testPutSubjectNameNull() {
-		subjectRestService.postSubject();
+    @Test
+    public void testPutSubjectNameNull() {
+        subjectRestService.postSubject();
 
-		subjectRestService.getSubjectDto().setName(null);
+        subjectRestService.getSubjectDto().setName(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.putSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.putSubject();
+    }
 
-	@Test
-	public void testPutSubjectTeacherNull() {
-		subjectRestService.postSubject();
+    @Test
+    public void testPutSubjectTeacherNull() {
+        subjectRestService.postSubject();
 
-		subjectRestService.getSubjectDto().setTeacher(null);
+        subjectRestService.getSubjectDto().setTeacher(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.putSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.putSubject();
+    }
 
-	@Test
-	public void testPutSubjectCourseNull() {
-		subjectRestService.postSubject();
+    @Test
+    public void testPutSubjectCourseNull() {
+        subjectRestService.postSubject();
 
-		subjectRestService.getSubjectDto().setCourse(null);
+        subjectRestService.getSubjectDto().setCourse(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		subjectRestService.putSubject();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        subjectRestService.putSubject();
+    }
 
-	// DELETE
-	@Test
-	public void testDeleteSubject() {
-		subjectRestService.postSubject();
+    // DELETE
+    @Test
+    public void testDeleteSubject() {
+        subjectRestService.postSubject();
 
-		subjectRestService.deleteSubject(subjectRestService.getSubjectDto().getId());
-	}
+        subjectRestService.deleteSubject(subjectRestService.getSubjectDto().getId());
 
-	@Test
-	public void testDeleteSubjectPreAuthorize() {
-		subjectRestService.postSubject();
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        subjectRestService.deleteSubject(subjectRestService.getSubjectDto().getId());
+    }
 
-		restService.loginTeacher();// PreAuthorize("hasRole('MANAGER')")
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		subjectRestService.deleteSubject(subjectRestService.getSubjectDto().getId());
-	}
+    @Test
+    public void testDeleteSubjectPreAuthorize() {
+        subjectRestService.postSubject();
 
-	@Test
-	public void testDeleteSubjectNoBearerAuth() {
-		subjectRestService.postSubject();
+        restService.loginTeacher();// PreAuthorize("hasRole('MANAGER')")
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        subjectRestService.deleteSubject(subjectRestService.getSubjectDto().getId());
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(SubjectController.PATH_ID).expand(subjectRestService.getSubjectDto().getId())
-				.delete().build();
+    @Test
+    public void testDeleteSubjectNoBearerAuth() {
+        subjectRestService.postSubject();
 
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(SubjectController.PATH_ID).expand(subjectRestService.getSubjectDto().getId())
+                .delete().build();
 
-	@Test
-	public void testDeleteSubjectForbiddenDeleteExceptionGrade() {
-		CourseDto cDto = courseRestService.getCourseByNameAndYear(CourseName.PRIMERO_A, "2018");
-		SubjectDto sDto = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cDto.getId());
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		subjectRestService.deleteSubject(sDto.getId());
-	}
+    @Test
+    public void testDeleteSubjectForbiddenDeleteExceptionGrade() {
+        CourseDto cDto = courseRestService.getCourseByNameAndYear(CourseName.PRIMERO_A, "2018");
+        SubjectDto sDto = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cDto.getId());
 
-	@Test
-	public void testDeleteSubjectFieldNotFoundExceptionId() {
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		subjectRestService.deleteSubject("xxx");
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        subjectRestService.deleteSubject(sDto.getId());
+    }
 
-	// GET
-	@Test
-	public void testGetSubjectById() {
-		subjectRestService.postSubject();
+    @Test
+    public void testDeleteSubjectFieldNotFoundExceptionId() {
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        subjectRestService.deleteSubject("xxx");
+    }
 
-		SubjectDto sDto = subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
+    // GET
+    @Test
+    public void testGetSubjectById() {
+        subjectRestService.postSubject();
 
-		assertEquals(subjectRestService.getSubjectDto(), sDto);
-	}
+        SubjectDto sDto = subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
 
-	@Test
-	public void testGetSubjectByIdPreAuthorize() {
-		subjectRestService.postSubject();
+        assertEquals(subjectRestService.getSubjectDto(), sDto);
+    }
 
-		// @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-		restService.loginAdmin();
+    @Test
+    public void testGetSubjectByIdPreAuthorize() {
+        subjectRestService.postSubject();
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
+        // @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+        restService.loginAdmin();
 
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        subjectRestService.getSubjectById(subjectRestService.getSubjectDto().getId());
 
-	@Test
-	public void testGetSubjectByIdNoBearerAuth() {
-		subjectRestService.postSubject();
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID)
-				.expand(subjectRestService.getSubjectDto().getId()).get().build();
-	}
+    @Test
+    public void testGetSubjectByIdNoBearerAuth() {
+        subjectRestService.postSubject();
 
-	@Test
-	public void testGetSubjectByIdFieldNotFoundExceptionId() {
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		subjectRestService.getSubjectById("xxx");
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_ID)
+                .expand(subjectRestService.getSubjectDto().getId()).get().build();
+    }
 
-	}
+    @Test
+    public void testGetSubjectByIdFieldNotFoundExceptionId() {
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        subjectRestService.getSubjectById("xxx");
 
-	//
-	@Test
-	public void testGetSubjectByNameAndCourse() {
-		subjectRestService.postSubject();
+    }
 
-		SubjectDto sDto = subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(),
-				subjectRestService.getSubjectDto().getCourse().getId());
+    //
+    @Test
+    public void testGetSubjectByNameAndCourse() {
+        subjectRestService.postSubject();
 
-		assertEquals(subjectRestService.getSubjectDto(), sDto);
-		
-	}
+        SubjectDto sDto = subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(),
+                subjectRestService.getSubjectDto().getCourse().getId());
 
-	@Test
-	public void testGetSubjectByNameAndCoursePreAuthorize() {
-		subjectRestService.postSubject();
+        assertEquals(subjectRestService.getSubjectDto(), sDto);
 
-		// @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-		restService.loginAdmin();
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(),
-				subjectRestService.getSubjectDto().getCourse().getId());
+    @Test
+    public void testGetSubjectByNameAndCoursePreAuthorize() {
+        subjectRestService.postSubject();
 
-	}
+        // @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+        restService.loginAdmin();
 
-	@Test
-	public void testGetSubjectByNameAndCourseNoBearerAuth() {
-		subjectRestService.postSubject();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(),
+                subjectRestService.getSubjectDto().getCourse().getId());
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_NAME)
-				.expand(subjectRestService.getSubjectDto().getName()).path(SubjectController.PATH_ID)
-				.expand(subjectRestService.getSubjectDto().getCourse().getId()).get().build();
+    }
 
-	}
+    @Test
+    public void testGetSubjectByNameAndCourseNoBearerAuth() {
+        subjectRestService.postSubject();
 
-	@Test
-	public void testGetSubjectByNameAndCourseDocumentNotFoundException() {
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(), "xxx");
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(SubjectController.SUBJECT).path(SubjectController.PATH_NAME)
+                .expand(subjectRestService.getSubjectDto().getName()).path(SubjectController.PATH_ID)
+                .expand(subjectRestService.getSubjectDto().getCourse().getId()).get().build();
 
-	}
+    }
 
-	//
-	@Test
-	public void testGetSubjects() {
-		subjectRestService.postSubject();
+    @Test
+    public void testGetSubjectByNameAndCourseDocumentNotFoundException() {
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        subjectRestService.getSubjectByNameAndCourse(subjectRestService.getSubjectDto().getName(), "xxx");
 
-		List<SubjectDto> sDtos = subjectRestService.getFullSubjects();
-		Assert.assertTrue(sDtos.size() > 0);
-	}
+    }
 
-	@Test
-	public void testGetSubjectsPreAuthorize() {
-		// @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-		restService.loginAdmin();
+    //
+    @Test
+    public void testGetSubjects() {
+        subjectRestService.postSubject();
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		subjectRestService.getFullSubjects();
+        List<SubjectDto> sDtos = subjectRestService.getFullSubjects();
+        Assert.assertTrue(sDtos.size() > 0);
+    }
 
-	}
+    @Test
+    public void testGetSubjectsPreAuthorize() {
+        // @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+        restService.loginAdmin();
 
-	@Test
-	public void testGetSubjectsNoBearerAuth() {
-		subjectRestService.postSubject();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        subjectRestService.getFullSubjects();
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(SubjectController.SUBJECT).get().build();
+    }
 
-	}
+    @Test
+    public void testGetSubjectsNoBearerAuth() {
+        subjectRestService.postSubject();
+
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(SubjectController.SUBJECT).get().build();
+
+    }
 
 }

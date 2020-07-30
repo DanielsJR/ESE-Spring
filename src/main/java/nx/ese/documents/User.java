@@ -5,7 +5,7 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.utils.NxDateFormatter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -134,11 +134,11 @@ public class User {
     @Override
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NX_DateFormatter.formatterDate(this.birthday) + ", gender=" + gender
+                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NxDateFormatter.formatterDate(this.birthday) + ", gender=" + gender
                 + ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
                 + ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
-                + createdBy + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
-                + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
+                + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

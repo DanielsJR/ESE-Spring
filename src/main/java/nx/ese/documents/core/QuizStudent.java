@@ -3,7 +3,7 @@ package nx.ese.documents.core;
 import java.util.Date;
 import java.util.List;
 
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.utils.NxDateFormatter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -74,8 +74,8 @@ public class QuizStudent {
         return "QuizStudent [" + "id=" + id
                 + ", multipleSelectionIitems=" + multipleSelectionItems + ", trueFalseItems=" + trueFalseItems
                 + ", correspondItems=" + correspondItems + ", incompleteTextItems=" + incompleteTextItems
-                + ", createdBy=" + createdBy + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser
-                + ", lastModifiedDate=" + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + ", createdBy=" + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser
+                + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class NX_Encrypting {
+public class NxEncrypting {
 
     public static final String SHA1 = "SHA-1";
 
@@ -22,13 +22,13 @@ public class NX_Encrypting {
 
     private String algorithm;
     
-    private static final Logger logger = LoggerFactory.getLogger(NX_Encrypting.class);
+    private static final Logger logger = LoggerFactory.getLogger(NxEncrypting.class);
 
-    public NX_Encrypting(String algorithm) {
+    public NxEncrypting(String algorithm) {
         this.algorithm = algorithm;
     }
 
-    public NX_Encrypting() {
+    public NxEncrypting() {
         this(SHA1);
     }
 

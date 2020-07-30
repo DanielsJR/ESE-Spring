@@ -5,10 +5,10 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class NX_ListNotEmptyValidator implements ConstraintValidator<NX_ListNotEmpty, List<?>> {
+public class NxListNotEmptyValidator implements ConstraintValidator<NxListNotEmpty, List<?>> {
 
     @Override
-    public void initialize(NX_ListNotEmpty constraint) {
+    public void initialize(NxListNotEmpty constraint) {
         // Empty, not operation
     }
 

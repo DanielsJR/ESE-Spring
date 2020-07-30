@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.utils.NxDateFormatter;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -60,8 +60,8 @@ public class Preferences {
     @Override
     public String toString() {
         return "Preferences [id=" + id + ", user=" + user + ", theme=" + theme + ", createdBy=" + createdBy
-                + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate="
-                + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate="
+                + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
     @Override

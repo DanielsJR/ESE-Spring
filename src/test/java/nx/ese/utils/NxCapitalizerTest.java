@@ -5,12 +5,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class NX_CapitalizerTest {
+public class NxCapitalizerTest {
 
     @Test
     public void testCapitalizer() {
         String withoutCap = "san ramon";
-        String cap = NX_Capitalizer.capitalizer(withoutCap);
+        String cap = NxCapitalizer.capitalizer(withoutCap);
         assertEquals("San Ramon", cap);
     }
 

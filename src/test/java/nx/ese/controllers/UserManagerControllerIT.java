@@ -292,6 +292,9 @@ public class UserManagerControllerIT {
         userRestService.patchManagerResetPass(userRestService.getManagerDto().getUsername(), newPass);
 
         restService.loginUser(userRestService.getManagerDto().getUsername(), newPass);
+
+        UserDto uDto = userRestService.getUserByUsernameSecure(userRestService.getManagerDto().getUsername());
+        assertEquals(uDto, userRestService.getManagerDto());
     }
 
     @Test
@@ -426,6 +429,9 @@ public class UserManagerControllerIT {
         userRestService.postManager();
 
         userRestService.deleteManager(userRestService.getManagerDto().getUsername());
+
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        userRestService.getManagerByID(userRestService.getManagerDto().getUsername());
     }
 
     @Test

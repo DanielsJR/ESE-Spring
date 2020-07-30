@@ -27,300 +27,301 @@ import nx.ese.services.SubjectRestService;
 @TestPropertySource(locations = "classpath:test.properties")
 public class GradeControllerIT {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-	@Autowired
-	private GradeRestService gradeRestService;
-	
-	@Autowired
-	private SubjectRestService subjectRestService;
+    @Autowired
+    private GradeRestService gradeRestService;
 
-	@Autowired
-	private RestService restService;
+    @Autowired
+    private SubjectRestService subjectRestService;
 
-	@Before
-	public void before() {
-		gradeRestService.createGradesDto();
-		restService.loginTeacher();
-	}
+    @Autowired
+    private RestService restService;
 
-	@After
-	public void delete() {
-		gradeRestService.deleteGrades();
-	}
+    @Before
+    public void before() {
+        gradeRestService.createGradesDto();
+        restService.loginTeacher();
+    }
 
-	// POST********************************
-	@Test
-	public void testPostGrade() {
-		gradeRestService.postGrade();
+    @After
+    public void delete() {
+        gradeRestService.deleteGrades();
+    }
 
-		GradeDto gDto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
-		assertEquals(gDto, gradeRestService.getGradeDto());
+    // POST********************************
+    @Test
+    public void testPostGrade() {
+        gradeRestService.postGrade();
 
-		gradeRestService.postGrade2();
+        GradeDto gDto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
+        assertEquals(gDto, gradeRestService.getGradeDto());
 
-		GradeDto gDto2 = gradeRestService.getGradeById(gradeRestService.getGradeDto2().getId());
-		assertEquals(gDto2.getId(), gradeRestService.getGradeDto2().getId());
-	}
+        gradeRestService.postGrade2();
 
-	@Test
-	public void testPostGradePreAuthorize() {
-		restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
+        GradeDto gDto2 = gradeRestService.getGradeById(gradeRestService.getGradeDto2().getId());
+        assertEquals(gDto2.getId(), gradeRestService.getGradeDto2().getId());
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		gradeRestService.postGrade();
-	}
+    @Test
+    public void testPostGradePreAuthorize() {
+        restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
 
-	@Test
-	public void testPostGradeNoBearerAuth() {
-		gradeRestService.postGrade();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.postGrade();
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(GradeController.GRADE).body(gradeRestService.getGradeDto()).post().build();
-	}
+    @Test
+    public void testPostGradeNoBearerAuth() {
+        gradeRestService.postGrade();
 
-	@Test
-	public void testPostGradeFieldInvalidExceptionId() {
-		gradeRestService.postGrade();
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(GradeController.GRADE).body(gradeRestService.getGradeDto()).post().build();
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.postGrade();// it goes with Id
-	}
+    @Test
+    public void testPostGradeFieldInvalidExceptionId() {
+        gradeRestService.postGrade();
 
-	@Test
-	public void testPostGradeDocumentAlreadyExistException() {
-		gradeRestService.postGrade();
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.postGrade();// it goes with Id
+    }
 
-		gradeRestService.getGradeDto2().setStudent(gradeRestService.getGradeDto().getStudent());
-		gradeRestService.getGradeDto2().setEvaluation(gradeRestService.getGradeDto().getEvaluation());
+    @Test
+    public void testPostGradeDocumentAlreadyExistException() {
+        gradeRestService.postGrade();
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.postGrade2();
+        gradeRestService.getGradeDto2().setStudent(gradeRestService.getGradeDto().getStudent());
+        gradeRestService.getGradeDto2().setEvaluation(gradeRestService.getGradeDto().getEvaluation());
 
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.postGrade2();
 
-	@Test
-	public void testPostGradeBodyNull() {
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		restService.restBuilder().path(GradeController.GRADE).bearerAuth(restService.getAuthToken().getToken())
-				.body(null).post().build();
-	}
+    }
 
+    @Test
+    public void testPostGradeBodyNull() {
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        restService.restBuilder().path(GradeController.GRADE).bearerAuth(restService.getAuthToken().getToken())
+                .body(null).post().build();
+    }
 
 
-	@Test
-	public void testPostGradeStudentNull() {
-		gradeRestService.getGradeDto().setStudent(null);
+    @Test
+    public void testPostGradeStudentNull() {
+        gradeRestService.getGradeDto().setStudent(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.postGrade();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.postGrade();
+    }
 
-	@Test
-	public void testPostGradeEvaluationNull() {
-		gradeRestService.getGradeDto().setEvaluation(null);
+    @Test
+    public void testPostGradeEvaluationNull() {
+        gradeRestService.getGradeDto().setEvaluation(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.postGrade();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.postGrade();
+    }
 
 
-	// PUT********************************
-	@Test
-	public void testPutGrade() {
-		gradeRestService.postGrade();
+    // PUT********************************
+    @Test
+    public void testPutGrade() {
+        gradeRestService.postGrade();
 
-		gradeRestService.getGradeDto().setGrade(1.0);
-		gradeRestService.putGrade();
+        gradeRestService.getGradeDto().setGrade(1.0);
+        gradeRestService.putGrade();
 
-		GradeDto gDto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
-		Assert.assertEquals(0, Double.compare(gDto.getGrade(), 1.0));
-	}
+        GradeDto gDto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
+        Assert.assertEquals(0, Double.compare(gDto.getGrade(), 1.0));
+    }
 
-	@Test
-	public void testPutGradePreAuthorize() {
-		gradeRestService.postGrade();
+    @Test
+    public void testPutGradePreAuthorize() {
+        gradeRestService.postGrade();
 
-		gradeRestService.getGradeDto().setGrade(1.0);
+        gradeRestService.getGradeDto().setGrade(1.0);
 
-		restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
+        restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		gradeRestService.putGrade();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.putGrade();
+    }
 
-	@Test
-	public void testPutGradeNoBearerAuth() {
-		gradeRestService.postGrade();
+    @Test
+    public void testPutGradeNoBearerAuth() {
+        gradeRestService.postGrade();
 
-		gradeRestService.getGradeDto().setGrade(1.0);
+        gradeRestService.getGradeDto().setGrade(1.0);
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
-				.expand(gradeRestService.getGradeDto().getId()).body(gradeRestService.getGradeDto()).put().build();
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
+                .expand(gradeRestService.getGradeDto().getId()).body(gradeRestService.getGradeDto()).put().build();
 
-	}
+    }
 
-	@Test
-	public void testPutGradeDocumentAlreadyExistException() {
-		gradeRestService.postGrade();
-		gradeRestService.postGrade2();
+    @Test
+    public void testPutGradeDocumentAlreadyExistException() {
+        gradeRestService.postGrade();
+        gradeRestService.postGrade2();
 
-		gradeRestService.getGradeDto().setStudent(gradeRestService.getGradeDto2().getStudent());
-		gradeRestService.getGradeDto().setEvaluation(gradeRestService.getGradeDto2().getEvaluation());
+        gradeRestService.getGradeDto().setStudent(gradeRestService.getGradeDto2().getStudent());
+        gradeRestService.getGradeDto().setEvaluation(gradeRestService.getGradeDto2().getEvaluation());
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.putGrade();
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.putGrade();
 
-	}
+    }
 
-	@Test
-	public void testPutGradeFieldNotFoundExceptionId() {
-		gradeRestService.getGradeDto().setGrade(1.0);
+    @Test
+    public void testPutGradeFieldNotFoundExceptionId() {
+        gradeRestService.getGradeDto().setGrade(1.0);
 
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID).expand("xxx")
-				.bearerAuth(restService.getAuthToken().getToken()).body(gradeRestService.getGradeDto()).put().build();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID).expand("xxx")
+                .bearerAuth(restService.getAuthToken().getToken()).body(gradeRestService.getGradeDto()).put().build();
+    }
 
-	@Test
-	public void testPutGradeBodyNull() {
-		gradeRestService.postGrade();
+    @Test
+    public void testPutGradeBodyNull() {
+        gradeRestService.postGrade();
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
-				.expand(gradeRestService.getGradeDto().getId()).bearerAuth(restService.getAuthToken().getToken())
-				.body(null).put().build();
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
+                .expand(gradeRestService.getGradeDto().getId()).bearerAuth(restService.getAuthToken().getToken())
+                .body(null).put().build();
 
-	}
+    }
 
 
-	@Test
-	public void testPutGradeStudentNull() {
-		gradeRestService.postGrade();
+    @Test
+    public void testPutGradeStudentNull() {
+        gradeRestService.postGrade();
 
-		gradeRestService.getGradeDto().setStudent(null);
+        gradeRestService.getGradeDto().setStudent(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.putGrade();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.putGrade();
+    }
 
-	@Test
-	public void testPutGradeEvaluationNull() {
-		gradeRestService.postGrade();
+    @Test
+    public void testPutGradeEvaluationNull() {
+        gradeRestService.postGrade();
 
-		gradeRestService.getGradeDto().setEvaluation(null);
+        gradeRestService.getGradeDto().setEvaluation(null);
 
-		thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-		gradeRestService.putGrade();
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.putGrade();
+    }
 
 
-	// DELETE
-	@Test
-	public void testDeleteGrade() {
-		gradeRestService.postGrade();
+    // DELETE
+    @Test
+    public void testDeleteGrade() {
+        gradeRestService.postGrade();
 
-		gradeRestService.deleteGrade(gradeRestService.getGradeDto().getId());
-	}
+        gradeRestService.deleteGrade(gradeRestService.getGradeDto().getId());
 
-	@Test
-	public void testDeleteGradePreAuthorize() {
-		gradeRestService.postGrade();
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
+    }
 
-		restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
+    @Test
+    public void testDeleteGradePreAuthorize() {
+        gradeRestService.postGrade();
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		gradeRestService.deleteGrade(gradeRestService.getGradeDto().getId());
-	}
+        restService.loginManager();// PreAuthorize("hasRole('TEACHER')")
 
-	@Test
-	public void testDeleteGradeNoBearerAuth() {
-		gradeRestService.postGrade();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.deleteGrade(gradeRestService.getGradeDto().getId());
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
-				.expand(gradeRestService.getGradeDto().getId()).delete().build();
-	}
+    @Test
+    public void testDeleteGradeNoBearerAuth() {
+        gradeRestService.postGrade();
 
-	@Test
-	public void testDeleteGradeFieldNotFoundExceptionId() {
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		gradeRestService.deleteGrade("xxx");
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
+                .expand(gradeRestService.getGradeDto().getId()).delete().build();
+    }
 
-	// GET********************************
-	@Test
-	public void testGetGradeById() {
-		gradeRestService.postGrade();
-		GradeDto Gdto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
-		Assert.assertEquals(Gdto, gradeRestService.getGradeDto());
-	}
+    @Test
+    public void testDeleteGradeFieldNotFoundExceptionId() {
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        gradeRestService.deleteGrade("xxx");
+    }
 
-	@Test
-	public void testGetGradeByIdPreAuthorize() {
-		gradeRestService.postGrade();
+    // GET********************************
+    @Test
+    public void testGetGradeById() {
+        gradeRestService.postGrade();
+        GradeDto Gdto = gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
+        Assert.assertEquals(Gdto, gradeRestService.getGradeDto());
+    }
 
-		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
-									// MANAGER")
+    @Test
+    public void testGetGradeByIdPreAuthorize() {
+        gradeRestService.postGrade();
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
+        restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
+        // MANAGER")
 
-	}
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getGradeById(gradeRestService.getGradeDto().getId());
 
-	@Test
-	public void testGetGradeByIdNoBearerAuth() {
-		gradeRestService.postGrade();
+    }
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
-				.expand(gradeRestService.getGradeDto().getId()).body(gradeRestService.getGradeDto().getId()).get()
-				.build();
-	}
+    @Test
+    public void testGetGradeByIdNoBearerAuth() {
+        gradeRestService.postGrade();
 
-	@Test
-	public void testGetGradeByIdFieldNotFoundExceptionId() {
-		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-		gradeRestService.getGradeById("xxx");
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(GradeController.GRADE).path(GradeController.PATH_ID)
+                .expand(gradeRestService.getGradeDto().getId()).body(gradeRestService.getGradeDto().getId()).get()
+                .build();
+    }
 
-	}
+    @Test
+    public void testGetGradeByIdFieldNotFoundExceptionId() {
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        gradeRestService.getGradeById("xxx");
+    }
 
-	//
-	@Test
-	public void testGetFullGrades() {
-		gradeRestService.getFullGrades();
+    //
+    @Test
+    public void testGetFullGrades() {
+        gradeRestService.getFullGrades();
 
-		Assert.assertTrue(gradeRestService.getListGradeDto().size() > 0);
-	}
+        Assert.assertTrue(gradeRestService.getListGradeDto().size() > 0);
+    }
 
-	@Test
-	public void testGetFullGradesPreAuthorize() {
-		restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
-									// MANAGER")
+    @Test
+    public void testGetFullGradesPreAuthorize() {
+        restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
+        // MANAGER")
 
-		thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-		gradeRestService.getFullGrades();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getFullGrades();
 
-	}
+    }
 
-	@Test
-	public void testGetFullGradesNoBearerAuth() {
-		gradeRestService.getFullGrades();
+    @Test
+    public void testGetFullGradesNoBearerAuth() {
+        gradeRestService.getFullGrades();
 
-		thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-		restService.restBuilder().path(GradeController.GRADE).get().build();
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder().path(GradeController.GRADE).get().build();
 
-	}
-	
-	@Test
-	public void testGetGradesBySubject() {
-		gradeRestService.postGrade();
-	    String sjcId = subjectRestService.getSubjectDto().getId();
-	    gradeRestService.getGradesBySubject(sjcId);
+    }
 
-		Assert.assertTrue(gradeRestService.getListGradeDto().size() > 0);
-	}
+    @Test
+    public void testGetGradesBySubject() {
+        gradeRestService.postGrade();
+        String sjcId = subjectRestService.getSubjectDto().getId();
+        gradeRestService.getGradesBySubject(sjcId);
+
+        Assert.assertTrue(gradeRestService.getListGradeDto().size() > 0);
+    }
 
 }

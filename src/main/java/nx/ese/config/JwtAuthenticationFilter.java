@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private TokenProvider jwtProvider;
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
@@ -46,14 +46,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = jwtProvider.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                logger.error("an error occured during getting username from token", e);
+                log.error("an error occured during getting username from token", e);
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                log.warn("the token is expired and not valid anymore", e);
             } catch (SignatureException e) {
-                logger.error("Authentication Failed. Username or Password not valid.");
+                log.error("Authentication Failed. Username or Password not valid.");
             }
         } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
+            log.warn("couldn't find bearer string, will ignore the header");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.info("Access granted to: {}", username);
+                log.info("Access granted to: {}", username);
             }
         }
 

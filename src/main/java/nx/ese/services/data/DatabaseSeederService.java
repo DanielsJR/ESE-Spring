@@ -3,7 +3,6 @@ package nx.ese.services.data;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ import nx.ese.repositories.QuizRepository;
 import nx.ese.repositories.QuizStudentRepository;
 import nx.ese.repositories.SubjectRepository;
 import nx.ese.repositories.UserRepository;
-import nx.ese.utils.NX_UtilBase64Image;
+import nx.ese.utils.NxUtilBase64Image;
 
 @Service
 public class DatabaseSeederService {
@@ -110,13 +109,13 @@ public class DatabaseSeederService {
 
     }
 
-    public void seedDatabase(String ymlFileName) throws IOException {
+    private void seedDatabase(String ymlFileName) throws IOException {
         assert ymlFileName != null && !ymlFileName.isEmpty();
         Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
         InputStream input = new ClassPathResource(ymlFileName).getInputStream();
         DatabaseGraph dbGraph = yamlParser.load(input);
 
-        logger.warn("------------------------- Seeding with: " + ymlFileName + " -------------------------");
+        logger.warn("------------------------- Seeding with: {} -------------------------", ymlFileName);
 
         if (dbGraph.getUserList() != null) {
             this.userRepository.saveAll(dbGraph.getUserList());
@@ -182,12 +181,10 @@ public class DatabaseSeederService {
     public void setAvatars() {
         logger.warn("------------------------- Setting Avatars -------------------------");
         List<User> users = userRepository.findAll();
-        Iterator<User> it = users.iterator();
-        while (it.hasNext()) {
-            User user = it.next();
+        for (User user : users) {
             if (user.getAvatar() != null) {
                 String path = Avatar.SERVER_AVATAR_PATH + user.getAvatar().getName();
-                String avatarBase64 = NX_UtilBase64Image.encoder(path);
+                String avatarBase64 = NxUtilBase64Image.encoder(path);
                 user.getAvatar().setData(avatarBase64);
                 userRepository.save(user);
             }

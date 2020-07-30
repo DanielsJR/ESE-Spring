@@ -2,7 +2,7 @@ package nx.ese.documents.core;
 
 import java.util.Date;
 
-import nx.ese.utils.NX_DateFormatter;
+import nx.ese.utils.NxDateFormatter;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -77,7 +77,7 @@ public class Grade {
     public String toString() {
         return "Grade [id=" + id + ", student=" + student + ", evaluation=" + evaluation + ", grade=" + grade
                 + ", quizStudent=" + quizStudent + ", createdBy=" + createdBy + ", createdDate="
-                + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
+                + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
 
     }
 

@@ -256,6 +256,9 @@ public class EvaluationControllerIT {
 		evaluationRestService.postEvaluation();
 
 		evaluationRestService.deleteEvaluation(evaluationRestService.getEvaluationDto().getId());
+
+		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+		evaluationRestService.getEvaluationById(evaluationRestService.getEvaluationDto().getId());
 	}
 
 	@Test
@@ -317,7 +320,6 @@ public class EvaluationControllerIT {
 	public void testGetEvaluationByIdFieldNotFoundExceptionId() {
 		thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
 		evaluationRestService.getEvaluationById("xxx");
-
 	}
 
 	//

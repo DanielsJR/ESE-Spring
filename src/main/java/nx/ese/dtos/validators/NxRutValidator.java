@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class NX_RutValidator implements ConstraintValidator<NX_RutValid, String> {
+public class NxRutValidator implements ConstraintValidator<NxRutValid, String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(NX_RutValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(NxRutValidator.class);
 
     @Override
     public boolean isValid(String rut, ConstraintValidatorContext arg1) {
