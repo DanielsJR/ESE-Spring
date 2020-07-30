@@ -174,13 +174,13 @@ public class UserRestService {
         try {
             this.deleteManager(managerDto.getUsername());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "DTO1 nothing to delete");
+            logger.info("managerDto1 nothing to delete");
         }
 
         try {
             this.deleteManager(managerDto2.getUsername());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "DTO2 nothing to delete");
+            logger.info("managerDto2 nothing to delete");
         }
         logger.info("**************************************************************************************");
 
@@ -259,13 +259,13 @@ public class UserRestService {
         try {
             this.deleteTeacher(teacherDto.getUsername());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "DTO1 nothing to delete");
+            logger.info("teacherDto1 nothing to delete");
         }
 
         try {
             this.deleteTeacher(teacherDto2.getUsername());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "DTO2 nothing to delete");
+            logger.info("teacherDto2 nothing to delete");
         }
         logger.info("*******************************************************************************************");
     }
@@ -336,13 +336,13 @@ public class UserRestService {
         try {
             this.deleteStudent(studentDto.getUsername());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "DTO1 nothing to delete");
+            logger.info("studentDto1 nothing to delete");
         }
 
         try {
             this.deleteStudent(studentDto2.getUsername());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "DTO2 nothing to delete");
+            logger.info("studentDto2 nothing to delete");
         }
 
         logger.info("******************************************************************************************");

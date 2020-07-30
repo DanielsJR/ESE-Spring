@@ -2,6 +2,7 @@ package nx.ese.services;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -26,11 +27,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import nx.ese.documents.LoginUser;
 
 
-
 public class RestBuilder<T> {
 
     private static final String SERVER_URI_DEFAULT = "http://localhost";
-    
+
     private static final int PORT_DEFAULT = 8080;
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -58,7 +58,7 @@ public class RestBuilder<T> {
     private HttpMethod method;
 
     private boolean log;
-    
+
     private static final Logger logger = LoggerFactory.getLogger(RestBuilder.class);
 
     public RestBuilder(String serverUri, int port) {
@@ -109,15 +109,15 @@ public class RestBuilder<T> {
         this.authorization = authHeader;
         return this;
     }
-    
+
     public RestBuilder<T> bearerAuth(String token) {
         String authHeader = "Bearer " + token;
         this.authorization = authHeader;
         return this;
     }
-    
+
     public RestBuilder<T> login(String username, String password) {
-        LoginUser loginUser= new LoginUser();
+        LoginUser loginUser = new LoginUser();
         loginUser.setUsername(username);
         loginUser.setPassword(password);
         this.body = loginUser;
@@ -140,7 +140,7 @@ public class RestBuilder<T> {
     }
 
     public RestBuilder<T> accept(MediaType mediaType) {
-        if(this.mediaTytes.isEmpty()) {
+        if (this.mediaTytes.isEmpty()) {
             this.mediaTytes.add(MediaType.APPLICATION_JSON);
         }
         this.mediaTytes.add(mediaType);
@@ -197,18 +197,21 @@ public class RestBuilder<T> {
     public T build() {
         ResponseEntity<T> response;
         if (log) {
-        	logger.info(method + " " + this.path + this.headers() + "{" + this.body + "}");
+            String msg = MessageFormat.format("method:{0}  path:{1}  headers:{2}  boty:{3}", method, this.path, this.headers(), this.body);
+            logger.info(msg);
         }
         if (body != null && !method.equals(HttpMethod.GET)) {
             response = restTemplate.exchange(this.uri(), method, new HttpEntity<Object>(body, this.headers()), clazz);
             if (log) {
-            	logger.info(response.getStatusCode() + "==" + response.getHeaders());
+                String msg = MessageFormat.format("{0} == {1}", response.getStatusCode(), response.getHeaders());
+                logger.info(msg);
             }
             return response.getBody();
         } else {
             response = restTemplate.exchange(this.uri(), method, new HttpEntity<Object>(this.headers()), clazz);
             if (log) {
-            	logger.info(response.getStatusCode() + "==" + response.getHeaders());
+                String msg = MessageFormat.format("{0} == {1}", response.getStatusCode(), response.getHeaders());
+                logger.info(msg);
             }
             return response.getBody();
         }

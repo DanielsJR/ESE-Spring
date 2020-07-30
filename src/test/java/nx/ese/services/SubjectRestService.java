@@ -65,13 +65,13 @@ public class SubjectRestService {
         try {
             this.deleteSubject(this.subjectDto.getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "subjectDto: nothing to delete");
+            logger.info("subjectDto: nothing to delete");
         }
 
         try {
             this.deleteSubject(this.subjectDto2.getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "subjectDto2: nothing to delete");
+            logger.info("subjectDto2: nothing to delete");
         }
 
         this.courseRestService.deleteCourses();

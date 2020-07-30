@@ -108,13 +108,13 @@ public class QuizStudentRestService {
         try {
             this.deleteQuizStudent(this.getQuizStudentDto().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "quizStudentDto: nothing to delete");
+            logger.info("quizStudentDto: nothing to delete");
         }
 
         try {
             this.deleteQuizStudent(this.getQuizStudentDto2().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "quizStudentDto2: nothing to delete");
+            logger.info("quizStudentDto2: nothing to delete");
         }
 
         this.subjectRestService.deleteSubjects();

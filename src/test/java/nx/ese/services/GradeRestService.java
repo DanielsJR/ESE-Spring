@@ -65,13 +65,13 @@ public class GradeRestService {
         try {
             this.deleteGrade(this.getGradeDto().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "gradeDto: nothing to delete");
+            logger.info("gradeDto: nothing to delete");
         }
 
         try {
             this.deleteGrade(this.getGradeDto2().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "gradeDto2: nothing to delete");
+            logger.info("gradeDto2: nothing to delete");
         }
 
         this.evaluationRestService.deleteEvaluationsDto();

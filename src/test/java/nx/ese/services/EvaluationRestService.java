@@ -69,13 +69,13 @@ public class EvaluationRestService {
         try {
             this.deleteEvaluation(this.getEvaluationDto().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "evaluationDto: nothing to delete");
+            logger.info("evaluationDto: nothing to delete");
         }
 
         try {
             this.deleteEvaluation(this.getEvaluationDto2().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "evaluationDto2: nothing to delete");
+            logger.info("evaluationDto2: nothing to delete");
         }
 
         this.subjectRestService.deleteSubjects();

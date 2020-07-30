@@ -8,6 +8,7 @@ import nx.ese.documents.Gender;
 import nx.ese.documents.Role;
 import nx.ese.dtos.UserDto;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class UserTestDto {
@@ -109,6 +110,17 @@ public class UserTestDto {
         this.createdDate = user.getCreatedDate();
         this.lastModifiedUser = user.getLastModifiedUser();
         this.lastModifiedDate = user.getLastModifiedDate();
+    }
+
+    @Override
+    public String toString() {
+
+        return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NX_DateFormatter.formatterDate(this.birthday) + ", gender=" + gender
+                + ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
+                + ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
+                + createdBy + ", createdDate=" + NX_DateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="
+                + NX_DateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 
 

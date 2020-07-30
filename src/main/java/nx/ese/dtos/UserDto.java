@@ -8,7 +8,6 @@ import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -126,19 +125,10 @@ public class UserDto {
     }
 
     // for tests
-    /*public UserDto(String usernamePass) {
-        this(null, usernamePass, usernamePass + "@ESE1" , usernamePass, usernamePass, null, null, null, null, null, null,
-                null, null, null, true);
-    }*/
-
-    // for tests
     public UserDto(String usernamePass) {
-        this.setUsername(usernamePass);
-        this.password = usernamePass + "@ESE1";
-        this.setFirstName(usernamePass);
-        this.setLastName(usernamePass);
+        this(null, usernamePass, usernamePass + "@ESE1", usernamePass, usernamePass, null, null, null, null, null, null,
+                null, null, null, true);
     }
-
 
     // output
     public UserDto(User user) {

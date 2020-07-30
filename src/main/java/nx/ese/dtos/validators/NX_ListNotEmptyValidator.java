@@ -9,6 +9,7 @@ public class NX_ListNotEmptyValidator implements ConstraintValidator<NX_ListNotE
 
     @Override
     public void initialize(NX_ListNotEmpty constraint) {
+        // Empty, not operation
     }
 
     @Override

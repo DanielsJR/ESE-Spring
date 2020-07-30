@@ -72,13 +72,13 @@ public class CourseRestService {
             try {
                 this.deleteCourse(this.courseDto.getId());
             } catch (Exception e) {
-                logger.info("error: " + e.getMessage() + "courseDto: nothing to delete");
+                logger.info("courseDto: nothing to delete");
             }
 
             try {
                 this.deleteCourse(this.courseDto2.getId());
             } catch (Exception e) {
-                logger.info("error: " + e.getMessage() + "courseDto2: nothing to delete");
+                logger.info("courseDto2: nothing to delete");
             }
 
             this.userRestService.deleteTeachers();

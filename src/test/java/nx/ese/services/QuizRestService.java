@@ -131,13 +131,13 @@ public class QuizRestService {
         try {
             this.deleteQuiz(this.getQuizDto().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "quizDto: nothing to delete");
+            logger.info("quizDto: nothing to delete");
         }
 
         try {
             this.deleteQuiz(this.getQuizDto2().getId());
         } catch (Exception e) {
-            logger.info("error: " + e.getMessage() + "quizDto2: nothing to delete");
+            logger.info("quizDto2: nothing to delete");
         }
 
         this.userRestService.deleteTeachers();
