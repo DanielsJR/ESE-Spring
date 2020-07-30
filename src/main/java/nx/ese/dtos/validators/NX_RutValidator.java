@@ -1,9 +1,14 @@
 package nx.ese.dtos.validators;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class NX_RutValidator implements ConstraintValidator<NX_RutValid, String> {
+
+    private static final Logger logger = LoggerFactory.getLogger(NX_RutValidator.class);
 
     @Override
     public boolean isValid(String rut, ConstraintValidatorContext arg1) {
@@ -26,7 +31,9 @@ public class NX_RutValidator implements ConstraintValidator<NX_RutValid, String>
                 }
 
             } catch (java.lang.NumberFormatException e) {
+                logger.error(e.getMessage());
             } catch (Exception e) {
+                logger.error(e.getMessage());
             }
             return validacion;
         } else {

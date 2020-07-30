@@ -64,7 +64,7 @@ public class WebSocketAuthChannelInterceptorAdapter extends ChannelInterceptorAd
                 if (jwtTokenProvider.validateToken(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = jwtTokenProvider.getAuthentication(authToken, userDetails);
                     accessor.setUser(authentication);
-                    logger.info("Access granted to:" + username + "in WebSocket");
+                    logger.info("Access granted to: {} in WebSocket",username);
                 }
             }
         }

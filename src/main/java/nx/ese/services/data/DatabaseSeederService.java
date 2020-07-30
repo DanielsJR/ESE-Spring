@@ -96,7 +96,7 @@ public class DatabaseSeederService {
                     this.seedDatabase(ymlFileName.get());
                     this.setAvatars();
                 } catch (IOException e) {
-                    logger.error("File " + ymlFileName + " doesn't exist or can't be opened");
+                    logger.error("File {} doesn't exist or can't be opened", ymlFileName);
                 }
             } else {
                 this.createAdminIfNotExist();
