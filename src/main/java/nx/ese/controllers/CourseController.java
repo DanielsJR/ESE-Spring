@@ -35,117 +35,151 @@ import nx.ese.services.UserService;
 @RequestMapping(CourseController.COURSE)
 public class CourseController {
 
-	public static final String COURSE = "/courses";
-	public static final String NAME = "/name";
-	public static final String YEAR = "/year";
-	public static final String TEACHER_NAME = "/teacherName";
-	public static final String STUDENT_NAME = "/studentName";
+    public static final String COURSE = "/courses";
+    public static final String NAME = "/name";
+    public static final String YEAR = "/year";
+    public static final String STUDENT_ID = "/studentId";
+    public static final String STUDENT_NAME = "/studentName";
+    public static final String TEACHER_ID = "/teacherId";
+    public static final String TEACHER_NAME = "/teacherName";
 
-	public static final String PATH_ID = "/{id}";
-	public static final String PATH_NAME = "/{name}";
-	public static final String PATH_YEAR = "/{year}";
-	public static final String PATH_TEACHER_NAME = "/{teacherName}";
-	public static final String PATH_STUDENT_NAME = "/{studentName}";
-	
+    public static final String PATH_ID = "/{id}";
+    public static final String PATH_NAME = "/{name}";
+    public static final String PATH_YEAR = "/{year}";
+    public static final String PATH_STUDENT_ID = "/{studentId}";
+    public static final String PATH_STUDENT_NAME = "/{studentName}";
+    public static final String PATH_TEACHER_ID = "/{teacherId}";
+    public static final String PATH_TEACHER_NAME = "/{teacherName}";
 
-	@Autowired
-	private CourseService courseService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private CourseService courseService;
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@PostMapping()
-	@ResponseStatus(HttpStatus.CREATED)
-	public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) throws FieldAlreadyExistException,
-			FieldInvalidException, DocumentAlreadyExistException {
+    @Autowired
+    private UserService userService;
 
-		if (!this.courseService.isIdNull(courseDto))
-			throw new FieldInvalidException("Id");
+    @PreAuthorize("hasRole('MANAGER')")
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseDto createCourse(@Valid @RequestBody CourseDto courseDto) throws FieldAlreadyExistException,
+            FieldInvalidException, DocumentAlreadyExistException {
 
-		if (this.courseService.nameAndYearRepeated(courseDto))
-			throw new DocumentAlreadyExistException("Curso");
+        if (!this.courseService.isIdNull(courseDto))
+            throw new FieldInvalidException("Id");
 
-		if (this.courseService.chiefTeacherRepeated(courseDto))
-			throw new FieldAlreadyExistException("Profesor Jefe");
+        if (this.courseService.nameAndYearRepeated(courseDto))
+            throw new DocumentAlreadyExistException("Curso");
 
-		if (this.courseService.studentsRepeatedInCoursesByYear(courseDto))
-			throw new FieldAlreadyExistException("Estudiante");
+        if (this.courseService.chiefTeacherRepeated(courseDto))
+            throw new FieldAlreadyExistException("Profesor Jefe");
 
-		return this.courseService.createCourse(courseDto);
-	}
+        if (this.courseService.studentsRepeatedInDto(courseDto))
+            throw new FieldAlreadyExistException("Estudiante en DTO");
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@PutMapping(PATH_ID)
-	public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
-			throws FieldNotFoundException, FieldAlreadyExistException,
-			DocumentAlreadyExistException {
+        if (this.courseService.studentsRepeatedInCoursesByYear(courseDto))
+            throw new FieldAlreadyExistException("Estudiante en otro Curso");
 
-		if (this.courseService.nameAndYearRepeated(courseDto))
-			throw new DocumentAlreadyExistException("Curso");
+        return this.courseService.createCourse(courseDto);
+    }
 
-		if (this.courseService.chiefTeacherRepeated(courseDto))
-			throw new FieldAlreadyExistException("Profesor Jefe");
+    @PreAuthorize("hasRole('MANAGER')")
+    @PutMapping(PATH_ID)
+    public CourseDto modifyCourse(@PathVariable String id, @Valid @RequestBody CourseDto courseDto)
+            throws FieldNotFoundException, FieldAlreadyExistException,
+            DocumentAlreadyExistException {
 
-		if (this.courseService.studentsRepeatedInCoursesByYear(courseDto))
-			throw new FieldAlreadyExistException("Estudiante");
+        if (this.courseService.nameAndYearRepeated(courseDto))
+            throw new DocumentAlreadyExistException("Curso");
 
-		return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
+        if (this.courseService.chiefTeacherRepeated(courseDto))
+            throw new FieldAlreadyExistException("Profesor Jefe");
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@DeleteMapping(PATH_ID)
-	public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException, ForbiddenDeleteException {
+        if (this.courseService.studentsRepeatedInDto(courseDto))
+            throw new FieldAlreadyExistException("Estudiante en DTO");
 
-		if (this.courseService.isCourseInSubject(id))
-			throw new ForbiddenDeleteException("Curso tiene asignatura(s)");
+        if (this.courseService.studentsRepeatedInCoursesByYear(courseDto))
+            throw new FieldAlreadyExistException("Estudiante en otro Curso");
 
-		return this.courseService.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
+        return this.courseService.modifyCourse(id, courseDto).orElseThrow(() -> new FieldNotFoundException("Id"));
+    }
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping(PATH_ID)
-	public CourseDto getCourseById(@PathVariable String id) throws FieldNotFoundException {
-		return this.courseService.getCourseById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
-	}
+    @PreAuthorize("hasRole('MANAGER')")
+    @DeleteMapping(PATH_ID)
+    public CourseDto deleteCourse(@PathVariable String id) throws FieldNotFoundException, ForbiddenDeleteException {
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping(NAME + PATH_NAME + PATH_YEAR)
-	public CourseDto getCourseByNameAndYear(@PathVariable CourseName name, @PathVariable String year)
-			throws DocumentNotFoundException {
+        if (this.courseService.isCourseInSubject(id))
+            throw new ForbiddenDeleteException("Curso tiene asignatura(s)");
 
-		return this.courseService.getCourseByNameAndYear(name, year)
-				.orElseThrow(() -> new DocumentNotFoundException("Course"));
-	}
+        return this.courseService.deleteCourse(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+    }
 
-	@PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-	@GetMapping(YEAR + PATH_YEAR)
-	public List<CourseDto> getFullCoursesByYear(@PathVariable String year) {
-		return this.courseService.getFullCoursesByYear(year).orElse(Collections.emptyList());
-	}
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(PATH_ID)
+    public CourseDto getCourseById(@PathVariable String id) throws FieldNotFoundException {
+        return this.courseService.getCourseById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+    }
 
-	@PreAuthorize("hasRole('MANAGER')")
-	@GetMapping(TEACHER_NAME + PATH_TEACHER_NAME + PATH_YEAR)
-	public CourseDto getCourseByChiefTeacherNameAndYear(@PathVariable String teacherName, @PathVariable String year)
-			throws DocumentNotFoundException, FieldNotFoundException {
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(NAME + PATH_NAME + PATH_YEAR)
+    public CourseDto getCourseByNameAndYear(@PathVariable CourseName name, @PathVariable String year)
+            throws DocumentNotFoundException {
 
-		if (!this.userService.existsUserUsername(teacherName))
-			throw new FieldNotFoundException("Nombre de Usuario");
+        return this.courseService.getCourseByNameAndYear(name, year)
+                .orElseThrow(() -> new DocumentNotFoundException("Course"));
+    }
 
-		return this.courseService.getCourseByChiefTeacherNameQdsl(teacherName, year)
-				.orElseThrow(() -> new DocumentNotFoundException("Curso"));
-	}
-	
-	@PreAuthorize("hasRole('STUDENT')")
-	@GetMapping(STUDENT_NAME + PATH_STUDENT_NAME + PATH_YEAR)
-	public String getCourseIdByStudentAndYear(@PathVariable String 	studentName, @PathVariable String year)
-			throws DocumentNotFoundException, FieldNotFoundException {
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(YEAR + PATH_YEAR)
+    public List<CourseDto> getFullCoursesByYear(@PathVariable String year) {
+        return this.courseService.getFullCoursesByYear(year).orElse(Collections.emptyList());
+    }
 
-		if (!this.userService.existsUserUsername(studentName))
-			throw new FieldNotFoundException("Nombre de Usuario");
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(TEACHER_ID + PATH_TEACHER_ID + PATH_YEAR)
+    public CourseDto getCourseByChiefTeacherAndYear(@PathVariable String teacherId, @PathVariable String year)
+            throws DocumentNotFoundException, FieldNotFoundException {
 
-		return this.courseService.getCourseIdByStudentAndYear(studentName, year)
-				.orElseThrow(() -> new DocumentNotFoundException("Curso"));
-	}
+        if (!this.userService.existsUserId(teacherId))
+            throw new FieldNotFoundException("Id");
+
+        return this.courseService.getCourseByChiefTeacherAndYear(teacherId, year)
+                .orElseThrow(() -> new DocumentNotFoundException("Curso"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(TEACHER_NAME + PATH_TEACHER_NAME + PATH_YEAR)
+    public CourseDto getCourseByChiefTeacherNameAndYear(@PathVariable String teacherName, @PathVariable String year)
+            throws DocumentNotFoundException, FieldNotFoundException {
+
+        if (!this.userService.existsUserUsername(teacherName))
+            throw new FieldNotFoundException("Nombre de Usuario");
+
+        return this.courseService.getCourseByChiefTeacherNameAndYear(teacherName, year)
+                .orElseThrow(() -> new DocumentNotFoundException("Curso"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
+    @GetMapping(STUDENT_ID + PATH_STUDENT_ID + PATH_YEAR)
+    public String getCourseIdByStudentAndYear(@PathVariable String studentId, @PathVariable String year)
+            throws DocumentNotFoundException, FieldNotFoundException {
+
+        if (!this.userService.existsUserId(studentId))
+            throw new FieldNotFoundException("Id");
+
+        return this.courseService.getCourseIdByStudentAndYear(studentId, year)
+                .orElseThrow(() -> new DocumentNotFoundException("Curso"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
+    @GetMapping(STUDENT_NAME + PATH_STUDENT_NAME + PATH_YEAR)
+    public String getCourseIdByStudentNameAndYear(@PathVariable String studentName, @PathVariable String year)
+            throws DocumentNotFoundException, FieldNotFoundException {
+
+        if (!this.userService.existsUserUsername(studentName))
+            throw new FieldNotFoundException("Nombre de Usuario");
+
+        return this.courseService.getCourseIdByStudentNameAndYear(studentName, year)
+                .orElseThrow(() -> new DocumentNotFoundException("Curso"));
+    }
 
 }

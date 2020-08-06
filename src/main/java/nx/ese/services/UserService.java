@@ -130,15 +130,15 @@ public class UserService {
     }
 
     public boolean isChiefTeacher(String username) {
-        User user = this.userRepository.findByUsername(username);
-        return user != null && courseRepository.findFirstByChiefTeacher(user.getId()) != null;
+        Optional<User> user = this.userRepository.findByUsernameOptional(username);
+        return user.isPresent() && courseRepository.findFirstByChiefTeacher(user.get().getId()).isPresent();
     }
 
     public boolean isChiefTeacherSetRoles(UserDto userDto) {
         boolean roleTeacher = Stream.of(userDto.getRoles())
                 .anyMatch(r -> r.toString().equals(Role.TEACHER.toString()));
 
-        return (!roleTeacher) && (this.courseRepository.findFirstByChiefTeacher(userDto.getId()) != null);
+        return (!roleTeacher) && (this.courseRepository.findFirstByChiefTeacher(userDto.getId()).isPresent());
     }
 
     public boolean isTeacherInSubject(String username) {
@@ -166,7 +166,7 @@ public class UserService {
 
     // CRUD***********************************
     public Optional<List<UserMinDto>> getMinUsers(Role role) {
-        List<UserMinDto> list = this.userRepository.findUsersAll(role);
+        List<UserMinDto> list = this.userRepository.findUsersMiniAll(role);
         if (list.isEmpty())
             return Optional.empty();
 

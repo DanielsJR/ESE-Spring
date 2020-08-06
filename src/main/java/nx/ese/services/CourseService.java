@@ -59,8 +59,8 @@ public class CourseService {
     }
 
     public boolean nameAndYearRepeated(CourseDto courseDto) {
-        CourseDto courseDB = this.courseRepository.findByNameAndYear(courseDto.getName(), courseDto.getYear());
-        return courseDB != null && !courseDB.getId().equals(courseDto.getId());
+        Optional<CourseDto> courseDB = this.courseRepository.findByNameAndYear(courseDto.getName(), courseDto.getYear());
+        return courseDB.isPresent() && !courseDB.get().getId().equals(courseDto.getId());
     }
 
     public boolean chiefTeacherRepeated(CourseDto courseDto) {
@@ -69,27 +69,16 @@ public class CourseService {
         return courseDB != null && !courseDB.getId().equals(courseDto.getId());
     }
 
-    private boolean isStudentInCourses(UserDto student, String courseIdExclude, List<CourseDto> courses) {
-        return courses
-                .parallelStream()
-                .filter(c -> !c.getId().equals(courseIdExclude))
-                .flatMap(c -> c.getStudents().parallelStream())
-                .anyMatch(s -> s.getId().equals(student.getId()));
+    public boolean studentsRepeatedInDto(CourseDto course) {
+        return (!course.getStudents().stream().allMatch(new HashSet<>()::add));
     }
 
     public boolean studentsRepeatedInCoursesByYear(CourseDto course) {
-        if (!course.getStudents().stream().allMatch(new HashSet<>()::add))
-            return true;
-
-        if (!courseRepository.findByYear(course.getYear()).isEmpty()) {
-            List<CourseDto> courses = courseRepository.findByYear(course.getYear());
-            return course.getStudents()
-                    .stream()
-                    .anyMatch(s -> this.isStudentInCourses(s, course.getId(), courses));
-        } else {
-            return false;
-        }
-
+        return course.getStudents()
+                .parallelStream()
+                .anyMatch(s -> courseRepository.findByStudentAndYearOptional(s.getId(), course.getYear())
+                        .filter(c -> !c.getId().equals(course.getId()))
+                        .isPresent());
     }
 
     public boolean isCourseInSubject(String courseId) {
@@ -135,9 +124,8 @@ public class CourseService {
 
     public Optional<List<CourseDto>> getFullCoursesByYear(String year) {
         List<CourseDto> list = courseRepository.findByYear(year)
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(c -> c.getName().toString()))
+                .parallelStream()
+                .sorted(Comparator.comparing(c -> c.getName().getCode()))
                 .collect(Collectors.toList());
         if (list.isEmpty())
             return Optional.empty();
@@ -146,35 +134,31 @@ public class CourseService {
     }
 
     public Optional<CourseDto> getCourseByNameAndYear(CourseName name, String year) {
-        CourseDto courseDto = courseRepository.findByNameAndYear(name, year);
-        if (courseDto != null)
-            return Optional.of(courseDto);
-
-        return Optional.empty();
+        return courseRepository.findByNameAndYear(name, year);
     }
 
-    public Optional<CourseDto> getCourseByChiefTeacherName(String username, String year) {
-        CourseDto course = courseRepository.findByChiefTeacherAndYear(userRepository.findByUsername(username).getId(), year);
-        if (course != null)
-            return Optional.of(course);
-
-        return Optional.empty();
-    }
-
-    public Optional<CourseDto> getCourseByChiefTeacherNameQdsl(String username, String year) {
+    public Optional<CourseDto> getCourseByChiefTeacherNameAndYear(String teacherUsername, String year) {
         QCourse qCourse = QCourse.course;
-        Predicate predicate = qCourse.chiefTeacher.eq(userRepository.findByUsername(username))
+        Predicate predicate = qCourse.chiefTeacher.eq(userRepository.findByUsername(teacherUsername))
                 .and(qCourse.year.eq(year));
 
         return courseRepository.findOne(predicate).map(CourseDto::new);
     }
 
-    public Optional<String> getCourseIdByStudentAndYear(String username, String year) {
+    public Optional<String> getCourseIdByStudentNameAndYear(String studentUsername, String year) {
         QCourse qCourse = QCourse.course;
-        Predicate predicate = qCourse.students.contains(userRepository.findByUsername(username))
+        Predicate predicate = qCourse.students.contains(userRepository.findByUsername(studentUsername))
                 .and(qCourse.year.eq(year));
 
         return courseRepository.findOne(predicate).map(Course::getId);
+    }
+
+    public Optional<CourseDto> getCourseByChiefTeacherAndYear(String teacherId, String year) {
+        return courseRepository.findByChiefTeacherAndYearOptionalDto(teacherId, year);
+    }
+
+    public Optional<String> getCourseIdByStudentAndYear(String studentId, String year) {
+        return courseRepository.findByStudentAndYearOptional(studentId, year).map(Course::getId);
     }
 
 

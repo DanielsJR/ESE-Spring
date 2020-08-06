@@ -13,23 +13,31 @@ import nx.ese.dtos.UserMinDto;
 
 public interface UserRepository extends MongoRepository<User, String> {
 
-	public User findByUsername(String username);
+
 	
-	public User findByDni(String dni);
+	User findByDni(String dni);
 	
-	public User findByMobile(String mobile);
+	User findByMobile(String mobile);
 	
-	public User findByEmail(String email);
+	User findByEmail(String email);
 	
-	public User findByRoles(Role[]  roles);
-	
+	User findByRoles(Role[] roles);
+
+	User findByUsername(String username);
+
 	@Query(value = "{'username' : ?0}")
-	public Optional<User> findByUsernameOptional(String username);
+	Optional<User> findByUsernameOptional(String username);
+
+	@Query(value = "{'username' : ?0}")
+	UserDto findByUsernameDto(String username);
+
+	@Query(value = "{'username' : ?0}")
+	Optional<UserDto> findByUsernameOptionalDto(String username);
 
 	@Query(value = "{'roles' : ?0}", fields = "{ '_id' : 1, 'firstName' : 1, 'lastName' : 1}")
-	public List<UserMinDto> findUsersAll(Role role);
+	List<UserMinDto> findUsersMiniAll(Role role);
 	
 	@Query(value = "{'roles' : ?0}", fields = "{ 'password' : 0 }")
-	public List<UserDto> findUsersFullAll(Role role);
+	List<UserDto> findUsersFullAll(Role role);
 
 }

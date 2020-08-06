@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import nx.ese.ApiTestConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,21 +13,17 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import nx.ese.documents.Role;
 import nx.ese.dtos.UserDto;
 import nx.ese.services.HttpMatcher;
 import nx.ese.services.RestService;
 import nx.ese.services.UserRestService;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = "classpath:test.properties")
+@ApiTestConfig
 public class UserTeacherControllerIT {
 
     @Rule
