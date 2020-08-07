@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import nx.ese.documents.Role;
 import nx.ese.documents.User;
-import nx.ese.documents.core.Course;
 import nx.ese.dtos.UserDto;
 import nx.ese.dtos.UserMinDto;
 import nx.ese.repositories.CourseRepository;
@@ -112,7 +111,9 @@ public class UserService {
 
     public boolean hasUserGreaterPrivilegesByUsername(String username, Role[] roles) {
         User user = this.userRepository.findByUsername(username);
-        return user != null && !Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
+        if (user != null)
+            return !Arrays.asList(roles).containsAll(Arrays.asList(user.getRoles()));
+        return false;
     }
 
     public boolean hasUserGreaterPrivilegesById(String id, Role[] roles) {
@@ -166,15 +167,15 @@ public class UserService {
 
     // CRUD***********************************
     public Optional<List<UserMinDto>> getMinUsers(Role role) {
-        List<UserMinDto> list = this.userRepository.findUsersMiniAll(role);
+        List<UserMinDto> list = this.userRepository.findUsersByRoleMin(role);
         if (list.isEmpty())
             return Optional.empty();
 
         return Optional.of(list);
     }
 
-    public Optional<List<UserDto>> getFullUsers(Role role) {
-        List<UserDto> list = this.userRepository.findUsersFullAll(role)
+    public Optional<List<UserDto>> getUsersByRole(Role role) {
+        List<UserDto> list = this.userRepository.findUsersByRole(role)
                 .parallelStream()
                 .sorted(Comparator.comparing(UserDto::getFirstName))
                 .collect(Collectors.toList());
@@ -187,6 +188,10 @@ public class UserService {
     public Optional<UserDto> getUserById(String id) {
         Optional<User> user = this.userRepository.findById(id);
         return user.map(UserDto::new);
+    }
+
+    public Optional<UserDto> getUserByIdAndRole(String id, Role role) {
+        return this.userRepository.findUserByIdAndRole(id, role);
     }
 
     public Optional<UserDto> getUserByUsername(String username) {

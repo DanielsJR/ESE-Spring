@@ -65,7 +65,7 @@ public class UserTeacherControllerIT {
     @Test
     public void testPostTeacherNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER)
                 .body(userRestService.getTeacherDto()).post().build();
     }
 
@@ -122,7 +122,7 @@ public class UserTeacherControllerIT {
     @Test
     public void testPostTeacherWithoutBody() {
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER)
                 .bearerAuth(restService.getAuthToken().getToken()).post().build();
     }
 
@@ -197,7 +197,7 @@ public class UserTeacherControllerIT {
     @Test
     public void testPutTeacherNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER)
                 .body(userRestService.getTeacherDto()).put().build();
     }
 
@@ -268,7 +268,7 @@ public class UserTeacherControllerIT {
 
         restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER)
                 .path(UserController.PATH_USERNAME).expand(uDto.getUsername())
                 .bearerAuth(restService.getAuthToken().getToken()).body(uDto).put().build();
     }
@@ -305,7 +305,7 @@ public class UserTeacherControllerIT {
         String newPass = "newPass@ESE1";
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS).path(UserController.PASS)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER).path(UserController.PASS)
                 .path(UserController.PATH_USERNAME).expand(userRestService.getTeacherDto().getUsername()).body(newPass)
                 .patch().build();
     }
@@ -367,7 +367,7 @@ public class UserTeacherControllerIT {
         userRestService.getTeacherDto().setRoles(newRoles);
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS).path(UserController.ROLE)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER).path(UserController.ROLE)
                 .path(UserController.PATH_USERNAME).expand(userRestService.getTeacherDto().getUsername())
                 .body(userRestService.getTeacherDto()).patch().build();
     }
@@ -446,7 +446,7 @@ public class UserTeacherControllerIT {
         userRestService.postTeacher();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER)
                 .path(UserController.PATH_USERNAME).expand(userRestService.getTeacherDto().getUsername()).delete()
                 .build();
     }
@@ -492,7 +492,7 @@ public class UserTeacherControllerIT {
         userRestService.postTeacher();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS).path(UserController.PATH_ID)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER).path(UserController.PATH_ID)
                 .expand(userRestService.getTeacherDto().getId()).get().build();
     }
 
@@ -535,7 +535,7 @@ public class UserTeacherControllerIT {
         userRestService.postTeacher();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS)
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER)
                 .path(UserController.PATH_USERNAME).expand(userRestService.getTeacherDto().getUsername()).get().build();
     }
 
@@ -570,7 +570,7 @@ public class UserTeacherControllerIT {
     @Test
     public void testGetFullTeachersNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.TEACHERS).get().build();
+        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER).get().build();
     }
 
     //
@@ -594,7 +594,7 @@ public class UserTeacherControllerIT {
         restService.loginAdmin();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.USER_MIN)
+        restService.restBuilder().path(UserController.USER).path(UserController.MANAGER).path(UserController.USER_MIN)
                 .get().build();
     }
 

@@ -7,6 +7,10 @@ import java.util.Date;
 
 public class NxDateFormatter {
 
+    private NxDateFormatter() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String formatterDate(Date date) {
         String fDate = "null";
         if (date != null)

@@ -32,7 +32,7 @@ public class TokenControllerIT {
 
     private UserDto getUserByUsername(String username) {
         UserDto userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-                .path(UserController.USERS).path(UserController.PATH_USERNAME).expand(username)
+                .path(UserController.USER).path(UserController.PATH_USERNAME).expand(username)
                 .bearerAuth(restService.getAuthToken().getToken()).get().log().build();
         return userDto;
 

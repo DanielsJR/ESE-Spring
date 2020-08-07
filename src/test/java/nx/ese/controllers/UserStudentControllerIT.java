@@ -73,8 +73,12 @@ public class UserStudentControllerIT {
     @Test
     public void testPostStudentNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-                .body(userRestService.getStudentDto()).post().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .body(userRestService.getStudentDto())
+                .post()
+                .build();
     }
 
     @Test
@@ -130,8 +134,12 @@ public class UserStudentControllerIT {
     @Test
     public void testPostStudentWithoutBody() {
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-                .bearerAuth(restService.getAuthToken().getToken()).post().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .post()
+                .build();
     }
 
 
@@ -211,8 +219,12 @@ public class UserStudentControllerIT {
         userRestService.postStudent();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-                .body(userRestService.getStudentDto()).put().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .body(userRestService.getStudentDto())
+                .put()
+                .build();
     }
 
     @Test
@@ -282,10 +294,13 @@ public class UserStudentControllerIT {
 
         restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
                 .path(UserController.PATH_USERNAME).expand(uDto.getUsername())
-                .bearerAuth(restService.getAuthToken().getToken()).body(uDto).put().build();
-
+                .bearerAuth(restService.getAuthToken().getToken()).body(uDto)
+                .put()
+                .build();
     }
 
     @Test
@@ -352,9 +367,14 @@ public class UserStudentControllerIT {
         String newPass = "newPass@ESE1";
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).path(UserController.PASS)
-                .path(UserController.PATH_USERNAME).expand(userRestService.getStudentDto().getUsername()).body(newPass)
-                .patch().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.PASS)
+                .path(UserController.PATH_USERNAME).expand(userRestService.getStudentDto().getUsername())
+                .body(newPass)
+                .patch()
+                .build();
     }
 
     @Test
@@ -396,8 +416,11 @@ public class UserStudentControllerIT {
         userRestService.postStudent();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-                .path(UserController.PATH_USERNAME).expand(userRestService.getStudentDto().getUsername()).delete()
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.PATH_USERNAME).expand(userRestService.getStudentDto().getUsername())
+                .delete()
                 .build();
     }
 
@@ -437,8 +460,31 @@ public class UserStudentControllerIT {
     public void testGetStudentByIdNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         userRestService.postStudent();
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).path(UserController.PATH_ID)
-                .expand(userRestService.getStudentDto().getId()).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.PATH_ID)
+                .expand(userRestService.getStudentDto().getId())
+                .get()
+                .build();
+    }
+
+    @Test
+    public void testGetStudentByIdGreaterPrivileges() {
+        restService.loginMegaUser();
+
+        UserDto uDto = userRestService.getUserByUsernameSecure("megauser");
+
+        restService.loginManager();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.ID)
+                .path(UserController.PATH_ID).expand(uDto.getId())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @Test
@@ -471,8 +517,30 @@ public class UserStudentControllerIT {
     public void testGetStudentByUsernameNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         userRestService.postStudent();
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS)
-                .path(UserController.PATH_USERNAME).expand(userRestService.getStudentDto().getUsername()).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.PATH_USERNAME).expand(userRestService.getStudentDto().getUsername())
+                .get()
+                .build();
+    }
+
+    @Test
+    public void testGetStudentByUsernameGreaterPrivileges() {
+        restService.loginMegaUser();
+
+        UserDto uDto = userRestService.getUserByUsernameSecure("megauser");
+
+        restService.loginManager();
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.USERNAME)
+                .path(UserController.PATH_USERNAME).expand(uDto.getUsername())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @Test
@@ -499,7 +567,11 @@ public class UserStudentControllerIT {
     @Test
     public void testGetFullStudentsNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .get()
+                .build();
     }
 
     //
@@ -520,8 +592,12 @@ public class UserStudentControllerIT {
     @Test
     public void testGetMinStudentsNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.STUDENTS).path(UserController.USER_MIN)
-                .get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.USER_MIN)
+                .get()
+                .build();
     }
 
 }

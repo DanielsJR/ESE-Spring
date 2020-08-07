@@ -508,7 +508,7 @@ public class CourseControllerIT {
         restService.restBuilder()
                 .path(CourseController.COURSE)
                 .path(CourseController.TEACHER_NAME)
-                .path(CourseController.PATH_TEACHER_NAME)
+                .path(CourseController.PATH_USERNAME)
                 .expand(courseRestService.getCourseDto().getChiefTeacher().getUsername())
                 .path(CourseController.PATH_YEAR).expand(courseRestService.getCourseDto().getYear())
                 .get()
@@ -550,7 +550,7 @@ public class CourseControllerIT {
         restService.restBuilder()
                 .path(CourseController.COURSE)
                 .path(CourseController.STUDENT_ID)
-                .path(CourseController.PATH_STUDENT_ID).expand(courseRestService.getCourseDto().getStudents().get(0).getId())
+                .path(CourseController.PATH_ID).expand(courseRestService.getCourseDto().getStudents().get(0).getId())
                 .path(CourseController.PATH_YEAR).expand(courseRestService.getCourseDto().getYear())
                 .get()
                 .build();
@@ -598,7 +598,7 @@ public class CourseControllerIT {
         restService.restBuilder()
                 .path(CourseController.COURSE)
                 .path(CourseController.TEACHER_ID)
-                .path(CourseController.PATH_TEACHER_ID).expand(courseRestService.getCourseDto().getChiefTeacher().getId())
+                .path(CourseController.PATH_ID).expand(courseRestService.getCourseDto().getChiefTeacher().getId())
                 .path(CourseController.PATH_YEAR).expand(courseRestService.getCourseDto().getYear())
                 .get()
                 .build();

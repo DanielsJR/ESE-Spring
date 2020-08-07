@@ -1,13 +1,10 @@
 package nx.ese.services;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 import nx.ese.services.data.DatabaseSeederService;
 import nx.ese.utils.UserTestDto;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,68 +100,111 @@ public class UserRestService {
 
     // MANGER********************************************
     public void postManager() {
-        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.MANAGERS).bearerAuth(restService.getAuthToken().getToken()).body(new UserTestDto(managerDto)).post()
+        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(new UserTestDto(managerDto))
+                .post()
                 .build();
     }
 
     public void postManager2() {
         managerDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-                .path(UserController.USERS).path(UserController.MANAGERS)
-                .bearerAuth(restService.getAuthToken().getToken()).body(new UserTestDto(managerDto2)).post().build();
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(new UserTestDto(managerDto2))
+                .post()
+                .build();
     }
 
     public void putManager() {
-        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.MANAGERS).path(UserController.PATH_USERNAME).expand(managerDto.getUsername())
-                .bearerAuth(restService.getAuthToken().getToken()).body(managerDto).put().build();
+        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.PATH_USERNAME)
+                .expand(managerDto.getUsername())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(managerDto)
+                .put()
+                .build();
     }
 
     public void patchManagerResetPass(String username, String resetedPass) {
-        restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.MANAGERS)
-                .path(UserController.PASS).path(UserController.PATH_USERNAME).expand(username)
-                .bearerAuth(restService.getAuthToken().getToken()).body(resetedPass).patch().build();
-
+        restService.restBuilder(new RestBuilder<>())
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.PASS)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(resetedPass)
+                .patch()
+                .build();
     }
 
     public void patchManagerSetRole(UserDto userDto) {
-        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.MANAGERS).path(UserController.ROLE).path(UserController.PATH_USERNAME)
-                .expand(userDto.getUsername()).bearerAuth(restService.getAuthToken().getToken()).body(userDto).patch()
+        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.ROLE)
+                .path(UserController.PATH_USERNAME).expand(userDto.getUsername())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(userDto)
+                .patch()
                 .build();
     }
 
     public void deleteManager(String username) {
-        restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.MANAGERS)
-                .path(UserController.PATH_USERNAME).expand(username).bearerAuth(restService.getAuthToken().getToken())
-                .delete().build();
-
+        restService.restBuilder(new RestBuilder<>())
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .delete()
+                .build();
     }
 
     public UserDto getManagerByID(String id) {
-        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.MANAGERS).path(UserController.ID).path(UserController.PATH_ID).expand(id)
-                .bearerAuth(restService.getAuthToken().getToken()).get().build();
+        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.ID)
+                .path(UserController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public UserDto getManagerByUsername(String username) {
-        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.MANAGERS).path(UserController.USER_NAME).path(UserController.PATH_USERNAME)
-                .expand(username).bearerAuth(restService.getAuthToken().getToken()).get().build();
+        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.USERNAME)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<UserDto> getFullManagers() {
-        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(UserController.USERS)
-                .path(UserController.MANAGERS).get().bearerAuth(restService.getAuthToken().getToken()).build();
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<UserDto> getMinManagers() {
-        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(UserController.USERS)
-                .path(UserController.MANAGERS).path(UserController.USER_MIN).get()
-                .bearerAuth(restService.getAuthToken().getToken()).build();
-
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.USER_MIN)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public void deleteManagers() {
@@ -188,68 +228,111 @@ public class UserRestService {
 
     // TEACHER*******************************************
     public void postTeacher() {
-        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.TEACHERS).bearerAuth(restService.getAuthToken().getToken()).body(new UserTestDto(teacherDto)).post()
+        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(new UserTestDto(teacherDto))
+                .post()
                 .build();
     }
 
     public void postTeacher2() {
         teacherDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-                .path(UserController.USERS).path(UserController.TEACHERS)
-                .bearerAuth(restService.getAuthToken().getToken()).body(new UserTestDto(teacherDto2)).post().build();
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(new UserTestDto(teacherDto2))
+                .post()
+                .build();
     }
 
     public void putTeacher() {
-        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.TEACHERS).path(UserController.PATH_USERNAME).expand(teacherDto.getUsername())
-                .bearerAuth(restService.getAuthToken().getToken()).body(teacherDto).put().build();
+        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.PATH_USERNAME).expand(teacherDto.getUsername())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(teacherDto)
+                .put()
+                .build();
     }
 
     public void patchTeacherResetPass(String username, String resetedPass) {
-        restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.TEACHERS)
-                .path(UserController.PASS).path(UserController.PATH_USERNAME).expand(username)
-                .bearerAuth(restService.getAuthToken().getToken()).body(resetedPass).patch().build();
-
+        restService.restBuilder(new RestBuilder<>())
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.PASS)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(resetedPass)
+                .patch()
+                .build();
     }
 
     public void patchTeacherSetRole(UserDto userDto) {
-        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.TEACHERS).path(UserController.ROLE).path(UserController.PATH_USERNAME)
-                .expand(userDto.getUsername()).bearerAuth(restService.getAuthToken().getToken()).body(userDto).patch()
+        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.ROLE)
+                .path(UserController.PATH_USERNAME).expand(userDto.getUsername())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(userDto)
+                .patch()
                 .build();
     }
 
     public void deleteTeacher(String username) {
-        restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.TEACHERS)
-                .path(UserController.PATH_USERNAME).expand(username).bearerAuth(restService.getAuthToken().getToken())
-                .delete().build();
-
+        restService.restBuilder(new RestBuilder<>())
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .delete()
+                .build();
     }
 
     public UserDto getTeacherByID(String id) {
-        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.TEACHERS).path(UserController.ID).path(UserController.PATH_ID).expand(id).get()
-                .bearerAuth(restService.getAuthToken().getToken()).build();
+        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.ID)
+                .path(UserController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public UserDto getTeacherByUsername(String username) {
-        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.TEACHERS).path(UserController.USER_NAME).path(UserController.PATH_USERNAME)
-                .expand(username).bearerAuth(restService.getAuthToken().getToken()).get().build();
+        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.USERNAME)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<UserDto> getFullTeachers() {
-        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(UserController.USERS)
-                .path(UserController.TEACHERS).get().bearerAuth(restService.getAuthToken().getToken()).build();
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<UserDto> getMinTeachers() {
-        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(UserController.USERS)
-                .path(UserController.TEACHERS).path(UserController.USER_MIN).get()
-                .bearerAuth(restService.getAuthToken().getToken()).build();
-
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.USER_MIN)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public void deleteTeachers() {
@@ -272,61 +355,99 @@ public class UserRestService {
 
     // STUDENT*******************************************
     public void postStudent() {
-        studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.STUDENTS).bearerAuth(restService.getAuthToken().getToken()).body(new UserTestDto(studentDto)).post()
+        studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(new UserTestDto(studentDto))
+                .post()
                 .build();
     }
 
     public void postStudent2() {
         studentDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-                .path(UserController.USERS).path(UserController.STUDENTS)
-                .bearerAuth(restService.getAuthToken().getToken()).body(new UserTestDto(studentDto2)).post().build();
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(new UserTestDto(studentDto2))
+                .post()
+                .build();
     }
 
     public void putStudent() {
-        studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.STUDENTS).path(UserController.PATH_USERNAME).expand(studentDto.getUsername())
-                .bearerAuth(restService.getAuthToken().getToken()).body(studentDto).put().build();
+        studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.PATH_USERNAME).expand(studentDto.getUsername())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(studentDto)
+                .put()
+                .build();
     }
 
     public void patchStudentResetPass(String username, String resetedPass) {
-        restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.STUDENTS)
-                .path(UserController.PASS).path(UserController.PATH_USERNAME).expand(username)
-                .bearerAuth(restService.getAuthToken().getToken()).body(resetedPass).patch().build();
-
+        restService.restBuilder(new RestBuilder<>())
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.PASS)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(resetedPass)
+                .patch()
+                .build();
     }
 
     public void deleteStudent(String username) {
-        restService.restBuilder(new RestBuilder<>()).path(UserController.USERS).path(UserController.STUDENTS)
-                .path(UserController.PATH_USERNAME).expand(username).bearerAuth(restService.getAuthToken().getToken())
-                .delete().build();
-
+        restService.restBuilder(new RestBuilder<>())
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .delete()
+                .build();
     }
 
     public UserDto getStudentByID(String id) {
-        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.STUDENTS).path(UserController.ID).path(UserController.PATH_ID).expand(id).get()
-                .bearerAuth(restService.getAuthToken().getToken()).build();
+        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.ID)
+                .path(UserController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public UserDto getStudentByUsername(String username) {
-        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.STUDENTS).path(UserController.USER_NAME).path(UserController.PATH_USERNAME)
-                .expand(username).bearerAuth(restService.getAuthToken().getToken()).get().build();
+        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.USERNAME)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<UserDto> getFullStudents() {
-        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(UserController.USERS)
-                .path(UserController.STUDENTS).get().bearerAuth(restService.getAuthToken().getToken()).build();
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<UserDto> getMinStudents() {
-        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(UserController.USERS)
-                .path(UserController.STUDENTS).path(UserController.USER_MIN).get()
-                .bearerAuth(restService.getAuthToken().getToken()).build();
-
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(UserController.USER)
+                .path(UserController.STUDENT)
+                .path(UserController.USER_MIN)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public void deleteStudents() {
@@ -350,9 +471,12 @@ public class UserRestService {
 
     // USER****************************************
     public UserDto getUserByUsernameSecure(String username) {
-        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USERS)
-                .path(UserController.PATH_USERNAME).expand(username).get()
-                .bearerAuth(restService.getAuthToken().getToken()).build();
+        return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+                .path(UserController.USER)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
 }

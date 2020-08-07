@@ -14,7 +14,7 @@ public class NxUtilBase64Image {
 
     private static final Logger logger = LoggerFactory.getLogger(NxUtilBase64Image.class);
 
-    public NxUtilBase64Image() {
+    private NxUtilBase64Image() {
         throw new IllegalStateException("Utility class");
     }
 

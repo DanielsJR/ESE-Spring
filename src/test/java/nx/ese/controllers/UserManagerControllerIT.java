@@ -69,8 +69,12 @@ public class UserManagerControllerIT {
     @Test
     public void testPostManagerNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
-                .body(userRestService.getManagerDto()).post().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .body(userRestService.getManagerDto())
+                .post()
+                .build();
     }
 
     @Test
@@ -126,7 +130,7 @@ public class UserManagerControllerIT {
     @Test
     public void testPostManagerWithoutBody() {
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
+        restService.restBuilder().path(UserController.USER).path(UserController.MANAGER)
                 .bearerAuth(restService.getAuthToken().getToken()).post().build();
     }
 
@@ -205,8 +209,12 @@ public class UserManagerControllerIT {
         userRestService.postManager();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
-                .body(userRestService.getManagerDto()).put().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .body(userRestService.getManagerDto())
+                .put()
+                .build();
     }
 
     @Test
@@ -278,9 +286,14 @@ public class UserManagerControllerIT {
 
         restService.loginAdmin();
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
                 .path(UserController.PATH_USERNAME).expand(uDto.getUsername())
-                .bearerAuth(restService.getAuthToken().getToken()).body(uDto).put().build();
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(uDto)
+                .put()
+                .build();
     }
 
     // PATCH-----------------------------
@@ -315,9 +328,14 @@ public class UserManagerControllerIT {
         String newPass = "newPass@ESE1";
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.PASS)
-                .path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername()).body(newPass)
-                .patch().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.PASS)
+                .path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername())
+                .body(newPass)
+                .patch()
+                .build();
     }
 
     @Test
@@ -374,9 +392,14 @@ public class UserManagerControllerIT {
         userRestService.getManagerDto().setRoles(newRoles);
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.ROLE)
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.ROLE)
                 .path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername())
-                .body(userRestService.getManagerDto()).patch().build();
+                .body(userRestService.getManagerDto())
+                .patch()
+                .build();
     }
 
     @Test
@@ -448,8 +471,11 @@ public class UserManagerControllerIT {
         userRestService.postManager();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
-                .path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername()).delete()
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername())
+                .delete()
                 .build();
     }
 
@@ -494,8 +520,13 @@ public class UserManagerControllerIT {
         userRestService.postManager();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.PATH_ID)
-                .expand(userRestService.getManagerDto().getId()).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.PATH_ID)
+                .expand(userRestService.getManagerDto().getId())
+                .get()
+                .build();
     }
 
     @Test
@@ -538,8 +569,12 @@ public class UserManagerControllerIT {
         userRestService.postManager();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS)
-                .path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername()).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.PATH_USERNAME).expand(userRestService.getManagerDto().getUsername())
+                .get()
+                .build();
     }
 
     @Test
@@ -549,7 +584,7 @@ public class UserManagerControllerIT {
     }
 
     @Test
-    public void testGetManagerByUsernameHasUserGreaterPrivilegesBy() {
+    public void testGetManagerByUsernameHasUserGreaterPrivileges() {
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         userRestService.getManagerByUsername("megauser");
     }
@@ -570,7 +605,11 @@ public class UserManagerControllerIT {
     @Test
     public void testGetFullManagersNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .get()
+                .build();
     }
 
     //
@@ -591,8 +630,12 @@ public class UserManagerControllerIT {
     @Test
     public void testGetMinManagersNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USERS).path(UserController.MANAGERS).path(UserController.USER_MIN)
-                .get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.USER_MIN)
+                .get()
+                .build();
     }
 
 }

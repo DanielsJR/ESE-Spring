@@ -40,7 +40,7 @@ public class CourseRepositoryTest {
     public void findByYear() {
         List<CourseDto> cs = courseRepository.findByYear("2018");
         Assert.assertTrue(cs.size() > 0);
-        Assert.assertEquals(cs.get(0).getName(), CourseName.PRIMERO_A);
+        Assert.assertEquals(CourseName.PRIMERO_A, cs.get(0).getName());
 
         Assert.assertEquals(0, courseRepository.findByYear("1820").size());
     }

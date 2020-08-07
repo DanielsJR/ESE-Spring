@@ -13,31 +13,39 @@ import nx.ese.dtos.UserMinDto;
 
 public interface UserRepository extends MongoRepository<User, String> {
 
+    @Query(fields = "{ 'password' : 0 }")
+    User findByDni(String dni);
 
-	
-	User findByDni(String dni);
-	
-	User findByMobile(String mobile);
-	
-	User findByEmail(String email);
-	
-	User findByRoles(Role[] roles);
+    @Query(fields = "{ 'password' : 0 }")
+    User findByMobile(String mobile);
 
-	User findByUsername(String username);
+    @Query(fields = "{ 'password' : 0 }")
+    User findByEmail(String email);
 
-	@Query(value = "{'username' : ?0}")
-	Optional<User> findByUsernameOptional(String username);
+    User findByUsername(String username);
 
-	@Query(value = "{'username' : ?0}")
-	UserDto findByUsernameDto(String username);
+    @Query(value = "{'username' : ?0}", fields = "{ 'password' : 0 }")
+    Optional<User> findByUsernameOptional(String username);
 
-	@Query(value = "{'username' : ?0}")
-	Optional<UserDto> findByUsernameOptionalDto(String username);
+    @Query(value = "{'username' : ?0}", fields = "{ 'password' : 0 }")
+    UserDto findByUsernameDto(String username);
 
-	@Query(value = "{'roles' : ?0}", fields = "{ '_id' : 1, 'firstName' : 1, 'lastName' : 1}")
-	List<UserMinDto> findUsersMiniAll(Role role);
-	
-	@Query(value = "{'roles' : ?0}", fields = "{ 'password' : 0 }")
-	List<UserDto> findUsersFullAll(Role role);
+    @Query(value = "{'username' : ?0}", fields = "{ 'password' : 0 }")
+    Optional<UserDto> findByUsernameOptionalDto(String username);
+
+    @Query(value = "{'roles' : ?0}", fields = "{ '_id' : 1, 'firstName' : 1, 'lastName' : 1}")
+    List<UserMinDto> findUsersByRoleMin(Role role);
+
+    @Query(value = "{'roles' : ?0}", fields = "{ 'password' : 0 }")
+    List<UserDto> findUsersByRole(Role role);
+
+    @Query(value = "{'username' : ?0, 'roles' : ?1}", fields = "{ 'password' : 0 }")
+    Optional<UserDto> findUserByUsernameAndRole(String username, Role role);
+
+    @Query(value = "{'_id' : ?0, 'roles' : ?1}", fields = "{ 'password' : 0 }")
+    Optional<UserDto> findUserByIdAndRole(String id, Role role);
+
+    @Query(fields = "{ 'password' : 0 }")
+    Optional<UserDto> findUserByUsernameAndRoles(String username, Role[] roles);
 
 }
