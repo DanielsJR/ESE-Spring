@@ -8,17 +8,20 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import nx.ese.documents.core.Subject;
 import nx.ese.documents.core.SubjectName;
 import nx.ese.dtos.SubjectDto;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-public interface SubjectRepository extends MongoRepository<Subject, String> {
+public interface SubjectRepository extends MongoRepository<Subject, String>, QuerydslPredicateExecutor<Subject> {
 	
-	public Optional<SubjectDto> findByNameAndCourse(SubjectName name, String courseId);
-	
-	public SubjectDto findFirstByTeacher(String teacherId);
-	
-	public SubjectDto findFirstByCourse(String CourseId);
+	Optional<SubjectDto> findByNameAndCourse(SubjectName name, String courseId);
 
-	public List<SubjectDto> findByTeacher(String id);
+	Optional<SubjectDto> findFirstByTeacher(String teacherId);
 	
-	public List<SubjectDto> findByCourse(String id);
+	Optional<SubjectDto> findFirstByCourse(String courseId);
+
+	List<SubjectDto> findByTeacher(String teacherId);
+	
+	List<SubjectDto> findByCourse(String courseId);
+
+	List<SubjectDto> findByTeacherAndCourse(String courseId);
 
 }

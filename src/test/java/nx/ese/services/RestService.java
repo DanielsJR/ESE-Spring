@@ -1,5 +1,6 @@
 package nx.ese.services;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -29,12 +30,14 @@ public class RestService {
 	@Value("${nx.test.manager.password}")
 	private String managerPassword;
 
+	@Getter
 	@Value("${nx.test.teacher.username}")
 	private String teacherUsername;
 
 	@Value("${nx.test.teacher.password}")
 	private String teacherPassword;
 
+	@Getter
 	@Value("${nx.test.student.username}")
 	private String studentUsername;
 

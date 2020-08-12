@@ -1,13 +1,13 @@
 package nx.ese.services;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
+import com.querydsl.core.types.Predicate;
+import nx.ese.documents.core.QSubject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -58,53 +58,8 @@ public class SubjectService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
+
     // CRUD******************************
-    public Optional<List<SubjectDto>> getFullSubjects() {
-        List<SubjectDto> list = subjectRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
-                .stream()
-                .map(SubjectDto::new)
-                //.parallel()
-                //.sorted(Comparator.comparing(s -> s.getName().toString()))
-                .collect(Collectors.toList());
-        if (list.isEmpty())
-            return Optional.empty();
-
-        return Optional.of(list);
-    }
-
-    public Optional<List<SubjectDto>> getSubjectsByTeacher(String id) {
-        List<SubjectDto> list = subjectRepository.findByTeacher(id)
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(s -> s.getName().toString()))
-                .collect(Collectors.toList());
-        if (list.isEmpty())
-            return Optional.empty();
-
-        return Optional.of(list);
-    }
-
-    public Optional<List<SubjectDto>> getSubjectsByCourse(String id) {
-        List<SubjectDto> list = subjectRepository.findByCourse(id)
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(s -> s.getName().toString()))
-                .collect(Collectors.toList());
-        if (list.isEmpty())
-            return Optional.empty();
-
-        return Optional.of(list);
-    }
-
-    public Optional<SubjectDto> getSubjectById(String id) {
-        Optional<Subject> subject = subjectRepository.findById(id);
-        return subject.map(SubjectDto::new);
-    }
-
-    public Optional<SubjectDto> getSubjectByNameAndCourse(SubjectName name, String courseId) {
-        return subjectRepository.findByNameAndCourse(name, courseId);
-    }
-
     public SubjectDto createSubject(@Valid SubjectDto subjectDto) {
         Subject subject = new Subject();
         Subject ss = subjectRepository.insert(setSubjectFromDto(subject, subjectDto));
@@ -127,6 +82,61 @@ public class SubjectService {
         }
         return Optional.empty();
     }
+
+    public Optional<List<SubjectDto>> getSubjectsByYear(String year) {
+
+        List<SubjectDto> list = subjectRepository.findAll()
+                .stream()
+                .filter(s -> s.getCourse().getYear().equals(year))
+                .sorted(Comparator.comparing(s -> s.getName().toString()))
+                .map(SubjectDto::new)
+                .collect(Collectors.toList());
+        if (list.isEmpty())
+            return Optional.empty();
+
+        return Optional.of(list);
+    }
+
+    public Optional<SubjectDto> getSubjectById(String id) {
+        Optional<Subject> subject = subjectRepository.findById(id);
+        return subject.map(SubjectDto::new);
+    }
+
+    public Optional<SubjectDto> getSubjectByNameAndCourse(SubjectName name, String courseId) {
+        return subjectRepository.findByNameAndCourse(name, courseId);
+    }
+
+    public Optional<List<SubjectDto>> getSubjectsByTeacherAndYear(String username, String year) {
+        Optional<User> u = userRepository.findByUsernameOptional(username);
+        if (u.isPresent()) {
+            List<SubjectDto> list = subjectRepository.findByTeacher(u.get().getId())
+                    .stream()
+                    .filter(s -> s.getCourse().getYear().equals(year))
+                    .sorted(Comparator.comparing(s -> s.getName().toString()))
+                    .collect(Collectors.toList());
+
+            if (!list.isEmpty())
+                return Optional.of(list);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<SubjectDto>> getStudentSubjectsByCourse(String courseId, String username) {
+        Optional<User> u = userRepository.findByUsernameOptional(username);
+        Optional<Course> c = courseRepository.findById(courseId);
+        if (u.isPresent() && c.isPresent() && this.isStudentInCourse(c.get().getId(), u.get().getId())) {
+            List<SubjectDto> list = subjectRepository.findByCourse(courseId)
+                    .stream()
+                    .sorted(Comparator.comparing(s -> s.getName().toString()))
+                    .collect(Collectors.toList());
+
+            if (!list.isEmpty())
+                return Optional.of(list);
+        }
+        return Optional.empty();
+
+    }
+
 
     // Exceptions*********************
     public boolean existsById(String id) {
@@ -161,5 +171,8 @@ public class SubjectService {
         return evaluationRepository.findFirstBySubject(subjectId) != null;
     }
 
+    public boolean isStudentInCourse(String courseId, String studentId) {
+        return courseRepository.findByIdAndStudentOptional(courseId, studentId).isPresent();
+    }
 
 }

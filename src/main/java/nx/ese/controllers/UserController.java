@@ -463,7 +463,8 @@ public class UserController {
 
 
     // ***************ALL-USERS*******************
-    @PreAuthorize("authentication.name == #username")
+
+    @PreAuthorize("#username == authentication.principal.username")//@PreAuthorize("authentication.name == #username")
     @GetMapping(PATH_USERNAME)
     public UserDto getUserByUsername(@PathVariable String username) throws FieldNotFoundException, DocumentNotFoundException {
 
@@ -473,7 +474,7 @@ public class UserController {
         return this.userService.getUserByUsername(username).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
     }
 
-    @PreAuthorize("authentication.name == #username")
+    @PreAuthorize("#username == authentication.principal.username")
     @PutMapping(PATH_USERNAME)
     public UserDto modifyUser(@PathVariable String username, @Valid @RequestBody UserDto userDto)
             throws FieldAlreadyExistException, FieldNotFoundException, DocumentNotFoundException {
@@ -496,7 +497,7 @@ public class UserController {
         return this.userService.modifyUser(username, userDto).orElseThrow(() -> new DocumentNotFoundException("Usuario"));
     }
 
-    @PreAuthorize("authentication.name == #username")
+    @PreAuthorize("#username == authentication.principal.username")
     @PatchMapping(PATH_USERNAME)
     public boolean setUserPass(@PathVariable String username, @RequestBody String[] setPass)
             throws PasswordNotMatchException, FieldNotFoundException, DocumentNotFoundException {

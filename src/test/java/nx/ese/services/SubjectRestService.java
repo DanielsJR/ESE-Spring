@@ -82,32 +82,48 @@ public class SubjectRestService {
 
     public void postSubject() {
         this.subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-                .path(SubjectController.SUBJECT).bearerAuth(restService.getAuthToken().getToken()).body(subjectDto)
-                .post().build();
+                .path(SubjectController.SUBJECT)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(subjectDto)
+                .post()
+                .build();
     }
 
     public void postSubject2() {
         this.subjectDto2 = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-                .path(SubjectController.SUBJECT).bearerAuth(restService.getAuthToken().getToken()).body(subjectDto2)
-                .post().build();
+                .path(SubjectController.SUBJECT)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(subjectDto2)
+                .post()
+                .build();
     }
 
     public void putSubject() {
         this.subjectDto = restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-                .path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand(subjectDto.getId())
-                .bearerAuth(restService.getAuthToken().getToken()).body(subjectDto).put().build();
+                .path(SubjectController.SUBJECT)
+                .path(SubjectController.PATH_ID).expand(subjectDto.getId())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(subjectDto)
+                .put()
+                .build();
     }
 
     public void deleteSubject(String id) {
-        restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class).path(SubjectController.SUBJECT)
-                .path(SubjectController.PATH_ID).expand(id).bearerAuth(restService.getAuthToken().getToken()).delete()
+        restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
+                .path(SubjectController.SUBJECT)
+                .path(SubjectController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .delete()
                 .build();
     }
 
     public SubjectDto getSubjectById(String id) {
         return restService.restBuilder(new RestBuilder<SubjectDto>()).clazz(SubjectDto.class)
-                .path(SubjectController.SUBJECT).path(SubjectController.PATH_ID).expand(id)
-                .bearerAuth(restService.getAuthToken().getToken()).get().build();
+                .path(SubjectController.SUBJECT)
+                .path(SubjectController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public SubjectDto getSubjectByNameAndCourse(SubjectName name, String id) {
@@ -121,9 +137,37 @@ public class SubjectRestService {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<SubjectDto> getFullSubjects() {
-        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class).path(SubjectController.SUBJECT)
-                .bearerAuth(restService.getAuthToken().getToken()).get().build();
+    public List<SubjectDto> getSubjectsByYear(String year) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(SubjectController.SUBJECT)
+                .path(SubjectController.YEAR)
+                .path(SubjectController.PATH_YEAR).expand(year)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<SubjectDto> getSubjectsByTeacherAndYear(String username, String year) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(SubjectController.SUBJECT)
+                .path(SubjectController.TEACHER)
+                .path(SubjectController.PATH_USERNAME).expand(username)
+                .path(SubjectController.PATH_YEAR).expand(year)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<SubjectDto> getStudentSubjectsByCourse(String courseId, String username) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(SubjectController.SUBJECT)
+                .path(SubjectController.COURSE)
+                .path(SubjectController.PATH_ID).expand(courseId)
+                .path(SubjectController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
 }

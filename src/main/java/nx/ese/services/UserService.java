@@ -1,10 +1,7 @@
 package nx.ese.services;
 
-import java.util.Arrays;
+import java.util.*;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -144,21 +141,23 @@ public class UserService {
 
     public boolean isTeacherInSubject(String username) {
         User user = this.userRepository.findByUsername(username);
-        return user != null && this.subjectRepository.findFirstByTeacher(user.getId()) != null;
+        return user != null && this.subjectRepository.findFirstByTeacher(user.getId()).isPresent();
     }
 
     public boolean isTeacherInSubjectSetRoles(UserDto userDto) {
         boolean roleTeacher = Stream.of(userDto.getRoles())
                 .anyMatch(r -> r.toString().equals(Role.TEACHER.toString()));
 
-        return (!roleTeacher) && (this.subjectRepository.findFirstByTeacher(userDto.getId()) != null);
+        return (!roleTeacher) && (this.subjectRepository.findFirstByTeacher(userDto.getId()).isPresent());
     }
 
     public boolean isStudentInCourses(String username) {
         if (!courseRepository.findAll().isEmpty()) {
             return courseRepository.findAll()
                     .stream()
-                    .flatMap(c -> c.getStudents().parallelStream())
+                    //.flatMap(c -> c.getStudents() == null ? Stream.empty() : c.getStudents().stream())
+                    //.flatMap(c -> Stream.ofNullable(c.getStudents()))//java9
+                    .flatMap(c -> Optional.ofNullable(c.getStudents()).map(Collection::stream).orElseGet(Stream::empty))
                     .anyMatch(s -> s.getUsername().equals(username));
         } else {
             return false;

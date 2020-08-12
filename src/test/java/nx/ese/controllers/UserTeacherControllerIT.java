@@ -429,7 +429,7 @@ public class UserTeacherControllerIT {
         userRestService.deleteTeacher(userRestService.getTeacherDto().getUsername());
 
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        userRestService.getTeacherByID(userRestService.getTeacherDto().getUsername());
+        userRestService.getTeacherByUsername(userRestService.getTeacherDto().getUsername());
     }
 
     @Test
@@ -474,7 +474,7 @@ public class UserTeacherControllerIT {
     public void testGetTeacherById() {
         userRestService.postTeacher();
 
-        UserDto uDto = userRestService.getTeacherByID(userRestService.getTeacherDto().getId());
+        UserDto uDto = userRestService.getTeacherById(userRestService.getTeacherDto().getId());
         assertEquals(userRestService.getTeacherDto(), uDto);
     }
 
@@ -484,7 +484,7 @@ public class UserTeacherControllerIT {
 
         restService.loginTeacher();// PreAuthorize("hasRole('MANAGER')")
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        userRestService.getTeacherByID(userRestService.getTeacherDto().getId());
+        userRestService.getTeacherById(userRestService.getTeacherDto().getId());
     }
 
     @Test
@@ -499,7 +499,7 @@ public class UserTeacherControllerIT {
     @Test
     public void testGetTeacherIdNotFoundException() {
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        userRestService.getTeacherByID("u64563456");
+        userRestService.getTeacherById("u64563456");
     }
 
     @Test
@@ -509,7 +509,7 @@ public class UserTeacherControllerIT {
 
         restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        userRestService.getTeacherByID(uDto.getId());
+        userRestService.getTeacherById(uDto.getId());
     }
 
     //

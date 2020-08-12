@@ -59,7 +59,7 @@ public class UserStudentControllerIT {
         userRestService.postStudent();
 
         UserDto uDto = userRestService.getStudentByUsername(userRestService.getStudentDtoUsername());
-        assertEquals(uDto, userRestService.getStudentDto());
+        assertEquals(userRestService.getStudentDto(),uDto);
     }
 
     @Test
@@ -353,11 +353,9 @@ public class UserStudentControllerIT {
 
         String newPass = "newPass@ESE1";
 
-        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or
-        // hasRole('TEACHER')")
+        restService.loginStudent(); // PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         userRestService.patchStudentResetPass(userRestService.getStudentDto().getUsername(), newPass);
-
     }
 
     @Test
@@ -398,8 +396,8 @@ public class UserStudentControllerIT {
 
         userRestService.deleteStudent(userRestService.getStudentDto().getUsername());
 
-        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        userRestService.getStudentByID(userRestService.getStudentDto().getUsername());
+        //thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        //userRestService.getStudentByUsername(userRestService.getStudentDto().getUsername());
     }
 
     @Test
@@ -441,7 +439,7 @@ public class UserStudentControllerIT {
     public void testGetStudentById() {
         userRestService.postStudent();
 
-        UserDto uDto = userRestService.getStudentByID(userRestService.getStudentDto().getId());
+        UserDto uDto = userRestService.getStudentById(userRestService.getStudentDto().getId());
 
         assertEquals(userRestService.getStudentDto(), uDto);
     }
@@ -450,10 +448,9 @@ public class UserStudentControllerIT {
     public void testGetStudentByIdPreAuthorize() {
         userRestService.postStudent();
 
-        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or
-        // hasRole('TEACHER')")
+        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        userRestService.getStudentByID(userRestService.getStudentDto().getId());
+        userRestService.getStudentById(userRestService.getStudentDto().getId());
     }
 
     @Test
@@ -490,7 +487,7 @@ public class UserStudentControllerIT {
     @Test
     public void testGetStudentByIdIdNotFoundException() {
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        userRestService.getStudentByID("u64563456");
+        userRestService.getStudentById("u64563456");
     }
 
     //

@@ -1,12 +1,8 @@
-# RECOMENDABLE SOLO AÑADIR 
-
-
-    
-# Users u000-u009 ADMIN ***********************************************************
+# USERS ***********************************************************
 userList:
+  # Users u000-u009 ADMIN ***********************************************************
 
-# Users u010-u019 MANAGER ***********************************************************
-
+  # Users u010-u019 MANAGER ***********************************************************
   - &u019
     username: megauser
     password: megauser@ESE1
@@ -15,8 +11,8 @@ userList:
     birthday: 1969-6-9
     gender: HOMBRE
     avatar:
-       name: punisher.jpg
-       type: image/jpg
+      name: punisher.jpg
+      type: image/jpg
     mobile: 019000000
     email: e019@email.com
     address: Las Viñitas 019
@@ -25,18 +21,17 @@ userList:
       - ADMIN
       - MANAGER
       - TEACHER
-          
-      
+
   - &u010
     username: u010
     password: p010@ESE1
-    firstName: Barack Hussein 
+    firstName: Barack Hussein
     lastName: Obama II
     birthday: 1961-8-4
     gender: HOMBRE
     avatar:
-       name: obama.png
-       type: image/png
+      name: obama.png
+      type: image/png
     mobile: 010000000
     email: e010@email.com
     address: Las Viñitas 010
@@ -44,36 +39,34 @@ userList:
     roles:
       - MANAGER
       - TEACHER
-    
-    
+
   - &u011
     username: u011
     password: p011@ESE1
-    firstName: Donald John 
+    firstName: Donald John
     lastName: Trump
     birthday: 1946-6-14
     gender: HOMBRE
     avatar:
-       name: trump.png
-       type: image/png
+      name: trump.png
+      type: image/png
     mobile: 011111111
     email: e011@email.com
     address: Las Viñitas 011
     commune: LO_PRADO
     roles:
       - MANAGER
-    
-    
+
   - &u012
     username: u012
     password: p012@ESE1
-    firstName: Angelina 
+    firstName: Angelina
     lastName: Jolie Voight
     birthday: 1975-6-4
     gender: MUJER
     avatar:
-       name: angelina.png
-       type: image/png
+      name: angelina.png
+      type: image/png
     mobile: 012222222
     email: e012@email.com
     address: Las Viñitas 012
@@ -81,46 +74,43 @@ userList:
     roles:
       - MANAGER
       - TEACHER
-    
-    
-    
-# Users u020-u029 TEACHER ***********************************************************  
+
+
+  # Users u020-u029 TEACHER ***********************************************************
   - &u020
     username: u020
-    firstName: Jada Candase 
+    firstName: Jada Candase
     lastName: Stevens Jackson
     password: p020@ESE1
     birthday: 1988-7-4
     gender: MUJER
     avatar:
-       name: jada.png
-       type: image/png
+      name: jada.png
+      type: image/png
     mobile: 020000000
     email: e020@email.com
     address: Los Pepinos 020
     commune: LO_PRADO
     roles:
       - TEACHER
-    
-    
+
   - &u021
     username: u021
-    firstName: Wonder 
-    lastName: Woman 
+    firstName: Wonder
+    lastName: Woman
     password: p021@ESE1
     birthday: 1911-8-12
     gender: MUJER
     avatar:
-       name: wonder.png
-       type: image/png
+      name: wonder.png
+      type: image/png
     mobile: 021111111
     email: e021@email.com
     address: Las Viñitas 021
     commune: CALERA_DE_TANGO
     roles:
       - TEACHER
-    
-    
+
   - &u022
     username: u022
     password: p022@ESE1
@@ -129,15 +119,15 @@ userList:
     birthday: 1965-4-4
     gender: HOMBRE
     avatar:
-       name: iron-man.png
-       type: image/png
+      name: iron-man.png
+      type: image/png
     mobile: 002222222
     email: e022@email.com
     address: Las Viñitas 022
     commune: QUINTA_NORMAL
     roles:
       - TEACHER
-    
+
   - &u023
     username: u023
     password: p023@ESE1
@@ -146,139 +136,129 @@ userList:
     birthday: 1981-3-4
     gender: HOMBRE
     avatar:
-       name: goku.png
-       type: image/png
+      name: goku.png
+      type: image/png
     mobile: 002333333
     email: e023@email.com
     address: Las Viñitas 023
     commune: QUINTA_NORMAL
     roles:
-      - TEACHER   
-    
-    
-    
-    
-    
-# Users u030-u039 STUDENT ***********************************************************    
+      - TEACHER
+
+
+  # Users u030-u039 STUDENT ***********************************************************
   - &u030
     username: u030
-    firstName: Keisha 
-    lastName: Grey 
+    firstName: Keisha
+    lastName: Grey
     password: p030@ESE1
     birthday: 1994-6-9
     gender: MUJER
     avatar:
-       name: grey.png
-       type: image/png
+      name: grey.png
+      type: image/png
     mobile: 030000000
     email: e030@email.com
     address: Las Viñitas 030
     commune: CERRO_NAVIA
     roles:
       - STUDENT
-    
-    
+
   - &u031
     username: u031
     firstName: Arya
-    lastName: Stark 
+    lastName: Stark
     password: p031@ESE1
     birthday: 1997-4-15
     gender: MUJER
     avatar:
-       name: arya.png
-       type: image/png
+      name: arya.png
+      type: image/png
     mobile: 031111111
     email: e031@email.com
     address: Las Viñitas 031
     commune: LO_ESPEJO
     roles:
       - STUDENT
-   
-   
+
   - &u032
     username: u032
-    firstName: Reese  
-    lastName: Wilkerson 
+    firstName: Reese
+    lastName: Wilkerson
     password: p032@ESE1
     birthday: 1979-12-11
     gender: HOMBRE
     avatar:
-       name: reese.png
-       type: image/png
+      name: reese.png
+      type: image/png
     mobile: 032222222
     email: e032@email.com
     address: Las Viñitas 032
     commune: LA_GRANJA
     roles:
-      - STUDENT  
-      
-      
-        
-    
+      - STUDENT
+
   - &u033
     username: u033
-    firstName: Malcom 
-    lastName: Wilkerson 
+    firstName: Malcom
+    lastName: Wilkerson
     password: p033@ESE1
     birthday: 1983-12-30
     gender: HOMBRE
     avatar:
-       name: malcom.png
-       type: image/png
+      name: malcom.png
+      type: image/png
     mobile: 033333333
     email: e033@email.com
     address: Las Viñitas 033
     commune: QUINTA_NORMAL
     roles:
       - STUDENT
-    
+
   - &u034
     username: u034
-    firstName: Stevie  
-    lastName: Kenarban 
+    firstName: Stevie
+    lastName: Kenarban
     password: p034@ESE1
     birthday: 1983-11-12
     gender: HOMBRE
     avatar:
-       name: stevie.png
-       type: image/png
+      name: stevie.png
+      type: image/png
     mobile: 034444444
     email: e034@email.com
     address: Las Viñitas 034
     commune: LA_GRANJA
     roles:
       - STUDENT
-      
+
   - &u035
     username: u035
-    firstName: Cynthia  
-    lastName: Sanders 
+    firstName: Cynthia
+    lastName: Sanders
     password: p035@ESE1
     birthday: 1983-10-21
     gender: MUJER
     avatar:
-       name: cynthia.png
-       type: image/png
+      name: cynthia.png
+      type: image/png
     mobile: 035555555
     email: e035@email.com
     address: Las Viñitas 035
     commune: LA_GRANJA
     roles:
-      - STUDENT      
-      
-      
-    
+      - STUDENT
+
   - &u036
     username: u036
-    firstName: Dui  
-    lastName: Wilkerson 
+    firstName: Dui
+    lastName: Wilkerson
     password: p036@ESE1
     birthday: 1990-2-22
     gender: HOMBRE
     avatar:
-       name: dui.png
-       type: image/png
+      name: dui.png
+      type: image/png
     mobile: 036666666
     email: e036@email.com
     address: Las Viñitas 036
@@ -288,39 +268,37 @@ userList:
 
   - &u037
     username: u037
-    firstName: Chad Do 
+    firstName: Chad Do
     lastName: Not Touch
     password: p037@ESE1
     birthday: 1990-6-8
     gender: HOMBRE
     avatar:
-       name: chad.png
-       type: image/png
+      name: chad.png
+      type: image/png
     mobile: 037777777
     email: e037@email.com
     address: Las Viñitas 037
     commune: CERRILLOS
     roles:
       - STUDENT
-     
 
-      
   - &u038
     username: u038
-    firstName: David   
-    lastName: Hanson 
+    firstName: David
+    lastName: Hanson
     password: p038@ESE1
     birthday: 1990-4-21
     gender: HOMBRE
     avatar:
-       name: david.png
-       type: image/png
+      name: david.png
+      type: image/png
     mobile: 038888888
     email: e038@email.com
     address: Las Viñitas 038
     commune: LA_GRANJA
     roles:
-      - STUDENT            
+      - STUDENT
 
   - &u039
     username: u039
@@ -339,177 +317,204 @@ userList:
     roles:
       - STUDENT
 
-
-    # PREFERENCES ***********************************************************
-    
+# PREFERENCES ***********************************************************
 preferencesList:
   - user: *u010
     theme:
-       name: indigo-lightblue
-       isDark: false
-       color: '#9E9E9E' 
-    
+      name: indigo-lightblue
+      isDark: false
+      color: '#9E9E9E'
+
   - user: *u011
     theme:
-       name: brown-orange
-       isDark: false
-       color: '#795548' 
- 
+      name: brown-orange
+      isDark: false
+      color: '#795548'
+
   - user: *u012
     theme:
-       name: blue-orange-dark
-       isDark: true
-       color: '#2196F3'  
+      name: blue-orange-dark
+      isDark: true
+      color: '#2196F3'
 
   - user: *u020
     theme:
-       name: purple-pink-dark
-       isDark: true
-       color: '#E91E63' 
-    
+      name: purple-pink-dark
+      isDark: true
+      color: '#E91E63'
+
   - user: *u021
     theme:
-       name: lime-pink
-       isDark: false
-       color: '#CDDC39' 
- 
+      name: lime-pink
+      isDark: false
+      color: '#CDDC39'
+
   - user: *u022
     theme:
-       name: bluegrey-light-blue
-       isDark: true
-       color: '#F44336'  
+      name: bluegrey-light-blue
+      isDark: true
+      color: '#F44336'
 
   - user: *u030
     theme:
-       name: indigo-pink-dark
-       isDark: true
-       color: '#3F51B5' 
-    
+      name: indigo-pink-dark
+      isDark: true
+      color: '#3F51B5'
+
   - user: *u031
     theme:
-       name: yellow-deeppurple
-       isDark: false
-       color: '#CDDC39' 
- 
+      name: yellow-deeppurple
+      isDark: false
+      color: '#CDDC39'
+
   - user: *u032
     theme:
-       name: green-purple-dark
-       isDark: true
-       color: '#2196F3'  
+      name: green-purple-dark
+      isDark: true
+      color: '#2196F3'
 
   - user: *u033
     theme:
-       name: lightblue-purple-dark
-       isDark: true
-       color: '#3F51B5' 
-    
+      name: lightblue-purple-dark
+      isDark: true
+      color: '#3F51B5'
+
   - user: *u034
     theme:
-       name: amber-blue
-       isDark: false
-       color: '#CDDC39' 
- 
+      name: amber-blue
+      isDark: false
+      color: '#CDDC39'
+
   - user: *u035
     theme:
-       name: orange-indigo-dark
-       isDark: true
-       color: '#2196F3'   
-       
-# COURSES***********************************************************       
+      name: orange-indigo-dark
+      isDark: true
+      color: '#2196F3'
+
+# COURSES ***********************************************************
 coursesList:
 
-  - &c01
-    name: PRIMERO_A
+  #2018-----
+  - &8-C-18
+    name: OCTAVO_C
     chiefTeacher: *u020
     students:
       - *u030
       - *u031
       - *u032
     year: 2018
-    
-  - &c02
-    name: TERCERO_C
+
+  - &5-B-18
+    name: QUINTO_B
     chiefTeacher: *u012
     students:
       - *u033
       - *u034
       - *u035
     year: 2018
-    
-  - &c03
-    name: SEXTO_B
+
+  - &2-A-18
+    name: SEGUNDO_A
     chiefTeacher: *u022
     students:
       - *u036
       - *u037
       - *u038
-    year: 2018 
-    
-  - &c04
-    name: SEXTO_B
+    year: 2018
+
+  #2017-------
+  - &7-C-17
+    name: SEPTIMO_C
     chiefTeacher: *u021
+    students:
+      - *u030
+      - *u031
+      - *u032
+    year: 2017
+
+  - &4-B-17
+    name: CUARTO_B
+    chiefTeacher: *u012
+    students:
+      - *u033
+      - *u034
+      - *u035
+    year: 2017
+
+  - &1-A-17
+    name: PRIMERO_A
+    chiefTeacher: *u022
     students:
       - *u036
       - *u037
       - *u038
-    year: 2017     
-    
-# SUBJETCS ***********************************************************     
+    year: 2017
+
+  #2016-------
+  - &1-A-16
+    name: PRIMERO_A
+    chiefTeacher: *u022
+    year: 2016
+
+# SUBJECTS ***********************************************************
 subjectsList:
 
   - &s01
     name: MATEMATICAS
     teacher: *u010
-    course: *c01
-    
+    course: *8-C-18
+
   - &s02
     name: MATEMATICAS
     teacher: *u020
-    course: *c02 
-    
+    course: *5-B-18
+
   - &s03
     name: MATEMATICAS
     teacher: *u021
-    course: *c03 
-    
+    course: *2-A-18
+
   - &s04
     name: LENGUAJE
     teacher: *u022
-    course: *c01 
-    
+    course: *8-C-18
+
   - &s05
     name: LENGUAJE
     teacher: *u021
-    course: *c02 
-    
+    course: *5-B-18
+
   - &s06
     name: HISTORIA
     teacher: *u021
-    course: *c03    
-    
+    course: *2-A-18
+
   - &s07
     name: ED_FISICA
     teacher: *u022
-    course: *c01  
-    
+    course: *8-C-18
+
   - &s08
     name: ED_FISICA
     teacher: *u021
-    course: *c02  
-      
+    course: *5-B-18
+
   - &s09
     name: MUSICA
     teacher: *u020
-    course: *c03  
-    
-    
+    course: *2-A-18
+
   - &s10
     name: ED_FISICA
     teacher: *u023
-    course: *c03     
-    
-              
-# QUIZES ***********************************************************                  
+    course: *2-A-18
+
+  - &s11
+    name: ED_FISICA
+    teacher: *u023
+    course: *7-C-17
+
+# QUIZES ***********************************************************
 quizesList:
 
   - &q01
@@ -530,7 +535,7 @@ quizesList:
         alternativeB: '6'
         alternativeC: '4'
         alternativeD: '8'
-        answer: '4'   
+        answer: '4'
     trueFalseItems:
       - sentence: '4/2=2'
         answer: true
@@ -542,11 +547,11 @@ quizesList:
       - item: Área de un Rectángulo
         correspond: 'A=B*H'
     incompleteTextItems:
-      - sentence: Un cuadrado es 
+      - sentence: Un cuadrado es
         answer: Cuadrado
-      - sentence: Un circulo es 
+      - sentence: Un circulo es
         answer: Circular
-        
+
   - &q02
     title: Ecuaciones de Primer Grado
     description: Prueba de diagnóstico historia-01
@@ -565,7 +570,7 @@ quizesList:
         alternativeB: '2,85 millones de años'
         alternativeC: '100 mil años'
         alternativeD: '10,5 billones de años'
-        answer: '2,85 millones de años'   
+        answer: '2,85 millones de años'
     trueFalseItems:
       - sentence: 'Roma se construyo en un día'
         answer: false
@@ -577,11 +582,11 @@ quizesList:
       - item: Esparta
         correspond: 'Espartanos'
     incompleteTextItems:
-      - sentence: Esparta la polis 
+      - sentence: Esparta la polis
         answer: militar
-      - sentence: Los aztecas estaban en 
+      - sentence: Los aztecas estaban en
         answer: México
-        
+
   - &q03
     title: Álgebra I
     description: Lo mas facíl en Álgebra
@@ -602,7 +607,7 @@ quizesList:
       - item: Área de un Triángulo
         correspond: 'A=(B*H)/2'
     incompleteTextItems:
-      - sentence: Un cuadrado es 
+      - sentence: Un cuadrado es
         answer: Cuadrado
 
   - &q04
@@ -625,9 +630,9 @@ quizesList:
       - item: Área de un Triángulo
         correspond: 'A=(B*H)/2'
     incompleteTextItems:
-      - sentence: Un cuadrado es 
-        answer: Cuadrado    
-    
+      - sentence: Un cuadrado es
+        answer: Cuadrado
+
   - &q05
     title: Álgebra III
     description: Tercer nivel en Álgebra
@@ -648,9 +653,9 @@ quizesList:
       - item: Área de un Triángulo
         correspond: 'A=(B*H)/2'
     incompleteTextItems:
-      - sentence: Un cuadrado es 
-        answer: Cuadrado    
-                           
+      - sentence: Un cuadrado es
+        answer: Cuadrado
+
   - &q06
     title: Álgebra IV
     description: Cuarto nivel en Álgebra
@@ -681,7 +686,7 @@ quizesList:
         alternativeB: '1'
         alternativeC: '3'
         alternativeD: '0'
-        answer: '1'                        
+        answer: '1'
     trueFalseItems:
       - sentence: '4/2=2'
         answer: true
@@ -694,7 +699,7 @@ quizesList:
       - sentence: '4/4=2'
         answer: false
       - sentence: '2+2=2'
-        answer: false                                        
+        answer: false
     correspondItems:
       - item: animal
         correspond: perro
@@ -707,18 +712,18 @@ quizesList:
       - item: roma
         correspond: coliseo
       - item: comida
-        correspond: tallarines                         
+        correspond: tallarines
     incompleteTextItems:
-      - sentence: Un cuadrado es 
+      - sentence: Un cuadrado es
         answer: cuadrado
-      - sentence: Un triangulo es 
+      - sentence: Un triangulo es
         answer: triangular
-      - sentence: Un rectangulo es 
+      - sentence: Un rectangulo es
         answer: rectangular
-      - sentence: Un circulo es 
-        answer: circular                             
-    
-# QUIZES-STUDENT***********************************************************        
+      - sentence: Un circulo es
+        answer: circular
+
+# QUIZES-STUDENT ***********************************************************
 quizesStudentList:
 
   - &qs01
@@ -736,7 +741,7 @@ quizesStudentList:
         alternativeC: '4'
         alternativeD: '8'
         answer: '4'
-        correct: true  
+        correct: true
     trueFalseItems:
       - sentence: '4/2=2'
         answer: true
@@ -752,13 +757,13 @@ quizesStudentList:
         correspond: 'A=B*H'
         correct: false
     incompleteTextItems:
-      - sentence: Un cuadrado es 
+      - sentence: Un cuadrado es
         answer: Cuadrado
         correct: true
-      - sentence: Un circulo es 
+      - sentence: Un circulo es
         answer: Circular
         correct: true
-      
+
   - &qs02
     multipleSelectionItems:
       - sentence: '1+1'
@@ -774,7 +779,7 @@ quizesStudentList:
         alternativeC: '4'
         alternativeD: '8'
         answer: '4'
-        correct: true  
+        correct: true
     trueFalseItems:
       - sentence: '4/2=2'
         answer: true
@@ -790,10 +795,10 @@ quizesStudentList:
         correspond: 'A=(B*H)/2'
         correct: true
     incompleteTextItems:
-      - sentence: Un cuadrado es 
+      - sentence: Un cuadrado es
         answer: Cuadradin
         correct: false
-      - sentence: Un circulo es 
+      - sentence: Un circulo es
         answer: Circulin
         correct: false
 
@@ -812,7 +817,7 @@ quizesStudentList:
         alternativeC: '4'
         alternativeD: '8'
         answer: '8'
-        correct: false  
+        correct: false
     trueFalseItems:
       - sentence: '4/2=2'
         answer: true
@@ -831,11 +836,11 @@ quizesStudentList:
       - sentence: Un cuadrado es
         correct: true
         answer: Cuadrado
-      - sentence: Un circulo es 
+      - sentence: Un circulo es
         answer: Circular
-        correct: true       
-      
- 
+        correct: true
+
+
   - &qs04
     multipleSelectionItems:
       - sentence: '¿Quien descubrio America?'
@@ -851,7 +856,7 @@ quizesStudentList:
         alternativeC: '100 mil años'
         alternativeD: '10,5 billones de años'
         answer: '2,85 millones de años'
-        correct: true   
+        correct: true
     trueFalseItems:
       - sentence: 'Roma se construyo en un día'
         answer: false
@@ -867,13 +872,13 @@ quizesStudentList:
         correspond: 'Espartanos'
         correct: true
     incompleteTextItems:
-      - sentence: Esparta la polis 
+      - sentence: Esparta la polis
         answer: militar
         correct: true
-      - sentence: Los aztecas estaban en 
+      - sentence: Los aztecas estaban en
         answer: México
-        correct: true  
-        
+        correct: true
+
   - &qs05
     multipleSelectionItems:
       - sentence: '¿Quien descubrio America?'
@@ -889,7 +894,7 @@ quizesStudentList:
         alternativeC: '100 mil años'
         alternativeD: '10,5 billones de años'
         answer: '10,5 millones de años'
-        correct: false   
+        correct: false
     trueFalseItems:
       - sentence: 'Roma se construyo en un día'
         answer: false
@@ -905,13 +910,13 @@ quizesStudentList:
         correspond: 'Espartanos'
         correct: true
     incompleteTextItems:
-      - sentence: Esparta la polis 
+      - sentence: Esparta la polis
         answer: militar
         correct: true
-      - sentence: Los aztecas estaban en 
+      - sentence: Los aztecas estaban en
         answer: México
-        correct: true 
-        
+        correct: true
+
   - &qs06
     multipleSelectionItems:
       - sentence: '¿Quien descubrio America?'
@@ -927,7 +932,7 @@ quizesStudentList:
         alternativeC: '100 mil años'
         alternativeD: '10,5 billones de años'
         answer: '10,5 millones de años'
-        correct: true   
+        correct: true
     trueFalseItems:
       - sentence: 'Roma se construyo en un día'
         answer: true
@@ -943,19 +948,19 @@ quizesStudentList:
         correspond: 'Griegos'
         correct: false
     incompleteTextItems:
-      - sentence: Esparta la polis 
+      - sentence: Esparta la polis
         answer: México
         correct: false
-      - sentence: Los aztecas estaban en 
+      - sentence: Los aztecas estaban en
         answer: militar
-        correct: false                   
-          
-# EVALUATIONS***********************************************************
+        correct: false
+
+# EVALUATIONS ***********************************************************
 evaluationsList:
 
   - &e01
     title: Aritmetica Básica
-    type: PRUEBA   
+    type: PRUEBA
     date: 2018-6-11
     subject: *s01
     quiz: *q01
@@ -968,21 +973,21 @@ evaluationsList:
     subject: *s01
     quiz: *q02
     isOpen: false
-    
+
   - &e03
     title: Disertacion-01
     type: DISERTACION
     date: 2018-8-22
     subject: *s01
     isOpen: false
-    
+
   - &e04
     title: La historia de los números Romanos-01
     type: DISERTACION
     date: 2018-9-16
     subject: *s01
     isOpen: true
-    
+
   - &e05
     title: El gran Examen 3
     type: EXAMEN
@@ -990,76 +995,73 @@ evaluationsList:
     subject: *s03
     quiz: *q05
     isOpen: true
-    
+
   - &e06
     title: El gran Examen 4
     type: EXAMEN
     date: 2018-11-12
     subject: *s03
     quiz: *q06
-    isOpen: true    
-    
- 
-# GRADES*********************************************************** 
-gradesList:   
+    isOpen: true
+
+# GRADES ***********************************************************
+gradesList:
 
   - &g01
     grade: 6.0
     student: *u030
     evaluation: *e01
     quizStudent: *qs01
-    
+
   - &g02
     grade: 5.5
     student: *u031
     evaluation: *e01
     quizStudent: *qs02
-    
+
   - &g03
     grade: 4.5
     student: *u032
     evaluation: *e01
     quizStudent: *qs03
-    
-        
+
+
   - &g04
     grade: 6.5
     student: *u030
     evaluation: *e02
-    quizStudent: *qs04 
-    
+    quizStudent: *qs04
+
   - &g05
     grade: 6.1
     student: *u031
     evaluation: *e02
     quizStudent: *qs05
-   
+
   - &g06
     grade: 2.3
     student: *u032
     evaluation: *e02
     quizStudent: *qs06
-    
-    
+
+
   - &g07
     grade: 5.7
     student: *u030
     evaluation: *e03
-    
+
   - &g08
     grade: 6.4
     student: *u031
     evaluation: *e03
-    
+
   - &g09
     grade: 2.9
     student: *u032
     evaluation: *e03
-            
 
-
-# ATTENDANCES*********************************************************** 
-attendancesList:   
+# ATTENDANCES ***********************************************************
+attendancesList:
 
   - &a01
     subjectId: someId

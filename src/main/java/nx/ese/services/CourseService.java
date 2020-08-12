@@ -76,13 +76,13 @@ public class CourseService {
     public boolean studentsRepeatedInCoursesByYear(CourseDto course) {
         return course.getStudents()
                 .parallelStream()
-                .anyMatch(s -> courseRepository.findByStudentAndYearOptional(s.getId(), course.getYear())
+                .anyMatch(st -> courseRepository.findByStudentAndYearOptional(st.getId(), course.getYear())
                         .filter(c -> !c.getId().equals(course.getId()))
                         .isPresent());
     }
 
     public boolean isCourseInSubject(String courseId) {
-        return subjectRepository.findFirstByCourse(courseId) != null;
+        return subjectRepository.findFirstByCourse(courseId).isPresent();
     }
 
 

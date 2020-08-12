@@ -164,7 +164,7 @@ public class UserRestService {
                 .build();
     }
 
-    public UserDto getManagerByID(String id) {
+    public UserDto getManagerById(String id) {
         return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.MANAGER)
@@ -292,7 +292,7 @@ public class UserRestService {
                 .build();
     }
 
-    public UserDto getTeacherByID(String id) {
+    public UserDto getTeacherById(String id) {
         return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.TEACHER)
@@ -407,7 +407,7 @@ public class UserRestService {
                 .build();
     }
 
-    public UserDto getStudentByID(String id) {
+    public UserDto getStudentById(String id) {
         return restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.STUDENT)

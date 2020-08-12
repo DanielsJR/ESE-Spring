@@ -348,7 +348,7 @@ public class CourseControllerIT {
 
     @Test
     public void testDeleteCourseForbiddenDeleteExceptionSubject() {
-        CourseDto cDto = courseRestService.getCourseByNameAndYear(CourseName.PRIMERO_A, "2018");
+        CourseDto cDto = courseRestService.getCourseByNameAndYear(CourseName.OCTAVO_C, "2018");
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         courseRestService.deleteCourse(cDto.getId());
     }
@@ -397,8 +397,7 @@ public class CourseControllerIT {
     @Test
     public void testGetCourseByNameDocumentNotFoundException() {
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        courseRestService.getCourseByNameAndYear(CourseName.PRIMERO_A, "2050");
-
+        courseRestService.getCourseByNameAndYear(CourseName.PRIMERO_A, "1820");
     }
 
     //
@@ -452,8 +451,7 @@ public class CourseControllerIT {
     public void testGetFullCoursesByYearPreAuthorize() {
         courseRestService.postCourse();
 
-        // PreAuthorize("hasRole('MANAGER') or 'TEACHER'")
-        restService.loginStudent();
+        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or 'TEACHER'")
 
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         courseRestService.getFullCoursesByYear("2018");
@@ -475,7 +473,7 @@ public class CourseControllerIT {
 
     @Test
     public void testGetFullCoursesByYearEmptyList() {
-        assertEquals(courseRestService.getFullCoursesByYear("2050"), Collections.emptyList());
+        assertEquals(courseRestService.getFullCoursesByYear("1820"), Collections.emptyList());
     }
 
     //

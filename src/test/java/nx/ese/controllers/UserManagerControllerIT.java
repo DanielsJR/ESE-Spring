@@ -454,7 +454,7 @@ public class UserManagerControllerIT {
         userRestService.deleteManager(userRestService.getManagerDto().getUsername());
 
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        userRestService.getManagerByID(userRestService.getManagerDto().getUsername());
+        userRestService.getManagerById(userRestService.getManagerDto().getUsername());
     }
 
     @Test
@@ -502,7 +502,7 @@ public class UserManagerControllerIT {
     public void testGetManagerById() {
         userRestService.postManager();
 
-        UserDto uDto = userRestService.getManagerByID(userRestService.getManagerDto().getId());
+        UserDto uDto = userRestService.getManagerById(userRestService.getManagerDto().getId());
         assertEquals(userRestService.getManagerDto(), uDto);
     }
 
@@ -512,7 +512,7 @@ public class UserManagerControllerIT {
 
         restService.loginManager();// PreAuthorize("hasRole('ADMIN')")
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        userRestService.getManagerByID(userRestService.getManagerDto().getId());
+        userRestService.getManagerById(userRestService.getManagerDto().getId());
     }
 
     @Test
@@ -532,7 +532,7 @@ public class UserManagerControllerIT {
     @Test
     public void testGetManagerByIdNotFoundException() {
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        userRestService.getManagerByID("u64563456");
+        userRestService.getManagerById("u64563456");
     }
 
     @Test
@@ -542,7 +542,7 @@ public class UserManagerControllerIT {
 
         restService.loginAdmin();
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        userRestService.getManagerByID(uDto.getId());
+        userRestService.getManagerById(uDto.getId());
     }
 
     //

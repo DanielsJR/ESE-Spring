@@ -1,21 +1,18 @@
 package nx.ese.repositories;
 
-
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import nx.ese.documents.QUser;
-import nx.ese.documents.User;
+
 import nx.ese.documents.core.CourseName;
 import nx.ese.documents.core.QCourse;
+import nx.ese.documents.core.Course;
 import nx.ese.dtos.CourseDto;
+
 import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
-import nx.ese.documents.core.Course;
 
 import java.util.Optional;
 
@@ -40,6 +37,14 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         return Optional.empty();
     }
 
+    public Optional<CourseDto> findByNameAndYearAndChiefTeacher(CourseName courseName, String year, String teacherId) {
+        Predicate predicate = qCourse.name.eq(courseName)
+                .and(qCourse.year.eq(year))
+                .and(qCourse.chiefTeacher.id.eq(teacherId));
+        Optional<Course> c = courseRepository.findOne(predicate);
+        return c.map(CourseDto::new);
+    }
+
     public Optional<Course> findByStudentAndYearOptional(String studentId, String year) {
         Query query = new Query();
         query.addCriteria(Criteria.where("year").is(year)
@@ -51,11 +56,14 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         return Optional.empty();
     }
 
-    public Optional<CourseDto> findByNameAndYearAndChiefTeacher(CourseName courseName, String year, String teacherId) {
-        Predicate predicate = qCourse.name.eq(courseName)
-                .and(qCourse.year.eq(year))
-                .and(qCourse.chiefTeacher.id.eq(teacherId));
-        Optional<Course> c = courseRepository.findOne(predicate);
-        return c.map(CourseDto::new);
+    public Optional<Course> findByIdAndStudentOptional(String courseId, String studentId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(courseId)
+                .and("students.$id").is(new ObjectId(studentId)));
+
+        Course c = mongoTemplate.findOne(query, Course.class);
+        if (c != null)
+            return Optional.of(c);
+        return Optional.empty();
     }
 }

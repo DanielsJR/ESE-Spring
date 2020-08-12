@@ -24,7 +24,6 @@ import nx.ese.dtos.SubjectDto;
 import nx.ese.exceptions.DocumentAlreadyExistException;
 import nx.ese.exceptions.DocumentNotFoundException;
 import nx.ese.exceptions.FieldInvalidException;
-import nx.ese.exceptions.FieldNotFoundException;
 import nx.ese.exceptions.ForbiddenDeleteException;
 import nx.ese.services.SubjectService;
 
@@ -33,13 +32,16 @@ import nx.ese.services.SubjectService;
 @RequestMapping(SubjectController.SUBJECT)
 public class SubjectController {
 
-    public static final String SUBJECT = "/subjects";
+    public static final String SUBJECT = "/subject";
     public static final String NAME = "/name";
     public static final String TEACHER = "/teacher";
     public static final String COURSE = "/course";
+    public static final String YEAR = "/year";
 
     public static final String PATH_ID = "/{id}";
+    public static final String PATH_YEAR = "/{year}";
     public static final String PATH_NAME = "/{name}";
+    public static final String PATH_USERNAME = "/{username}";
 
 
     @Autowired
@@ -96,22 +98,22 @@ public class SubjectController {
                 .orElseThrow(() -> new DocumentNotFoundException("Asignatura"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-    @GetMapping()
-    public List<SubjectDto> getFullSubjects() {
-        return this.subjectService.getFullSubjects().orElse(Collections.emptyList());
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(YEAR + PATH_YEAR)
+    public List<SubjectDto> getSubjectsByYear(@PathVariable String year) {
+        return this.subjectService.getSubjectsByYear(year).orElse(Collections.emptyList());
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
-    @GetMapping(TEACHER + PATH_ID)
-    public List<SubjectDto> getSubjectsByTeacher(@PathVariable String id) {
-        return this.subjectService.getSubjectsByTeacher(id).orElse(Collections.emptyList());
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(TEACHER + PATH_USERNAME + PATH_YEAR)
+    public List<SubjectDto> getSubjectsByTeacherAndYear(@PathVariable String username, @PathVariable String year) {
+        return this.subjectService.getSubjectsByTeacherAndYear(username, year).orElse(Collections.emptyList());
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
-    @GetMapping(COURSE + PATH_ID)
-    public List<SubjectDto> getSubjectsByCourse(@PathVariable String id) {
-        return this.subjectService.getSubjectsByCourse(id).orElse(Collections.emptyList());
+    @PreAuthorize("hasRole('STUDENT') and #username == authentication.principal.username")
+    @GetMapping(COURSE + PATH_ID + PATH_USERNAME)
+    public List<SubjectDto> getStudentSubjectsByCourse(@PathVariable String id, @PathVariable String username) {
+        return this.subjectService.getStudentSubjectsByCourse(id, username).orElse(Collections.emptyList());
     }
 
 }

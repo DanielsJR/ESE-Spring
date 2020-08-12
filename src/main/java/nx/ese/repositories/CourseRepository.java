@@ -13,7 +13,7 @@ import nx.ese.dtos.CourseDto;
 
 public interface CourseRepository extends MongoRepository<Course, String>, QuerydslPredicateExecutor<Course>, CourseRepositoryCustom {
 
-    Optional<CourseDto> findByName(CourseName name);
+    Optional <List<CourseDto>> findByName(CourseName name);
 
     List<CourseDto> findByYear(String year);
 

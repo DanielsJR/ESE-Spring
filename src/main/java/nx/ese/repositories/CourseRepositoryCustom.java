@@ -15,4 +15,6 @@ public interface CourseRepositoryCustom {
 
 	Optional<CourseDto> findByNameAndYearAndChiefTeacher(CourseName courseName, String year, String teacherId);
 
+	Optional<Course> findByIdAndStudentOptional(String courseId, String studentId);
+
 }
