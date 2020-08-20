@@ -1,14 +1,17 @@
 package nx.ese.services;
 
+import java.time.LocalDate;
+
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import nx.ese.dtos.validators.NxPattern;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import nx.ese.documents.core.Evaluation;
@@ -63,13 +66,23 @@ public class EvaluationService {
         return evaluationDto.getDate() == null;
     }
 
+    public boolean isDateValid(LocalDate date) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(NxPattern.LOCAL_DATE_FORMAT);
+        try {
+            LocalDate.parse(date.toString(), dateFormatter);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+        return true;
+    }
+
     private Evaluation setEvaluationFromDto(Evaluation evaluation, @Valid EvaluationDto evaluationDto) {
         evaluation.setType(evaluationDto.getType());
         evaluation.setTitle(evaluationDto.getTitle());
         evaluation.setSubject(this.setSubject(evaluationDto));
         if (evaluationDto.getQuiz() != null) evaluation.setQuiz(this.setQuiz(evaluationDto));
         evaluation.setDate(evaluationDto.getDate());
-        evaluation.setIsOpen(evaluationDto.getIsOpen());
+        evaluation.setOpen(evaluationDto.getOpen());
         return evaluation;
     }
 
@@ -86,7 +99,7 @@ public class EvaluationService {
     // CRUD******************************
     public EvaluationDto createEvaluation(@Valid EvaluationDto evaluationDto) {
         Evaluation evaluation = setEvaluationFromDto(new Evaluation(), evaluationDto);
-        evaluation.setIsOpen(true);
+        evaluation.setOpen(true);
         return new EvaluationDto(evaluationRepository.insert(evaluation));
     }
 
@@ -104,22 +117,17 @@ public class EvaluationService {
         return Optional.empty();
     }
 
-    public Optional<List<EvaluationDto>> getFullEvaluations() {
-        List<EvaluationDto> list = evaluationRepository.findAll(new Sort(Sort.Direction.ASC, "title"))
-                .stream()
-                .map(EvaluationDto::new)
-                .collect(Collectors.toList());
-        if (list.isEmpty())
-            return Optional.empty();
-        return Optional.of(list);
-    }
-
-    public Optional<EvaluationDto> getEvaluationById(String id) {
-        return evaluationRepository.findById(id).map(EvaluationDto::new);
-    }
-
     public Optional<List<EvaluationDto>> getEvaluationsBySubject(String subjectId) {
         return evaluationRepository.findBySubject(subjectId);
     }
+
+    public Optional<EvaluationDto> getEvaluationById(String id) {
+        return evaluationRepository.findByIdOptionalDto(id);
+    }
+
+    public Optional<EvaluationDto> getEvaluationBySubjectAndDate(String subjectId, LocalDate date) {
+        return evaluationRepository.findBySubjectAndDate(subjectId, date);
+    }
+
 
 }

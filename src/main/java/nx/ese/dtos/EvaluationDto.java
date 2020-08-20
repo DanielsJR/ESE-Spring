@@ -1,11 +1,14 @@
 package nx.ese.dtos;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,15 +43,15 @@ public class EvaluationDto {
     @Setter
     private QuizDto quiz;
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
     @NotNull
     @Getter
     @Setter
-    private Date date;
+    private LocalDate date;
 
-    //@Getter
-    //@Setter
-    private boolean isOpen;
+    @Setter
+    private boolean open;
 
     @Getter
     private String createdBy;
@@ -64,15 +67,11 @@ public class EvaluationDto {
     @Getter
     private Date lastModifiedDate;
 
-    public boolean getIsOpen() {
-        return isOpen;
+    public boolean getOpen() {
+        return open;
     }
 
-    public void setIsOpen(boolean isOpen) {
-        this.isOpen = isOpen;
-    }
-
-    // output
+     // output
     public EvaluationDto(Evaluation evaluation) {
         this.id = evaluation.getId();
         this.type = evaluation.getType();
@@ -82,7 +81,7 @@ public class EvaluationDto {
             this.quiz = new QuizDto(evaluation.getQuiz());
         }
         this.date = evaluation.getDate();
-        this.isOpen = evaluation.getIsOpen();
+        this.open = evaluation.getOpen();
         this.createdBy = evaluation.getCreatedBy();
         this.createdDate = evaluation.getCreatedDate();
         this.lastModifiedUser = evaluation.getLastModifiedUser();
@@ -93,7 +92,7 @@ public class EvaluationDto {
     @Override
     public String toString() {
         return "EvaluationDto [id=" + id + ", type=" + type + ", title=" + title + ", subject=" + subject + ", quiz="
-                + quiz + ", date=" + NxDateFormatter.formatterDate(this.date) + ", isOpen=" + isOpen + ", createdBy=" + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate)
+                + quiz + ", date=" + this.date + ", open=" + open + ", createdBy=" + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate)
                 + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
     }
 

@@ -264,7 +264,7 @@ public class CourseControllerIT {
 
     @Test
     public void testPutCourseIdNull() {
-        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        thrown.expect(new HttpMatcher(HttpStatus.METHOD_NOT_ALLOWED));
         courseRestService.putCourse();
     }
 
@@ -440,26 +440,26 @@ public class CourseControllerIT {
 
     //
     @Test
-    public void testGetFullCoursesByYear() {
+    public void testGetCoursesByYear() {
         courseRestService.postCourse();
 
-        List<CourseDto> cDtos = courseRestService.getFullCoursesByYear("2018");
+        List<CourseDto> cDtos = courseRestService.getCoursesByYear("2018");
         Assert.assertTrue(cDtos.size() > 0);
     }
 
     @Test
-    public void testGetFullCoursesByYearPreAuthorize() {
+    public void testGetCoursesByYearPreAuthorize() {
         courseRestService.postCourse();
 
         restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or 'TEACHER'")
 
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        courseRestService.getFullCoursesByYear("2018");
+        courseRestService.getCoursesByYear("2018");
 
     }
 
     @Test
-    public void testGetFullCoursesByYearNoBearerAuth() {
+    public void testGetCoursesByYearNoBearerAuth() {
         courseRestService.postCourse();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
@@ -472,8 +472,8 @@ public class CourseControllerIT {
     }
 
     @Test
-    public void testGetFullCoursesByYearEmptyList() {
-        assertEquals(courseRestService.getFullCoursesByYear("1820"), Collections.emptyList());
+    public void testGetCoursesByYearEmptyList() {
+        assertEquals(courseRestService.getCoursesByYear("1820"), Collections.emptyList());
     }
 
     //

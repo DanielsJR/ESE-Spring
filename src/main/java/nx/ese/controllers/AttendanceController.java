@@ -27,7 +27,7 @@ import nx.ese.services.AttendanceService;
 @RequestMapping(AttendanceController.ATTENDANCE)
 public class AttendanceController {
 
-    public static final String ATTENDANCE = "/attendances";
+    public static final String ATTENDANCE = "/attendance";
     public static final String SUBJECT = "/subject";
 
     public static final String PATH_ID = "/{id}";

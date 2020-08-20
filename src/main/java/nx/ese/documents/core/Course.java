@@ -34,7 +34,7 @@ public class Course {
 	@Setter
 	private User chiefTeacher;
 
-	@DBRef(lazy = true)
+	@DBRef
 	@Getter
 	@Setter
 	private List<User> students;

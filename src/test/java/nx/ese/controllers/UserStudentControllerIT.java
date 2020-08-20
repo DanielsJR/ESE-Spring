@@ -396,8 +396,8 @@ public class UserStudentControllerIT {
 
         userRestService.deleteStudent(userRestService.getStudentDto().getUsername());
 
-        //thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        //userRestService.getStudentByUsername(userRestService.getStudentDto().getUsername());
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        userRestService.getStudentByUsername(userRestService.getStudentDto().getUsername());
     }
 
     @Test
@@ -504,8 +504,7 @@ public class UserStudentControllerIT {
     public void testGetStudentByUsernamePreAuthorize() {
         userRestService.postStudent();
 
-        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or
-        // hasRole('TEACHER')")
+        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         userRestService.getStudentByUsername(userRestService.getStudentDto().getUsername());
     }
@@ -555,8 +554,7 @@ public class UserStudentControllerIT {
 
     @Test
     public void testGetFullStudentsPreAuthorize() {
-        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or
-        // 'TEACHER'
+        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or 'TEACHER'
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         userRestService.getFullStudents();
     }
@@ -580,8 +578,7 @@ public class UserStudentControllerIT {
 
     @Test
     public void testGetMinStudentsPreAuthorize() {
-        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or
-        // 'TEACHER'
+        restService.loginStudent();// PreAuthorize("hasRole('MANAGER') or 'TEACHER'
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         userRestService.getMinStudents();
     }

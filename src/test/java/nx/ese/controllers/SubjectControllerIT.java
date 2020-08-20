@@ -202,7 +202,7 @@ public class SubjectControllerIT {
 
     @Test
     public void testPutSubjectIdNull() {
-        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        thrown.expect(new HttpMatcher(HttpStatus.METHOD_NOT_ALLOWED));
         subjectRestService.putSubject();
 
     }

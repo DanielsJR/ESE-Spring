@@ -7,15 +7,15 @@ import org.springframework.security.config.annotation.web.socket.AbstractSecurit
 @Configuration
 public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-	@Override
-	protected void configureInbound(final MessageSecurityMetadataSourceRegistry messages) {
-		messages.anyMessage().authenticated();
-		// messages.simpDestMatchers("/app/**").authenticated().simpSubscribeDestMatchers("/topic/**").authenticated().anyMessage().denyAll();
-	}
+    @Override
+    protected void configureInbound(final MessageSecurityMetadataSourceRegistry messages) {
+        messages.anyMessage().authenticated();
+        // messages.simpDestMatchers("/app/**").authenticated().simpSubscribeDestMatchers("/topic/**").authenticated().anyMessage().denyAll();
+    }
 
-	@Override
-	protected boolean sameOriginDisabled() {
-		return true;
-	}
+    @Override
+    protected boolean sameOriginDisabled() {
+        return true;
+    }
 
 }

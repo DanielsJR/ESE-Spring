@@ -152,7 +152,7 @@ public class CourseRestService {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<CourseDto> getFullCoursesByYear(String year) {
+    public List<CourseDto> getCoursesByYear(String year) {
         return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(CourseController.COURSE)
                 .path(CourseController.YEAR)

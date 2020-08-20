@@ -8,7 +8,7 @@ userList:
     password: megauser@ESE1
     firstName: Mega Hyper
     lastName: User
-    birthday: 1969-6-9
+    birthday: 1969-06-09
     gender: HOMBRE
     avatar:
       name: punisher.jpg
@@ -27,7 +27,7 @@ userList:
     password: p010@ESE1
     firstName: Barack Hussein
     lastName: Obama II
-    birthday: 1961-8-4
+    birthday: 1961-08-04
     gender: HOMBRE
     avatar:
       name: obama.png
@@ -45,7 +45,7 @@ userList:
     password: p011@ESE1
     firstName: Donald John
     lastName: Trump
-    birthday: 1946-6-14
+    birthday: 1946-06-14
     gender: HOMBRE
     avatar:
       name: trump.png
@@ -62,7 +62,7 @@ userList:
     password: p012@ESE1
     firstName: Angelina
     lastName: Jolie Voight
-    birthday: 1975-6-4
+    birthday: 1975-06-04
     gender: MUJER
     avatar:
       name: angelina.png
@@ -82,7 +82,7 @@ userList:
     firstName: Jada Candase
     lastName: Stevens Jackson
     password: p020@ESE1
-    birthday: 1988-7-4
+    birthday: 1988-07-04
     gender: MUJER
     avatar:
       name: jada.png
@@ -99,7 +99,7 @@ userList:
     firstName: Wonder
     lastName: Woman
     password: p021@ESE1
-    birthday: 1911-8-12
+    birthday: 1911-08-12
     gender: MUJER
     avatar:
       name: wonder.png
@@ -116,7 +116,7 @@ userList:
     password: p022@ESE1
     firstName: Iron
     lastName: Man
-    birthday: 1965-4-4
+    birthday: 1965-04-04
     gender: HOMBRE
     avatar:
       name: iron-man.png
@@ -133,7 +133,7 @@ userList:
     password: p023@ESE1
     firstName: Son
     lastName: Goku
-    birthday: 1981-3-4
+    birthday: 1981-03-04
     gender: HOMBRE
     avatar:
       name: goku.png
@@ -152,7 +152,7 @@ userList:
     firstName: Keisha
     lastName: Grey
     password: p030@ESE1
-    birthday: 1994-6-9
+    birthday: 1994-06-09
     gender: MUJER
     avatar:
       name: grey.png
@@ -169,7 +169,7 @@ userList:
     firstName: Arya
     lastName: Stark
     password: p031@ESE1
-    birthday: 1997-4-15
+    birthday: 1997-04-15
     gender: MUJER
     avatar:
       name: arya.png
@@ -254,7 +254,7 @@ userList:
     firstName: Dui
     lastName: Wilkerson
     password: p036@ESE1
-    birthday: 1990-2-22
+    birthday: 1990-02-22
     gender: HOMBRE
     avatar:
       name: dui.png
@@ -271,7 +271,7 @@ userList:
     firstName: Chad Do
     lastName: Not Touch
     password: p037@ESE1
-    birthday: 1990-6-8
+    birthday: 1990-06-08
     gender: HOMBRE
     avatar:
       name: chad.png
@@ -288,7 +288,7 @@ userList:
     firstName: David
     lastName: Hanson
     password: p038@ESE1
-    birthday: 1990-4-21
+    birthday: 1990-04-21
     gender: HOMBRE
     avatar:
       name: david.png
@@ -305,7 +305,7 @@ userList:
     firstName: None
     lastName: Course
     password: p039@ESE1
-    birthday: 1990-3-22
+    birthday: 1990-03-22
     gender: HOMBRE
     avatar:
       name: default-hombre-student.png
@@ -961,32 +961,32 @@ evaluationsList:
   - &e01
     title: Aritmetica Básica
     type: PRUEBA
-    date: 2018-6-11
+    date: 2018-06-11
     subject: *s01
     quiz: *q01
-    isOpen: false
+    open: false
 
   - &e02
     title: Ecuaciones de Primer Grado
     type: PRUEBA
-    date: 2018-6-20
+    date: 2018-06-20
     subject: *s01
     quiz: *q02
-    isOpen: false
+    open: false
 
   - &e03
     title: Disertacion-01
     type: DISERTACION
-    date: 2018-8-22
+    date: 2018-08-22
     subject: *s01
-    isOpen: false
+    open: false
 
   - &e04
     title: La historia de los números Romanos-01
     type: DISERTACION
-    date: 2018-9-16
+    date: 2018-09-16
     subject: *s01
-    isOpen: true
+    open: true
 
   - &e05
     title: El gran Examen 3
@@ -994,7 +994,7 @@ evaluationsList:
     date: 2018-10-12
     subject: *s03
     quiz: *q05
-    isOpen: true
+    open: true
 
   - &e06
     title: El gran Examen 4
@@ -1002,7 +1002,7 @@ evaluationsList:
     date: 2018-11-12
     subject: *s03
     quiz: *q06
-    isOpen: true
+    open: true
 
 # GRADES ***********************************************************
 gradesList:
@@ -1069,4 +1069,4 @@ attendancesList:
       - *u030
       - *u031
       - *u032
-    date: 2018-11-12
+    date: 2018-11-12T00:00:00-04:00

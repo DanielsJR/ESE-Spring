@@ -1,5 +1,6 @@
 package nx.ese.documents;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -49,7 +50,7 @@ public class User {
 
     @Setter
     @Getter
-    private Date birthday;
+    private LocalDate birthday;
 
     @Setter
     @Getter
@@ -104,7 +105,7 @@ public class User {
         active = true;
     }
 
-    public User(String username, String password, String firstName, String lastName, String dni, Date birthday,
+    public User(String username, String password, String firstName, String lastName, String dni, LocalDate birthday,
                 Gender gender, Avatar avatar, String mobile, String email, String address, Commune commune) {
         this();
         this.username = username;
@@ -134,7 +135,7 @@ public class User {
     @Override
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NxDateFormatter.formatterDate(this.birthday) + ", gender=" + gender
+                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + this.birthday + ", gender=" + gender
                 + ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
                 + ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
                 + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="

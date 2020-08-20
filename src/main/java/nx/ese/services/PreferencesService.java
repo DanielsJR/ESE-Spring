@@ -26,9 +26,9 @@ public class PreferencesService {
     public ThemeDto getUserTheme(String id) {
         ThemeDto themeDto = new ThemeDto();
         User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
-        if (preferencesRepository.findByUserId(id) != null
-                && preferencesRepository.findByUserId(id).getTheme() != null) {
-            Theme themeDb = preferencesRepository.findByUserId(id).getTheme();
+        if (preferencesRepository.findByUserId(id).isPresent()
+                && preferencesRepository.findByUserId(id).get().getTheme() != null) {
+            Theme themeDb = preferencesRepository.findByUserId(id).get().getTheme();
             themeDto.setName(themeDb.getName());
             themeDto.setIsDark(themeDb.getIsDark());
             themeDto.setColor(themeDb.getColor());
@@ -46,10 +46,10 @@ public class PreferencesService {
         }
     }
 
-    public boolean saveUserTheme(String id, ThemeDto theme) {
+    public boolean saveUserTheme(String userId, ThemeDto theme) {
         Theme nTheme = new Theme(theme.getName(), theme.getIsDark(), theme.getColor());
 
-        Optional<Preferences> preferences = preferencesRepository.findById(id);
+        Optional<Preferences> preferences = preferencesRepository.findByUserId(userId);
         if (preferences.isPresent()) {
             preferences.ifPresent(p -> {
                 p.setTheme(nTheme);
@@ -58,7 +58,7 @@ public class PreferencesService {
             return true;
 
         } else {
-            Optional<User> user = this.userRepository.findById(id);
+            Optional<User> user = this.userRepository.findById(userId);
             if (user.isPresent()) {
                 Preferences prefUser = new Preferences(user.get(), nTheme);
                 preferencesRepository.save(prefUser);

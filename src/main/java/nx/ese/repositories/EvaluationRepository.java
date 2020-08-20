@@ -1,6 +1,6 @@
 package nx.ese.repositories;
 
-
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,17 +10,32 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import nx.ese.documents.core.Evaluation;
 import nx.ese.documents.core.EvaluationType;
 import nx.ese.dtos.EvaluationDto;
+import org.springframework.data.mongodb.repository.Query;
 
 
 public interface EvaluationRepository extends MongoRepository<Evaluation, String> {
-	
-	public EvaluationDto  findFirstBySubject(String subjectId);
-	
-	public EvaluationDto  findFirstByQuiz(String quizId);
 
-	public EvaluationDto findByTitleAndTypeAndSubjectAndDate(String title, EvaluationType type, String id, Date date);
-	
-	public Optional<List<EvaluationDto>> findBySubject(String subjectId);
-	
+    @Query(value = "{'_id' : ?0 }")
+    Optional<EvaluationDto> findByIdOptionalDto(String evaluationId);
+
+    EvaluationDto findFirstBySubject(String subjectId);
+
+    EvaluationDto findFirstByQuiz(String quizId);
+
+    EvaluationDto findByTitleAndTypeAndSubjectAndDate(String title, EvaluationType type, String subjectId, LocalDate date);
+
+    Optional<List<EvaluationDto>> findBySubject(String subjectId);
+
+    Optional<EvaluationDto> findBySubjectAndDate(String subjectId, LocalDate date);
+
+    Optional<List<EvaluationDto>> findByTypeAndSubject(EvaluationType type, String subjectId);
+
+    Optional<List<EvaluationDto>> findBySubjectAndOpen(String subjectId, boolean open);
+
+    Optional<List<EvaluationDto>> findByTypeAndSubjectAndOpen(EvaluationType type, String subjectId, boolean open);
+
+    Optional<EvaluationDto> findFirstByDate(LocalDate date);
+
 
 }
+

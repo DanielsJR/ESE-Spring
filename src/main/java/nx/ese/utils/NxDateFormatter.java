@@ -14,7 +14,7 @@ public class NxDateFormatter {
     public static String formatterDate(Date date) {
         String fDate = "null";
         if (date != null)
-            fDate = new SimpleDateFormat(NxPattern.DATE_FORMAT).format(date.getTime());
+            fDate = new SimpleDateFormat(NxPattern.DATE_FORMAT_SHORT).format(date.getTime());
         return fDate;
     }
 }

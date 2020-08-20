@@ -8,6 +8,7 @@ import nx.ese.documents.Gender;
 import nx.ese.documents.Role;
 import nx.ese.dtos.UserDto;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -39,7 +40,7 @@ public class UserTestDto {
 
     @Getter
     @Setter
-    private Date birthday;
+    private LocalDate birthday;
 
     @Getter
     @Setter
@@ -116,7 +117,7 @@ public class UserTestDto {
     public String toString() {
 
         return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NxDateFormatter.formatterDate(this.birthday) + ", gender=" + gender
+                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + this.birthday + ", gender=" + gender
                 + ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
                 + ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
                 + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="

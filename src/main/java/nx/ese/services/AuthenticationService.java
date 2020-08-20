@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import nx.ese.config.TokenProvider;
+import nx.ese.jwt.TokenProvider;
 import nx.ese.documents.AuthToken;
 import nx.ese.documents.LoginUser;
 

@@ -1,8 +1,13 @@
 package nx.ese.services;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import nx.ese.dtos.validators.NxPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +36,9 @@ public class EvaluationRestService {
     @Setter
     private EvaluationDto evaluationDto2;
 
-    @Getter
-    @Setter
-    private List<EvaluationDto> listEvaluationDto;
+    public static String EVALUATION_TITLE_01 = "EvaluationTest01";
+    public static String EVALUATION_TITLE_02 = "EvaluationTest02";
+
 
     private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
 
@@ -44,18 +49,22 @@ public class EvaluationRestService {
         subjectRestService.postSubject();
 
         logger.info("*****************************CREATING_EVALUATIONS********************************************");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(NxPattern.DATE_FORMAT);
+
         this.evaluationDto = new EvaluationDto();
         this.evaluationDto.setType(EvaluationType.DISERTACION);
-        this.evaluationDto.setTitle("Test de evaluación-01");
-        Date date = new Date();
-        this.evaluationDto.setDate(date);
+        this.evaluationDto.setTitle(EVALUATION_TITLE_01);
+        this.evaluationDto.setDate(LocalDate.of(2018, 01, 11));
+        logger.warn("evaluationDto1 date Raw = {}", evaluationDto.getDate());
         this.evaluationDto.setSubject(subjectRestService.getSubjectDto());
 
         this.evaluationDto2 = new EvaluationDto();
         this.evaluationDto2.setType(EvaluationType.PRUEBA);
-        this.evaluationDto2.setTitle("Test de evaluación-02");
-        Date date2 = new Date();
-        this.evaluationDto2.setDate(date2);
+        this.evaluationDto2.setTitle(EVALUATION_TITLE_02);
+        //Date date2 = new GregorianCalendar(2018, Calendar.JANUARY, 11).getTime();
+
+        this.evaluationDto2.setDate(LocalDate.of(2018, 01, 11));
+        logger.warn("evaluationDto2 date Raw = {}", evaluationDto2.getDate());
         this.evaluationDto2.setSubject(subjectRestService.getSubjectDto());
 
         logger.info("*****************************************************************************************");
@@ -84,45 +93,73 @@ public class EvaluationRestService {
 
     }
 
-    public EvaluationDto postEvaluation() {
-        return evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-                .path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken())
-                .body(evaluationDto).post().build();
-
+    public void postEvaluation() {
+        evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(evaluationDto)
+                .post()
+                .build();
     }
 
-    public EvaluationDto postEvaluation2() {
-        return evaluationDto2 = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-                .path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken())
-                .body(evaluationDto2).post().build();
-
+    public void postEvaluation2() {
+        evaluationDto2 = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(evaluationDto2)
+                .post()
+                .build();
     }
 
-    public EvaluationDto putEvaluation() {
-        return evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-                .path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(evaluationDto.getId())
-                .bearerAuth(restService.getAuthToken().getToken()).body(evaluationDto).put().build();
-
+    public void putEvaluation() {
+        evaluationDto = restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.PATH_ID).expand(evaluationDto.getId())
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(evaluationDto)
+                .put()
+                .build();
     }
 
-    public EvaluationDto deleteEvaluation(String id) {
-        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-                .path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(id)
-                .bearerAuth(restService.getAuthToken().getToken()).delete().build();
+    public void deleteEvaluation(String id) {
+        restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .delete()
+                .build();
+    }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<EvaluationDto> getEvaluationsBySubject(String subjectId) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.SUBJECT)
+                .path(EvaluationController.PATH_ID).expand(subjectId)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
     public EvaluationDto getEvaluationById(String id) {
         return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
-                .path(EvaluationController.EVALUATION).path(EvaluationController.PATH_ID).expand(id)
-                .bearerAuth(restService.getAuthToken().getToken()).get().build();
-
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<EvaluationDto> getFullEvaluations() {
-        return listEvaluationDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
-                .path(EvaluationController.EVALUATION).bearerAuth(restService.getAuthToken().getToken()).get().build();
-
+    public EvaluationDto getEvaluationBySubjectAndDate(String subjectId, LocalDate date) {
+        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.SUBJECT)
+                .path(EvaluationController.PATH_ID).expand(subjectId)
+                .path(EvaluationController.PATH_DATE).expand(date)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
+
+
 }

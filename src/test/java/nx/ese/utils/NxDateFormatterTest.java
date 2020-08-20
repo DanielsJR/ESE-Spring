@@ -13,6 +13,6 @@ public class NxDateFormatterTest {
     public void formatterDate(){
         Date date = new GregorianCalendar(2020, Calendar.NOVEMBER, 27).getTime();
         String formattedDate = NxDateFormatter.formatterDate(date);
-        assertEquals("27/11/2020",formattedDate);
+        assertEquals("27-11-2020",formattedDate);
     }
 }

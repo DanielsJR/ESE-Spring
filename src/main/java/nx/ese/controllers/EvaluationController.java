@@ -1,10 +1,15 @@
 package nx.ese.controllers;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import nx.ese.dtos.validators.NxPattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +32,12 @@ import nx.ese.services.EvaluationService;
 @RequestMapping(EvaluationController.EVALUATION)
 public class EvaluationController {
 
-    public static final String EVALUATION = "/evaluations";
-    public static final String SUBJECTS = "/subjects";
+    public static final String EVALUATION = "/evaluation";
+    public static final String SUBJECT = "/subject";
 
     public static final String PATH_ID = "/{id}";
     public static final String PATH_USERNAME = "/{username}";
+    public static final String PATH_DATE = "/{date}";
 
     @Autowired
     private EvaluationService evaluationService;
@@ -68,21 +74,24 @@ public class EvaluationController {
     }
 
     @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @GetMapping(SUBJECT + PATH_ID)
+    public List<EvaluationDto> getEvaluationsBySubject(@PathVariable String id) throws DocumentNotFoundException {
+        return this.evaluationService.getEvaluationsBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
     @GetMapping(PATH_ID)
     public EvaluationDto getEvaluationById(@PathVariable String id) throws FieldNotFoundException {
         return this.evaluationService.getEvaluationById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-    @GetMapping()
-    public List<EvaluationDto> getFullEvaluations() throws DocumentNotFoundException {
-        return this.evaluationService.getFullEvaluations().orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
+    @PreAuthorize("hasRole('TEACHER')")
+    @GetMapping(SUBJECT + PATH_ID + PATH_DATE)
+    public EvaluationDto getEvaluationBySubjectAndDate(@PathVariable String id, @PathVariable LocalDate date)
+            throws DocumentNotFoundException, FieldInvalidException {
+
+        return this.evaluationService.getEvaluationBySubjectAndDate(id, date).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-    @GetMapping(SUBJECTS + PATH_ID)
-    public List<EvaluationDto> getEvaluationsBySubject(@PathVariable String id) throws DocumentNotFoundException {
-        return this.evaluationService.getEvaluationsBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
-    }
 
 }

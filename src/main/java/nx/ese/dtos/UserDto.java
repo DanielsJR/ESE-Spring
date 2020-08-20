@@ -1,14 +1,18 @@
 package nx.ese.dtos;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -50,10 +54,12 @@ public class UserDto {
     @NxRutValid
     private String dni;
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = NxPattern.DATE_FORMAT)
+    @Past
     @Getter
     @Setter
-    private Date birthday;
+    private LocalDate birthday;
 
     @Getter
     @Setter
@@ -103,7 +109,7 @@ public class UserDto {
 
     // input
     public UserDto(String id, String username, String password, String firstName, String lastName, String dni,
-                   Date birthday, Gender gender, Avatar avatar, String mobile, String email, String address, Commune commune,
+                   LocalDate birthday, Gender gender, Avatar avatar, String mobile, String email, String address, Commune commune,
                    Role[] roles, boolean active) {
         super();
         this.id = id;
@@ -201,7 +207,7 @@ public class UserDto {
     public String toString() {
 
         return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + NxDateFormatter.formatterDate(this.birthday) + ", gender=" + gender
+                + ", lastName=" + lastName + ", dni=" + dni + ", birthday=" + this.birthday + ", gender=" + gender
                 + ", mobile=" + mobile + ", avatar=" + avatar + ", email=" + email + ", address=" + address
                 + ", commune=" + commune + ", roles=" + Arrays.toString(roles) + ", active=" + active + ", createdBy="
                 + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedBy=" + lastModifiedUser + ", lastModifiedDate="

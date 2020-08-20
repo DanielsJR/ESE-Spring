@@ -27,8 +27,8 @@ import nx.ese.services.GradeService;
 @RequestMapping(GradeController.GRADE)
 public class GradeController {
 
-    public static final String GRADE = "/grades";
-    public static final String SUBJECT = "/subjects";
+    public static final String GRADE = "/grade";
+    public static final String SUBJECT = "/subject";
 
     public static final String PATH_ID = "/{id}";
     public static final String PATH_USERNAME = "/{username}";

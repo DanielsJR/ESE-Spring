@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import nx.ese.LocalDateYamlConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import nx.ese.documents.Avatar;
 import nx.ese.documents.Commune;
@@ -111,9 +111,11 @@ public class DatabaseSeederService {
 
     private void seedDatabase(String ymlFileName) throws IOException {
         assert ymlFileName != null && !ymlFileName.isEmpty();
-        Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
+        //Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
+        Yaml yamlParser = new Yaml(new LocalDateYamlConstructor());
         InputStream input = new ClassPathResource(ymlFileName).getInputStream();
-        DatabaseGraph dbGraph = yamlParser.load(input);
+        //DatabaseGraph dbGraph = yamlParser.load(input);
+        DatabaseGraph dbGraph = yamlParser.loadAs(input,DatabaseGraph.class);
 
         logger.warn("------------------------- Seeding with: {} -------------------------", ymlFileName);
 

@@ -30,7 +30,7 @@ import nx.ese.services.QuizStudentService;
 @RequestMapping(QuizStudentController.QUIZ_STUDENT)
 public class QuizStudentController {
 
-    public static final String QUIZ_STUDENT = "/quizes-student";
+    public static final String QUIZ_STUDENT = "/quiz-student";
 
     public static final String PATH_ID = "/{id}";
     public static final String PATH_USERNAME = "/{username}";
