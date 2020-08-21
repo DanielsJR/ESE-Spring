@@ -33,6 +33,8 @@
 
         <!-- Maven. Test de Integración -->
         <jacoco.version>0.8.5</jacoco.version>
+        <surefire.version>3.0.0-M5</surefire.version>
+
         <!-- JUnit -->
         <junit.platform.version>1.2.0</junit.platform.version>
         <!-- OpenAPI -->
@@ -196,6 +198,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
             </plugin>
 
             <plugin>
