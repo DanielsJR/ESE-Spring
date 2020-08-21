@@ -116,7 +116,7 @@ public class QuizService {
     }
 
     public Optional<List<QuizDto>> getFullQuizes() {
-        List<QuizDto> list = quizRepository.findAll(new Sort(Sort.Direction.ASC, "title"))
+        List<QuizDto> list = quizRepository.findAll(Sort.by(Sort.Direction.ASC, "title"))
                 .stream()
                 .map(QuizDto::new)
                 .collect(Collectors.toList());

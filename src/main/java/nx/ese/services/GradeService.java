@@ -109,7 +109,7 @@ public class GradeService {
     }
 
     public Optional<List<GradeDto>> getFullGrades() {
-        List<GradeDto> list = gradeRepository.findAll(new Sort(Sort.Direction.ASC, "title"))
+        List<GradeDto> list = gradeRepository.findAll(Sort.by(Sort.Direction.ASC, "title"))
                 .stream()
                 .map(GradeDto::new)
                 .collect(Collectors.toList());

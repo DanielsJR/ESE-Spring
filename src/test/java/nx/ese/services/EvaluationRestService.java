@@ -55,16 +55,12 @@ public class EvaluationRestService {
         this.evaluationDto.setType(EvaluationType.DISERTACION);
         this.evaluationDto.setTitle(EVALUATION_TITLE_01);
         this.evaluationDto.setDate(LocalDate.of(2018, 01, 11));
-        logger.warn("evaluationDto1 date Raw = {}", evaluationDto.getDate());
         this.evaluationDto.setSubject(subjectRestService.getSubjectDto());
 
         this.evaluationDto2 = new EvaluationDto();
         this.evaluationDto2.setType(EvaluationType.PRUEBA);
         this.evaluationDto2.setTitle(EVALUATION_TITLE_02);
-        //Date date2 = new GregorianCalendar(2018, Calendar.JANUARY, 11).getTime();
-
         this.evaluationDto2.setDate(LocalDate.of(2018, 01, 11));
-        logger.warn("evaluationDto2 date Raw = {}", evaluationDto2.getDate());
         this.evaluationDto2.setSubject(subjectRestService.getSubjectDto());
 
         logger.info("*****************************************************************************************");

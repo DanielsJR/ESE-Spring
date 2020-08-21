@@ -36,6 +36,7 @@ import nx.ese.repositories.QuizStudentRepository;
 import nx.ese.repositories.SubjectRepository;
 import nx.ese.repositories.UserRepository;
 import nx.ese.utils.NxUtilBase64Image;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 @Service
 public class DatabaseSeederService {

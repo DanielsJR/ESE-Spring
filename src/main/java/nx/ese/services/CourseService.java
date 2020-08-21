@@ -112,7 +112,7 @@ public class CourseService {
     }
 
     public Optional<List<CourseDto>> getFullCourses() {
-        List<CourseDto> list = courseRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
+        List<CourseDto> list = courseRepository.findAll(Sort.by(Sort.Direction.ASC, "name"))
                 .stream()
                 .map(CourseDto::new)
                 .collect(Collectors.toList());

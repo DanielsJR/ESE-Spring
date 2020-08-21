@@ -89,7 +89,7 @@ public class QuizStudentService {
     }
 
     public Optional<List<QuizStudentDto>> getFullQuizesStudent() {
-        List<QuizStudentDto> list = quizStudentRepository.findAll(new Sort(Sort.Direction.ASC, "grade"))
+        List<QuizStudentDto> list = quizStudentRepository.findAll(Sort.by(Sort.Direction.ASC, "grade"))
                 .stream()
                 .map(QuizStudentDto::new)
                 .collect(Collectors.toList());

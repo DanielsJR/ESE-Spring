@@ -1,8 +1,8 @@
-# USERS ***********************************************************
+# USERS
 userList:
-  # Users u000-u009 ADMIN ***********************************************************
+  # Users u000-u009 ADMIN
 
-  # Users u010-u019 MANAGER ***********************************************************
+  # Users u010-u019 MANAGER
   - &u019
     username: megauser
     password: megauser@ESE1
@@ -76,7 +76,7 @@ userList:
       - TEACHER
 
 
-  # Users u020-u029 TEACHER ***********************************************************
+  # Users u020-u029 TEACHER
   - &u020
     username: u020
     firstName: Jada Candase
@@ -146,7 +146,7 @@ userList:
       - TEACHER
 
 
-  # Users u030-u039 STUDENT ***********************************************************
+  # Users u030-u039 STUDENT
   - &u030
     username: u030
     firstName: Keisha
@@ -317,7 +317,7 @@ userList:
     roles:
       - STUDENT
 
-# PREFERENCES ***********************************************************
+# PREFERENCES
 preferencesList:
   - user: *u010
     theme:
@@ -391,7 +391,7 @@ preferencesList:
       isDark: true
       color: '#2196F3'
 
-# COURSES ***********************************************************
+# COURSES
 coursesList:
 
   #2018-----
@@ -456,7 +456,7 @@ coursesList:
     chiefTeacher: *u022
     year: 2016
 
-# SUBJECTS ***********************************************************
+# SUBJECTS
 subjectsList:
 
   - &s01
@@ -514,7 +514,7 @@ subjectsList:
     teacher: *u023
     course: *7-C-17
 
-# QUIZES ***********************************************************
+# QUIZES
 quizesList:
 
   - &q01
@@ -723,7 +723,7 @@ quizesList:
       - sentence: Un circulo es
         answer: circular
 
-# QUIZES-STUDENT ***********************************************************
+# QUIZES-STUDENT
 quizesStudentList:
 
   - &qs01
@@ -955,7 +955,7 @@ quizesStudentList:
         answer: militar
         correct: false
 
-# EVALUATIONS ***********************************************************
+# EVALUATIONS
 evaluationsList:
 
   - &e01
@@ -1004,7 +1004,7 @@ evaluationsList:
     quiz: *q06
     open: true
 
-# GRADES ***********************************************************
+# GRADES
 gradesList:
 
   - &g01
@@ -1060,7 +1060,7 @@ gradesList:
     student: *u032
     evaluation: *e03
 
-# ATTENDANCES ***********************************************************
+# ATTENDANCES
 attendancesList:
 
   - &a01
