@@ -168,7 +168,7 @@ public class SubjectService {
     }
 
     public boolean isSubjectInEvaluation(String subjectId) {
-        return evaluationRepository.findFirstBySubject(subjectId) != null;
+        return evaluationRepository.findFirstBySubject(subjectId).isPresent();
     }
 
     public boolean isStudentInCourse(String courseId, String studentId) {

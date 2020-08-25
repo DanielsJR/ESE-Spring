@@ -45,9 +45,9 @@ public class EvaluationService {
             return false;
         }
 
-        EvaluationDto evaluationDB = evaluationRepository.findByTitleAndTypeAndSubjectAndDate(evaluationDto.getTitle(),
+        Optional<EvaluationDto> evaluationDB = evaluationRepository.findByTitleAndTypeAndSubjectAndDate(evaluationDto.getTitle(),
                 evaluationDto.getType(), evaluationDto.getSubject().getId(), evaluationDto.getDate());
-        return evaluationDB != null && !evaluationDB.getId().equals(evaluationDto.getId());
+        return evaluationDB.isPresent() && !evaluationDB.get().getId().equals(evaluationDto.getId());
     }
 
     private boolean isSubjectNull(@Valid EvaluationDto evaluationDto) {

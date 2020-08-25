@@ -37,7 +37,7 @@ public class Grade {
 
     @Getter
     @Setter
-    private double grade;
+    private Double grade;
 
     @DBRef
     @Getter

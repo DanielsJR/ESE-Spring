@@ -428,11 +428,6 @@ public class SubjectControllerIT {
         restService.loginTeacher(); // u021
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         subjectRestService.getSubjectsByTeacherAndYear("u020", "2018");
-
-        restService.loginManager();
-        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        subjectRestService.getSubjectsByTeacherAndYear("u021", "2018");
-
     }
 
     @Test

@@ -124,10 +124,10 @@ public class CourseController {
                 .orElseThrow(() -> new DocumentNotFoundException("Course"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping(YEAR + PATH_YEAR)
-    public List<CourseDto> getFullCoursesByYear(@PathVariable String year) {
-        return this.courseService.getFullCoursesByYear(year).orElse(Collections.emptyList());
+    public List<CourseDto> getCoursesByYear(@PathVariable String year) {
+        return this.courseService.getCoursesByYear(year).orElse(Collections.emptyList());
     }
 
     @PreAuthorize("hasRole('MANAGER')")

@@ -122,7 +122,7 @@ public class CourseService {
         return Optional.of(list);
     }
 
-    public Optional<List<CourseDto>> getFullCoursesByYear(String year) {
+    public Optional<List<CourseDto>> getCoursesByYear(String year) {
         List<CourseDto> list = courseRepository.findByYear(year)
                 .parallelStream()
                 .sorted(Comparator.comparing(c -> c.getName().getCode()))

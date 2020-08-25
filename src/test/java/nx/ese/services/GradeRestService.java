@@ -114,17 +114,39 @@ public class GradeRestService {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<GradeDto> getFullGrades() {
-        return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
-                .path(GradeController.GRADE).bearerAuth(restService.getAuthToken().getToken()).get().build();
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<GradeDto> getGradesBySubject(String id) {
+    public List<GradeDto> getGradesBySubject(String subjectId) {
         return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(GradeController.GRADE)
                 .path(GradeController.SUBJECT)
-                .path(GradeController.PATH_ID).expand(id)
+                .path(GradeController.PATH_ID).expand(subjectId)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<GradeDto> getTeacherGradesBySubject(String subjectId, String username) {
+        return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(GradeController.GRADE)
+                .path(GradeController.SUBJECT)
+                .path(GradeController.PATH_ID).expand(subjectId)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get().log()
+                .build();
+
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<GradeDto> getStudentGradesBySubject(String subjectId, String username) {
+        return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(GradeController.GRADE)
+                .path(GradeController.SUBJECT)
+                .path(GradeController.PATH_ID).expand(subjectId)
+                .path(GradeController.STUDENT)
+                .path(GradeController.PATH_USERNAME).expand(username)
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();

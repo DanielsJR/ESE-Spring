@@ -2,6 +2,12 @@ package nx.ese.controllers;
 
 import static org.junit.Assert.assertEquals;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import nx.ese.documents.core.CourseName;
+import nx.ese.documents.core.SubjectName;
+import nx.ese.dtos.EvaluationDto;
+import nx.ese.services.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,10 +23,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import nx.ese.dtos.GradeDto;
-import nx.ese.services.GradeRestService;
-import nx.ese.services.HttpMatcher;
-import nx.ese.services.RestService;
-import nx.ese.services.SubjectRestService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -35,6 +40,9 @@ public class GradeControllerIT {
 
     @Autowired
     private SubjectRestService subjectRestService;
+
+    @Autowired
+    private CourseRestService courseRestService;
 
     @Autowired
     private RestService restService;
@@ -91,7 +99,6 @@ public class GradeControllerIT {
     @Test
     public void testPostGradeDocumentAlreadyExistException() {
         gradeRestService.postGrade();
-
         gradeRestService.getGradeDto2().setStudent(gradeRestService.getGradeDto().getStudent());
         gradeRestService.getGradeDto2().setEvaluation(gradeRestService.getGradeDto().getEvaluation());
 
@@ -107,8 +114,6 @@ public class GradeControllerIT {
                 .body(null).post().build();
     }
 
-    //TODO
-/*
     @Test
     public void testPostGradeStudentNull() {
         gradeRestService.getGradeDto().setStudent(null);
@@ -123,7 +128,15 @@ public class GradeControllerIT {
 
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         gradeRestService.postGrade();
-    }*/
+    }
+
+    @Test
+    public void testPostGradeGradeNull() {
+        gradeRestService.getGradeDto().setGrade(null);
+
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.postGrade();
+    }
 
 
     // PUT********************************
@@ -195,8 +208,6 @@ public class GradeControllerIT {
 
     }
 
-    //TODO
-/*
     @Test
     public void testPutGradeStudentNull() {
         gradeRestService.postGrade();
@@ -215,10 +226,19 @@ public class GradeControllerIT {
 
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         gradeRestService.putGrade();
-    } */
+    }
 
+    @Test
+    public void testPutGradeGradeNull() {
+        gradeRestService.postGrade();
 
-    // DELETE
+        gradeRestService.getGradeDto().setGrade(null);
+
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.putGrade();
+    }
+
+    // DELETE********************************
     @Test
     public void testDeleteGrade() {
         gradeRestService.postGrade();
@@ -292,38 +312,132 @@ public class GradeControllerIT {
 
     //
     @Test
-    public void testGetFullGrades() {
-        gradeRestService.getFullGrades();
-
-        Assert.assertTrue(gradeRestService.getListGradeDto().size() > 0);
-    }
-
-    @Test
-    public void testGetFullGradesPreAuthorize() {
-        restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or
-        // MANAGER")
-
-        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        gradeRestService.getFullGrades();
-
-    }
-
-    @Test
-    public void testGetFullGradesNoBearerAuth() {
-        gradeRestService.getFullGrades();
-
-        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(GradeController.GRADE).get().build();
-
-    }
-
-    @Test
     public void testGetGradesBySubject() {
         gradeRestService.postGrade();
-        String sjcId = subjectRestService.getSubjectDto().getId();
-        gradeRestService.getGradesBySubject(sjcId);
+        String sId = subjectRestService.getSubjectDto().getId();
+        restService.loginManager();
+        gradeRestService.getGradesBySubject(sId);
 
         Assert.assertTrue(gradeRestService.getListGradeDto().size() > 0);
     }
 
+    @Test
+    public void testGetGradesBySubjectPreAuthorize() {
+        gradeRestService.postGrade();
+        String sId = subjectRestService.getSubjectDto().getId();
+
+        restService.loginAdmin();// PreAuthorize("hasRole MANAGER")
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getGradesBySubject(sId);
+    }
+
+    @Test
+    public void testGetGradesBySubjectNoBearerAuth() {
+        gradeRestService.postGrade();
+        String sId = subjectRestService.getSubjectDto().getId();
+
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(GradeController.GRADE)
+                .path(GradeController.SUBJECT)
+                .path(GradeController.PATH_ID).expand(sId)
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    //
+    @Test
+    public void testGetTeacherGrades() {
+        restService.loginManager();
+        String cId = courseRestService.getCourseByNameAndYear(CourseName.OCTAVO_C, "2018").getId();
+        String sId = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cId).getId();
+
+        restService.loginUser("u010", "p010@ESE1");
+        List<GradeDto> rawList = gradeRestService.getTeacherGradesBySubject(sId, "u010");
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {
+        });
+
+        Assert.assertTrue(gList.size() > 0);
+        Assert.assertEquals("u010", gList.get(0).getEvaluation().getSubject().getTeacher().getUsername());
+    }
+
+    @Test
+    public void testGetTeacherGradesPreAuthorize() {
+        restService.loginManager();
+        String cId = courseRestService.getCourseByNameAndYear(CourseName.OCTAVO_C, "2018").getId();
+        String sId = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cId).getId();
+
+        restService.loginAdmin();// PreAuthorize("hasRole TEACHER")
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getTeacherGradesBySubject(sId, "u010");
+    }
+
+    @Test
+    public void testGetTeacherGradesNoBearerAuth() {
+        restService.loginManager();
+        String cId = courseRestService.getCourseByNameAndYear(CourseName.OCTAVO_C, "2018").getId();
+        String sId = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cId).getId();
+
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(GradeController.GRADE)
+                .path(GradeController.SUBJECT)
+                .path(GradeController.PATH_ID).expand(sId)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand("u010")
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get().log()
+                .build();
+    }
+
+    //
+    @Test
+    public void testGetStudentGrades() {
+        restService.loginManager();
+        String cId = courseRestService.getCourseByNameAndYear(CourseName.OCTAVO_C, "2018").getId();
+        String sId = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cId).getId();
+
+        restService.loginUser("u032", "p032@ESE1");
+        List<GradeDto> rawList = gradeRestService.getStudentGradesBySubject(sId, "u032");
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {
+        });
+
+        Assert.assertTrue(gList.size() > 0);
+        Assert.assertEquals("u032", gList.get(0).getStudent().getUsername());
+    }
+
+    @Test
+    public void testGetStudentGradesPreAuthorize() {
+        restService.loginManager();
+        String cId = courseRestService.getCourseByNameAndYear(CourseName.OCTAVO_C, "2018").getId();
+        String sId = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cId).getId();
+
+        restService.loginAdmin();// PreAuthorize("hasRole STUDENT")
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getStudentGradesBySubject(sId, "u010");
+    }
+
+    @Test
+    public void testGetStudentGradesNoBearerAuth() {
+        restService.loginManager();
+        String cId = courseRestService.getCourseByNameAndYear(CourseName.OCTAVO_C, "2018").getId();
+        String sId = subjectRestService.getSubjectByNameAndCourse(SubjectName.MATEMATICAS, cId).getId();
+
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(GradeController.GRADE)
+                .path(GradeController.SUBJECT)
+                .path(GradeController.PATH_ID).expand(sId)
+                .path(GradeController.STUDENT)
+                .path(GradeController.PATH_USERNAME).expand("u032")
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
 }

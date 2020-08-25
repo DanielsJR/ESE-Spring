@@ -1,5 +1,6 @@
 package nx.ese.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -29,6 +30,8 @@ public class GradeController {
 
     public static final String GRADE = "/grade";
     public static final String SUBJECT = "/subject";
+    public static final String TEACHER = "/teacher";
+    public static final String STUDENT = "/student";
 
     public static final String PATH_ID = "/{id}";
     public static final String PATH_USERNAME = "/{username}";
@@ -73,15 +76,21 @@ public class GradeController {
         return this.gradeService.getGradeById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-    @GetMapping()
-    public List<GradeDto> getFullGrades() throws DocumentNotFoundException {
-        return this.gradeService.getFullGrades().orElseThrow(() -> new DocumentNotFoundException("Grade(s)"));
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(SUBJECT + PATH_ID)
+    public List<GradeDto> getGradesBySubject(@PathVariable String id) {
+        return this.gradeService.getGradesBySubject(id).orElse(Collections.emptyList());
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
-    @GetMapping(SUBJECT + PATH_ID)
-    public List<GradeDto> getGradesBySubject(@PathVariable String id) throws DocumentNotFoundException {
-        return this.gradeService.getGradesBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Grade(s)"));
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(SUBJECT + PATH_ID + TEACHER + PATH_USERNAME)
+    public List<GradeDto> getTeacherGradesBySubject(@PathVariable String id, @PathVariable String username) {
+        return this.gradeService.getTeacherGradesBySubject(id, username).orElse(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('STUDENT') and #username == authentication.principal.username")
+    @GetMapping(SUBJECT + PATH_ID + STUDENT + PATH_USERNAME)
+    public List<GradeDto> getStudentGradesBySubject(@PathVariable String id, @PathVariable String username) {
+        return this.gradeService.getStudentGradesBySubject(id, username).orElse(Collections.emptyList());
     }
 }
