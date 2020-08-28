@@ -37,10 +37,8 @@ public class CourseController {
     public static final String COURSE = "/course";
     public static final String NAME = "/name";
     public static final String YEAR = "/year";
-    public static final String STUDENT_ID = "/studentId";
-    public static final String STUDENT_NAME = "/studentName";
-    public static final String TEACHER_ID = "/teacherId";
-    public static final String TEACHER_NAME = "/teacherName";
+    public static final String STUDENT = "/student";
+    public static final String TEACHER = "/teacher";
 
     public static final String PATH_ID = "/{id}";
     public static final String PATH_NAME = "/{name}";
@@ -131,50 +129,26 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole('MANAGER')")
-    @GetMapping(TEACHER_ID + PATH_ID + PATH_YEAR)
-    public CourseDto getCourseByChiefTeacherAndYear(@PathVariable String id, @PathVariable String year)
-            throws DocumentNotFoundException, FieldNotFoundException {
-
-        if (!this.userService.existsUserId(id))
-            throw new FieldNotFoundException("Id");
-
-        return this.courseService.getCourseByChiefTeacherAndYear(id, year)
-                .orElseThrow(() -> new DocumentNotFoundException("Curso"));
-    }
-
-    @PreAuthorize("hasRole('MANAGER')")
-    @GetMapping(TEACHER_NAME + PATH_USERNAME + PATH_YEAR)
-    public CourseDto getCourseByChiefTeacherNameAndYear(@PathVariable String username, @PathVariable String year)
+    @GetMapping(TEACHER + PATH_USERNAME + PATH_YEAR)
+    public CourseDto getCourseByChiefTeacherAndYear(@PathVariable String username, @PathVariable String year)
             throws DocumentNotFoundException, FieldNotFoundException {
 
         if (!this.userService.existsUserUsername(username))
             throw new FieldNotFoundException("Nombre de Usuario");
 
-        return this.courseService.getCourseByChiefTeacherNameAndYear(username, year)
+        return this.courseService.getCourseByChiefTeacherAndYear(username, year)
                 .orElseThrow(() -> new DocumentNotFoundException("Curso"));
     }
 
     @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
-    @GetMapping(STUDENT_ID + PATH_ID + PATH_YEAR)
-    public String getCourseIdByStudentAndYear(@PathVariable String id, @PathVariable String year)
-            throws DocumentNotFoundException, FieldNotFoundException {
-
-        if (!this.userService.existsUserId(id))
-            throw new FieldNotFoundException("Id");
-
-        return this.courseService.getCourseIdByStudentAndYear(id, year)
-                .orElseThrow(() -> new DocumentNotFoundException("Curso"));
-    }
-
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
-    @GetMapping(STUDENT_NAME + PATH_USERNAME + PATH_YEAR)
-    public String getCourseIdByStudentNameAndYear(@PathVariable String username, @PathVariable String year)
+    @GetMapping(STUDENT + PATH_USERNAME + PATH_YEAR)
+    public String getCourseIdByStudentAndYear(@PathVariable String username, @PathVariable String year)
             throws DocumentNotFoundException, FieldNotFoundException {
 
         if (!this.userService.existsUserUsername(username))
             throw new FieldNotFoundException("Nombre de Usuario");
 
-        return this.courseService.getCourseIdByStudentNameAndYear(username, year)
+        return this.courseService.getCourseIdByStudentAndYear(username, year)
                 .orElseThrow(() -> new DocumentNotFoundException("Curso"));
     }
 

@@ -109,7 +109,7 @@ public class SubjectService {
     public Optional<List<SubjectDto>> getSubjectsByTeacherAndYear(String username, String year) {
         Optional<User> u = userRepository.findByUsernameOptional(username);
         if (u.isPresent()) {
-            List<SubjectDto> list = subjectRepository.findByTeacher(u.get().getId())
+            List<SubjectDto> list = subjectRepository.findByTeacherDto(u.get().getId())
                     .stream()
                     .filter(s -> s.getCourse().getYear().equals(year))
                     .sorted(Comparator.comparing(s -> s.getName().toString()))

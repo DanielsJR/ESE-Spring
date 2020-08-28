@@ -156,8 +156,7 @@ public class UserService {
             return courseRepository.findAll()
                     .stream()
                     //.flatMap(c -> c.getStudents() == null ? Stream.empty() : c.getStudents().stream())
-                    //.flatMap(c -> Stream.ofNullable(c.getStudents()))//java9
-                    .flatMap(c -> Optional.ofNullable(c.getStudents()).map(Collection::stream).orElseGet(Stream::empty))
+                    .flatMap(c -> Optional.ofNullable(c.getStudents()).stream().flatMap(Collection::stream))
                     .anyMatch(s -> s.getUsername().equals(username));
         } else {
             return false;

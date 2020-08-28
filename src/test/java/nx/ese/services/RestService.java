@@ -71,9 +71,9 @@ public class RestService {
 		return restBuilder;
 	}
 	
-	public RestService loginUser(String user, String pass) {
+	public RestService loginUser(String username, String pass) {
 		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationController.TOKEN)
-				.path(AuthenticationController.GENERATE_TOKEN).login(user, pass).clazz(AuthToken.class).post().build();
+				.path(AuthenticationController.GENERATE_TOKEN).login(username, pass).clazz(AuthToken.class).post().build();
 		return this;
 	}
 

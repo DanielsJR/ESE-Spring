@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -22,6 +23,9 @@ public class SubjectRepositoryTest {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     public void findByNameAndCourse() {
@@ -46,5 +50,12 @@ public class SubjectRepositoryTest {
         Assert.assertTrue(cDto2.isPresent());
         Optional<SubjectDto> sDto2 = subjectRepository.findFirstByCourse(cDto2.get().getId());
         Assert.assertFalse(sDto2.isPresent());
+    }
+
+
+    @Test
+    public void findByTeacherDto(){
+        List<SubjectDto> sDtos = subjectRepository.findByTeacherDto(userRepository.findByUsername("u021").getId());
+        Assert.assertEquals(4, sDtos.size());
     }
 }

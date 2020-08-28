@@ -478,10 +478,10 @@ public class CourseControllerIT {
 
     //
     @Test
-    public void getCourseByChiefTeacherNameAndYear() {
+    public void getCourseByChiefTeacherAndYear() {
         courseRestService.postCourse();
 
-        CourseDto cDto = courseRestService.getCourseByChiefTeacherNameAndYear(
+        CourseDto cDto = courseRestService.getCourseByChiefTeacherAndYear(
                 courseRestService.getCourseDto().getChiefTeacher().getUsername(),
                 courseRestService.getCourseDto().getYear());
         assertEquals(courseRestService.getCourseDto().getChiefTeacher().getUsername(),
@@ -489,23 +489,23 @@ public class CourseControllerIT {
     }
 
     @Test
-    public void getCourseByChiefTeacherNameAndYearPreAuthorize() {
+    public void getCourseByChiefTeacherAndYearPreAuthorize() {
         courseRestService.postCourse();
 
         restService.loginStudent(); // PreAuthorize("hasRole('MANAGER') or 'TEACHER'")
 
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        courseRestService.getCourseByChiefTeacherNameAndYear(courseRestService.getCourseDto().getChiefTeacher().getUsername(), courseRestService.getCourseDto().getYear());
+        courseRestService.getCourseByChiefTeacherAndYear(courseRestService.getCourseDto().getChiefTeacher().getUsername(), courseRestService.getCourseDto().getYear());
     }
 
     @Test
-    public void getCourseByChiefTeacherNameAndYearNoBearerAuth() {
+    public void getCourseByChiefTeacherAndYearNoBearerAuth() {
         courseRestService.postCourse();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         restService.restBuilder()
                 .path(CourseController.COURSE)
-                .path(CourseController.TEACHER_NAME)
+                .path(CourseController.TEACHER)
                 .path(CourseController.PATH_USERNAME)
                 .expand(courseRestService.getCourseDto().getChiefTeacher().getUsername())
                 .path(CourseController.PATH_YEAR).expand(courseRestService.getCourseDto().getYear())
@@ -514,29 +514,30 @@ public class CourseControllerIT {
     }
 
     @Test
-    public void getCourseByChiefTeacherNameAndYearFieldNotFoundExceptionUsername() {
+    public void getCourseByChiefTeacherAndYearFieldNotFoundExceptionUsername() {
         courseRestService.postCourse();
 
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        courseRestService.getCourseByChiefTeacherNameAndYear("rupertina", courseRestService.getCourseDto().getYear());
+        courseRestService.getCourseByChiefTeacherAndYear("rupertina", courseRestService.getCourseDto().getYear());
 
     }
 
     @Test
-    public void getCourseByChiefTeacherNameAndYearDocumentNotFoundException() {
+    public void getCourseByChiefTeacherAndYearDocumentNotFoundException() {
         courseRestService.postCourse();
 
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        courseRestService.getCourseByChiefTeacherNameAndYear(
+        courseRestService.getCourseByChiefTeacherAndYear(
                 courseRestService.getCourseDto().getChiefTeacher().getUsername(), "1820");
 
     }
 
+    //
     @Test
     public void getCourseIdByStudentAndYear() {
         courseRestService.postCourse();
 
-        String cId = courseRestService.getCourseIdByStudentAndYear(courseRestService.getCourseDto().getStudents().get(0).getId(), courseRestService.getCourseDto().getYear());
+        String cId = courseRestService.getCourseIdByStudentAndYear(courseRestService.getCourseDto().getStudents().get(0).getUsername(), courseRestService.getCourseDto().getYear());
         assertEquals(courseRestService.getCourseDto().getId(), cId);
     }
 
@@ -547,8 +548,8 @@ public class CourseControllerIT {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         restService.restBuilder()
                 .path(CourseController.COURSE)
-                .path(CourseController.STUDENT_ID)
-                .path(CourseController.PATH_ID).expand(courseRestService.getCourseDto().getStudents().get(0).getId())
+                .path(CourseController.STUDENT)
+                .path(CourseController.PATH_USERNAME).expand(courseRestService.getCourseDto().getStudents().get(0).getUsername())
                 .path(CourseController.PATH_YEAR).expand(courseRestService.getCourseDto().getYear())
                 .get()
                 .build();
@@ -559,7 +560,7 @@ public class CourseControllerIT {
         courseRestService.postCourse();
 
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        courseRestService.getCourseIdByStudentAndYear("192", courseRestService.getCourseDto().getYear());
+        courseRestService.getCourseIdByStudentAndYear("rupertina", courseRestService.getCourseDto().getYear());
     }
 
     @Test
@@ -567,54 +568,7 @@ public class CourseControllerIT {
         courseRestService.postCourse();
 
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        courseRestService.getCourseIdByStudentAndYear(courseRestService.getCourseDto().getStudents().get(0).getId(), "1820");
+        courseRestService.getCourseIdByStudentAndYear(courseRestService.getCourseDto().getStudents().get(0).getUsername(), "1820");
     }
 
-    @Test
-    public void getCourseByChiefTeacherAndYear() {
-        courseRestService.postCourse();
-
-        CourseDto cDto = courseRestService.getCourseByChiefTeacherAndYear(courseRestService.getCourseDto().getChiefTeacher().getId(), courseRestService.getCourseDto().getYear());
-        assertEquals(courseRestService.getCourseDto().getChiefTeacher().getUsername(), (cDto.getChiefTeacher().getUsername()));
-    }
-
-    @Test
-    public void getCourseByChiefTeacherAndYearPreAuthorize() {
-        courseRestService.postCourse();
-
-        restService.loginStudent(); // PreAuthorize("hasRole('MANAGER') or 'TEACHER'")
-
-        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        courseRestService.getCourseByChiefTeacherAndYear(courseRestService.getCourseDto().getId(), courseRestService.getCourseDto().getYear());
-    }
-
-    @Test
-    public void getCourseByChiefTeacherAndYearNoBearerAuth() {
-        courseRestService.postCourse();
-
-        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder()
-                .path(CourseController.COURSE)
-                .path(CourseController.TEACHER_ID)
-                .path(CourseController.PATH_ID).expand(courseRestService.getCourseDto().getChiefTeacher().getId())
-                .path(CourseController.PATH_YEAR).expand(courseRestService.getCourseDto().getYear())
-                .get()
-                .build();
-    }
-
-    @Test
-    public void getCourseByChiefTeacherAndYearFieldNotFoundExceptionId() {
-        courseRestService.postCourse();
-
-        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        courseRestService.getCourseByChiefTeacherAndYear("192", courseRestService.getCourseDto().getYear());
-    }
-
-    @Test
-    public void getCourseByChiefTeacherAndYearDocumentNotFoundException() {
-        courseRestService.postCourse();
-
-        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        courseRestService.getCourseByChiefTeacherAndYear(courseRestService.getCourseDto().getChiefTeacher().getId(), "1820");
-    }
 }

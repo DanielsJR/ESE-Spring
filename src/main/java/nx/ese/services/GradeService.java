@@ -113,17 +113,6 @@ public class GradeService {
         return Optional.empty();
     }
 
-    public Optional<List<GradeDto>> getFullGrades() {
-        List<GradeDto> list = gradeRepository.findAll(Sort.by(Sort.Direction.ASC, "title"))
-                .stream()
-                .map(GradeDto::new)
-                .collect(Collectors.toList());
-        if (list.isEmpty())
-            return Optional.empty();
-
-        return Optional.of(list);
-    }
-
     public Optional<GradeDto> getGradeById(String gradeId) {
         return gradeRepository.findByIdOptionalDto(gradeId);
     }
@@ -136,9 +125,6 @@ public class GradeService {
                 .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(NoSuchElementException::new))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-
-        if (list.isEmpty())
-            return Optional.empty();
 
         return Optional.of(list);
     }
@@ -153,9 +139,6 @@ public class GradeService {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        if (gradeList.isEmpty())
-            return Optional.empty();
-
         return Optional.of(gradeList);
     }
 
@@ -168,9 +151,6 @@ public class GradeService {
                 .flatMap(List::stream)
                 .filter(gs -> gs.getStudent().getUsername().equals(username))
                 .collect(Collectors.toList());
-
-        if (gradeList.isEmpty())
-            return Optional.empty();
 
         return Optional.of(gradeList);
     }

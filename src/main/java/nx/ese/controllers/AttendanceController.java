@@ -1,5 +1,6 @@
 package nx.ese.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -74,11 +75,10 @@ public class AttendanceController {
         return this.attendanceService.getAttendanceById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
     }
 
-
     @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
     @GetMapping(SUBJECT + PATH_ID)
-    public List<AttendanceDto> getAttendancesBySubject(@PathVariable String id) throws DocumentNotFoundException {
-        return this.attendanceService.getAttendancesBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Asistencia(s)"));
+    public List<AttendanceDto> getAttendancesBySubject(@PathVariable String id) {
+        return this.attendanceService.getAttendancesBySubject(id).orElse(Collections.emptyList());
     }
 
 }

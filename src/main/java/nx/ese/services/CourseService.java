@@ -137,29 +137,22 @@ public class CourseService {
         return courseRepository.findByNameAndYear(name, year);
     }
 
-    public Optional<CourseDto> getCourseByChiefTeacherNameAndYear(String teacherUsername, String year) {
+    public Optional<CourseDto> getCourseByChiefTeacherAndYear(String teacherUsername, String year) {
         QCourse qCourse = QCourse.course;
-        Predicate predicate = qCourse.chiefTeacher.eq(userRepository.findByUsername(teacherUsername))
+        Predicate predicate = qCourse
+                .chiefTeacher.eq(userRepository.findByUsername(teacherUsername))
                 .and(qCourse.year.eq(year));
 
         return courseRepository.findOne(predicate).map(CourseDto::new);
     }
 
-    public Optional<String> getCourseIdByStudentNameAndYear(String studentUsername, String year) {
+    public Optional<String> getCourseIdByStudentAndYear(String studentUsername, String year) {
         QCourse qCourse = QCourse.course;
-        Predicate predicate = qCourse.students.contains(userRepository.findByUsername(studentUsername))
+        Predicate predicate = qCourse
+                .students.contains(userRepository.findByUsername(studentUsername))
                 .and(qCourse.year.eq(year));
 
         return courseRepository.findOne(predicate).map(Course::getId);
     }
-
-    public Optional<CourseDto> getCourseByChiefTeacherAndYear(String teacherId, String year) {
-        return courseRepository.findByChiefTeacherAndYearOptionalDto(teacherId, year);
-    }
-
-    public Optional<String> getCourseIdByStudentAndYear(String studentId, String year) {
-        return courseRepository.findByStudentAndYearOptional(studentId, year).map(Course::getId);
-    }
-
 
 }
