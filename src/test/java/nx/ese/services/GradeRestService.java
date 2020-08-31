@@ -32,10 +32,6 @@ public class GradeRestService {
     @Setter
     private GradeDto gradeDto2;
 
-    @Getter
-    @Setter
-    private List<GradeDto> listGradeDto;
-
     private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
 
     public void createGradesDto() {
@@ -43,6 +39,7 @@ public class GradeRestService {
 
         restService.loginTeacher();
         evaluationRestService.postEvaluation();
+        evaluationRestService.postEvaluation2();
 
         logger.info("*********************************CREATING_GRADES*****************************************");
         this.gradeDto = new GradeDto();
@@ -52,7 +49,7 @@ public class GradeRestService {
 
         this.gradeDto2 = new GradeDto();
         this.gradeDto2.setStudent(userRestService.getStudentDto2());
-        this.gradeDto2.setEvaluation(evaluationRestService.getEvaluationDto());
+        this.gradeDto2.setEvaluation(evaluationRestService.getEvaluationDto2());
         this.gradeDto2.setGrade(3.5);
         logger.info("**************************************************************************************");
 
@@ -63,13 +60,13 @@ public class GradeRestService {
         this.restService.loginTeacher();
 
         try {
-            this.deleteGrade(this.getGradeDto().getId());
+            this.deleteGrade(gradeDto.getId(),gradeDto.getEvaluation().getSubject().getTeacher().getUsername());
         } catch (Exception e) {
             logger.info("gradeDto: nothing to delete");
         }
 
         try {
-            this.deleteGrade(this.getGradeDto2().getId());
+            this.deleteGrade(gradeDto2.getId(),gradeDto2.getEvaluation().getSubject().getTeacher().getUsername());
         } catch (Exception e) {
             logger.info("gradeDto2: nothing to delete");
         }
@@ -80,42 +77,74 @@ public class GradeRestService {
 
     }
 
-    public GradeDto postGrade() {
+    public GradeDto postGrade(String teacherUsername) {
         return gradeDto = restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
-                .path(GradeController.GRADE).bearerAuth(restService.getAuthToken().getToken()).body(gradeDto).post()
+                .path(GradeController.GRADE)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(gradeDto)
+                .post()
                 .build();
     }
 
-    public GradeDto postGrade2() {
+    public GradeDto postGrade2(String teacherUsername) {
         return gradeDto2 = restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
-                .path(GradeController.GRADE).bearerAuth(restService.getAuthToken().getToken()).body(gradeDto2).post()
+                .path(GradeController.GRADE)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(gradeDto2)
+                .post()
                 .build();
 
     }
 
-    public GradeDto putGrade() {
+    public GradeDto putGrade(String teacherUsername) {
         return gradeDto = restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
-                .path(GradeController.GRADE).path(GradeController.PATH_ID).expand(gradeDto.getId())
-                .bearerAuth(restService.getAuthToken().getToken()).body(gradeDto).put().build();
-    }
-
-    public GradeDto deleteGrade(String id) {
-        return restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class).path(GradeController.GRADE)
-                .path(GradeController.PATH_ID).expand(id).bearerAuth(restService.getAuthToken().getToken()).delete()
+                .path(GradeController.GRADE)
+                .path(GradeController.PATH_ID).expand(gradeDto.getId())
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(gradeDto)
+                .put()
                 .build();
     }
 
-    public GradeDto getGradeById(String id) {
+    public GradeDto deleteGrade(String id, String teacherUsername) {
         return restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
                 .path(GradeController.GRADE)
                 .path(GradeController.PATH_ID).expand(id)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .delete()
+                .build();
+    }
+
+    public GradeDto getGradeById(String gradeId) {
+        return restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
+                .path(GradeController.GRADE)
+                .path(GradeController.PATH_ID).expand(gradeId)
                 .bearerAuth(restService.getAuthToken().getToken()).get()
+                .build();
+    }
+
+    public GradeDto getTeacherGradeById(String gradeId, String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<GradeDto>()).clazz(GradeDto.class)
+                .path(GradeController.GRADE)
+                .path(GradeController.PATH_ID).expand(gradeId)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
                 .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<GradeDto> getGradesBySubject(String subjectId) {
-        return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+        return  restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(GradeController.GRADE)
                 .path(GradeController.SUBJECT)
                 .path(GradeController.PATH_ID).expand(subjectId)
@@ -126,13 +155,13 @@ public class GradeRestService {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<GradeDto> getTeacherGradesBySubject(String subjectId, String username) {
-        return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+    public List<GradeDto> getTeacherGradesBySubject(String subjectId, String teacherUsername) {
+        return  restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(GradeController.GRADE)
                 .path(GradeController.SUBJECT)
                 .path(GradeController.PATH_ID).expand(subjectId)
                 .path(GradeController.TEACHER)
-                .path(GradeController.PATH_USERNAME).expand(username)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get().log()
                 .build();
@@ -140,13 +169,13 @@ public class GradeRestService {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<GradeDto> getStudentGradesBySubject(String subjectId, String username) {
-        return listGradeDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+    public List<GradeDto> getStudentGradesBySubject(String subjectId, String studentUsername) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(GradeController.GRADE)
                 .path(GradeController.SUBJECT)
                 .path(GradeController.PATH_ID).expand(subjectId)
                 .path(GradeController.STUDENT)
-                .path(GradeController.PATH_USERNAME).expand(username)
+                .path(GradeController.PATH_USERNAME).expand(studentUsername)
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();

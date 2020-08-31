@@ -47,6 +47,7 @@ public class EvaluationRestService {
 
         restService.loginManager();
         subjectRestService.postSubject();
+        subjectRestService.postSubject2();
 
         logger.info("*****************************CREATING_EVALUATIONS********************************************");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(NxPattern.DATE_FORMAT);
@@ -61,7 +62,7 @@ public class EvaluationRestService {
         this.evaluationDto2.setType(EvaluationType.PRUEBA);
         this.evaluationDto2.setTitle(EVALUATION_TITLE_02);
         this.evaluationDto2.setDate(LocalDate.of(2018, 03, 05));
-        this.evaluationDto2.setSubject(subjectRestService.getSubjectDto());
+        this.evaluationDto2.setSubject(subjectRestService.getSubjectDto2());
 
         logger.info("*****************************************************************************************");
     }

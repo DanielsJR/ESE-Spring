@@ -93,6 +93,10 @@ public class GradeService {
         return gradeDB != null && !gradeDB.getId().equals(gradeDto.getId());
     }
 
+    public boolean isTeacherInGrade(@Valid GradeDto gradeDto, String teacherusername) {
+        return gradeDto.getEvaluation().getSubject().getTeacher().getUsername().equals(teacherusername);
+    }
+
     // CRUD******************************
     public GradeDto createGrade(@Valid GradeDto gradeDto) {
         Grade grade = new Grade();
@@ -104,8 +108,10 @@ public class GradeService {
         return grade.map(value -> new GradeDto(gradeRepository.save(setGradeFromDto(value, gradeDto))));
     }
 
-    public Optional<GradeDto> deleteGrade(String id) {
-        Optional<Grade> grade = gradeRepository.findById(id);
+    public Optional<GradeDto> deleteGrade(String id, String teacherUsername) {
+        Optional<Grade> grade = gradeRepository.findById(id)
+                .filter(g -> g.getEvaluation().getSubject().getTeacher().getUsername().equals(teacherUsername));
+
         if (grade.isPresent()) {
             gradeRepository.deleteById(id);
             return grade.map(GradeDto::new);
@@ -115,6 +121,11 @@ public class GradeService {
 
     public Optional<GradeDto> getGradeById(String gradeId) {
         return gradeRepository.findByIdOptionalDto(gradeId);
+    }
+
+    public Optional<GradeDto> getTeacherGradeById(String gradeId, String teacherUsername) {
+        return gradeRepository.findByIdOptionalDto(gradeId)
+                .filter(g -> g.getEvaluation().getSubject().getTeacher().getUsername().equals(teacherUsername));
     }
 
     public Optional<List<GradeDto>> getGradesBySubject(String subjectId) {
