@@ -118,11 +118,6 @@ public class CourseRestService {
                 .build();
     }
 
-    public void patchCourse() {
-        // TODO Auto-generated method stub
-
-    }
-
     public void deleteCourse(String id) {
         restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
                 .path(CourseController.COURSE)
@@ -162,33 +157,22 @@ public class CourseRestService {
                 .build();
     }
 
-    public CourseDto getCourseByChiefTeacherNameAndYear(String teacherName, String year) {
+    public CourseDto getCourseByChiefTeacherAndYear(String username, String year) {
         return restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
                 .path(CourseController.COURSE)
-                .path(CourseController.TEACHER_NAME)
-                .path(CourseController.PATH_USERNAME).expand(teacherName)
+                .path(CourseController.TEACHER)
+                .path(CourseController.PATH_USERNAME).expand(username)
                 .path(CourseController.PATH_YEAR).expand(year)
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();
     }
 
-    public String getCourseIdByStudentAndYear(String studentId, String year) {
+    public String getCourseIdByStudentAndYear(String username, String year) {
         return restService.restBuilder(new RestBuilder<String>()).clazz(String.class)
                 .path(CourseController.COURSE)
-                .path(CourseController.STUDENT_ID)
-                .path(CourseController.PATH_ID).expand(studentId)
-                .path(CourseController.PATH_YEAR).expand(year)
-                .bearerAuth(restService.getAuthToken().getToken())
-                .get()
-                .build();
-    }
-
-    public CourseDto getCourseByChiefTeacherAndYear(String teacherId, String year) {
-        return restService.restBuilder(new RestBuilder<CourseDto>()).clazz(CourseDto.class)
-                .path(CourseController.COURSE)
-                .path(CourseController.TEACHER_ID)
-                .path(CourseController.PATH_ID).expand(teacherId)
+                .path(CourseController.STUDENT)
+                .path(CourseController.PATH_USERNAME).expand(username)
                 .path(CourseController.PATH_YEAR).expand(year)
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()

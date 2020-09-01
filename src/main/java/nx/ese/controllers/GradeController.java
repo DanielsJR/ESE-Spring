@@ -1,9 +1,11 @@
 package nx.ese.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import nx.ese.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nx.ese.dtos.GradeDto;
-import nx.ese.exceptions.DocumentAlreadyExistException;
-import nx.ese.exceptions.DocumentNotFoundException;
-import nx.ese.exceptions.FieldInvalidException;
-import nx.ese.exceptions.FieldNotFoundException;
 import nx.ese.services.GradeService;
 
 @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
@@ -29,6 +27,9 @@ public class GradeController {
 
     public static final String GRADE = "/grade";
     public static final String SUBJECT = "/subject";
+    public static final String EVALUATION = "/evaluation";
+    public static final String TEACHER = "/teacher";
+    public static final String STUDENT = "/student";
 
     public static final String PATH_ID = "/{id}";
     public static final String PATH_USERNAME = "/{username}";
@@ -36,10 +37,10 @@ public class GradeController {
     @Autowired
     private GradeService gradeService;
 
-    @PreAuthorize("hasRole('TEACHER')")
-    @PostMapping()
-    public GradeDto createGrade(@Valid @RequestBody GradeDto gradeDto)
-            throws FieldInvalidException, DocumentAlreadyExistException {
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @PostMapping(TEACHER + PATH_USERNAME)
+    public GradeDto createGrade(@PathVariable String username, @Valid @RequestBody GradeDto gradeDto)
+            throws FieldInvalidException, DocumentAlreadyExistException, ForbiddenException {
 
         if (!this.gradeService.isIdNull(gradeDto))
             throw new FieldInvalidException("Id");
@@ -47,41 +48,71 @@ public class GradeController {
         if (this.gradeService.isGradeRepeated(gradeDto))
             throw new DocumentAlreadyExistException("Nota");
 
+        if (!this.gradeService.isTeacherInGrade(gradeDto, username))
+            throw new ForbiddenException("Profesor creando nota de otro Profesor");
+
         return this.gradeService.createGrade(gradeDto);
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
-    @PutMapping(PATH_ID)
-    public GradeDto modifyGrade(@PathVariable String id, @Valid @RequestBody GradeDto gradeDto)
-            throws FieldNotFoundException, DocumentAlreadyExistException {
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @PutMapping(PATH_ID + TEACHER + PATH_USERNAME)
+    public GradeDto modifyGrade(@PathVariable String id, @PathVariable String username, @Valid @RequestBody GradeDto gradeDto)
+            throws FieldNotFoundException, DocumentAlreadyExistException, ForbiddenException {
 
         if (this.gradeService.isGradeRepeated(gradeDto))
             throw new DocumentAlreadyExistException("Nota");
 
+        if (!this.gradeService.isTeacherInGrade(gradeDto, username))
+            throw new ForbiddenException("Profesor modificando nota de otro Profesor");
+
         return this.gradeService.modifyGrade(id, gradeDto).orElseThrow(() -> new FieldNotFoundException("Id"));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
-    @DeleteMapping(PATH_ID)
-    public GradeDto deleteGrade(@PathVariable String id) throws FieldNotFoundException {
-        return this.gradeService.deleteGrade(id).orElseThrow(() -> new FieldNotFoundException("Id"));
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @DeleteMapping(PATH_ID + TEACHER + PATH_USERNAME)
+    public GradeDto deleteGrade(@PathVariable String id, @PathVariable String username) throws DocumentNotFoundException {
+        return this.gradeService.deleteGrade(id, username).orElseThrow(() -> new DocumentNotFoundException("Nota"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping(PATH_ID)
     public GradeDto getGradeById(@PathVariable String id) throws FieldNotFoundException {
         return this.gradeService.getGradeById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
-    @GetMapping()
-    public List<GradeDto> getFullGrades() throws DocumentNotFoundException {
-        return this.gradeService.getFullGrades().orElseThrow(() -> new DocumentNotFoundException("Grade(s)"));
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(PATH_ID + TEACHER + PATH_USERNAME)
+    public GradeDto getTeacherGradeById(@PathVariable String id, @PathVariable String username) throws DocumentNotFoundException {
+        return this.gradeService.getTeacherGradeById(id, username).orElseThrow(() -> new DocumentNotFoundException("Grade"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER') or hasRole('STUDENT')")
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping(SUBJECT + PATH_ID)
-    public List<GradeDto> getGradesBySubject(@PathVariable String id) throws DocumentNotFoundException {
-        return this.gradeService.getGradesBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Grade(s)"));
+    public List<GradeDto> getGradesBySubject(@PathVariable String id) {
+        return this.gradeService.getGradesBySubject(id).orElse(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(SUBJECT + PATH_ID + TEACHER + PATH_USERNAME)
+    public List<GradeDto> getTeacherGradesBySubject(@PathVariable String id, @PathVariable String username) {
+        return this.gradeService.getTeacherGradesBySubject(id, username).orElse(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('STUDENT') and #username == authentication.principal.username")
+    @GetMapping(SUBJECT + PATH_ID + STUDENT + PATH_USERNAME)
+    public List<GradeDto> getStudentGradesBySubject(@PathVariable String id, @PathVariable String username) {
+        return this.gradeService.getStudentGradesBySubject(id, username).orElse(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(EVALUATION + PATH_ID)
+    public List<GradeDto> getGradesByEvaluation(@PathVariable String id) {
+        return this.gradeService.getGradesByEvaluation(id).orElse(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(EVALUATION + PATH_ID + TEACHER + PATH_USERNAME)
+    public List<GradeDto> getTeacherGradesByEvaluation(@PathVariable String id, @PathVariable String username) {
+        return this.gradeService.getTeacherGradesByEvaluation(id, username).orElse(Collections.emptyList());
     }
 }

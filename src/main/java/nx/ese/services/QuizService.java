@@ -88,7 +88,7 @@ public class QuizService {
     }
 
     public boolean isQuizInEvaluation(String id) {
-        return evaluationRepository.findFirstByQuiz(id) != null;
+        return evaluationRepository.findFirstByQuiz(id).isPresent();
     }
 
     // CRUD******************************

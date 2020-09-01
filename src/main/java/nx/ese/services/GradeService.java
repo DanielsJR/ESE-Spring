@@ -80,12 +80,21 @@ public class GradeService {
         return gradeDto.getEvaluation() == null;
     }
 
+    public boolean isGradeNull(GradeDto gradeDto) {
+        return gradeDto.getGrade() == null;
+    }
+
     public boolean isGradeRepeated(@Valid GradeDto gradeDto) {
-        if (isStudentNull(gradeDto) || isEvaluationNull(gradeDto))
+        if (isStudentNull(gradeDto) || isEvaluationNull(gradeDto) || isGradeNull(gradeDto))
             return false;
+
         GradeDto gradeDB = gradeRepository.findByStudentAndEvaluation(gradeDto.getStudent().getId(),
                 gradeDto.getEvaluation().getId());
         return gradeDB != null && !gradeDB.getId().equals(gradeDto.getId());
+    }
+
+    public boolean isTeacherInGrade(@Valid GradeDto gradeDto, String teacherusername) {
+        return gradeDto.getEvaluation().getSubject().getTeacher().getUsername().equals(teacherusername);
     }
 
     // CRUD******************************
@@ -99,8 +108,10 @@ public class GradeService {
         return grade.map(value -> new GradeDto(gradeRepository.save(setGradeFromDto(value, gradeDto))));
     }
 
-    public Optional<GradeDto> deleteGrade(String id) {
-        Optional<Grade> grade = gradeRepository.findById(id);
+    public Optional<GradeDto> deleteGrade(String id, String teacherUsername) {
+        Optional<Grade> grade = gradeRepository.findById(id)
+                .filter(g -> g.getEvaluation().getSubject().getTeacher().getUsername().equals(teacherUsername));
+
         if (grade.isPresent()) {
             gradeRepository.deleteById(id);
             return grade.map(GradeDto::new);
@@ -108,19 +119,17 @@ public class GradeService {
         return Optional.empty();
     }
 
-    public Optional<List<GradeDto>> getFullGrades() {
-        List<GradeDto> list = gradeRepository.findAll(Sort.by(Sort.Direction.ASC, "title"))
-                .stream()
-                .map(GradeDto::new)
-                .collect(Collectors.toList());
-        if (list.isEmpty())
-            return Optional.empty();
-
-        return Optional.of(list);
+    public Optional<GradeDto> getGradeById(String gradeId) {
+        return gradeRepository.findByIdOptionalDto(gradeId);
     }
 
-    public Optional<List<GradeDto>> getGradesBySubject(String id) {
-        Optional<List<EvaluationDto>> evaluationList = this.evaluationRepository.findBySubject(id);
+    public Optional<GradeDto> getTeacherGradeById(String gradeId, String teacherUsername) {
+        return gradeRepository.findByIdOptionalDto(gradeId)
+                .filter(g -> g.getEvaluation().getSubject().getTeacher().getUsername().equals(teacherUsername));
+    }
+
+    public Optional<List<GradeDto>> getGradesBySubject(String subjectId) {
+        Optional<List<EvaluationDto>> evaluationList = this.evaluationRepository.findBySubject(subjectId);
 
         List<GradeDto> list = evaluationList.orElseThrow(NoSuchElementException::new)
                 .stream()
@@ -128,16 +137,54 @@ public class GradeService {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        if (list.isEmpty())
-            return Optional.empty();
-
         return Optional.of(list);
     }
 
-    public Optional<GradeDto> getGradeById(String id) {
-        Optional<Grade> grade = gradeRepository.findById(id);
-        return grade.map(GradeDto::new);
+    public Optional<List<GradeDto>> getTeacherGradesBySubject(String subjectId, String username) {
+        Optional<List<EvaluationDto>> evaluationList = this.evaluationRepository.findBySubject(subjectId);
+
+        List<GradeDto> gradeList = evaluationList.orElseThrow(NoSuchElementException::new)
+                .stream()
+                .filter(e -> e.getSubject().getTeacher().getUsername().equals(username))
+                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(NoSuchElementException::new))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        return Optional.of(gradeList);
+    }
+
+    public Optional<List<GradeDto>> getStudentGradesBySubject(String subjectId, String username) {
+
+        List<GradeDto> gradeList = this.evaluationRepository.findBySubject(subjectId)
+                .stream()
+                .flatMap(List::stream)
+                .flatMap(e -> gradeRepository.findByEvaluation(e.getId()).stream())
+                .flatMap(List::stream)
+                .filter(gs -> gs.getStudent().getUsername().equals(username))
+                .collect(Collectors.toList());
+
+        return Optional.of(gradeList);
+
+/*        List<GradeDto> gradeList = gradeRepository.findByStudent(userRepository.findByUsernameDto(username).getId())
+                .stream()
+                .flatMap(List::stream)
+                .filter(gradeDto -> gradeDto.getEvaluation().getSubject().getId().equals(subjectId))
+                .collect(Collectors.toList());
+
+        return Optional.of(gradeList);*/
+
     }
 
 
+    public Optional<List<GradeDto>> getGradesByEvaluation(String evaluationId) {
+        return gradeRepository.findByEvaluation(evaluationId);
+    }
+
+    public Optional<List<GradeDto>> getTeacherGradesByEvaluation(String evaluationId, String teacherId) {
+        return Optional.of(gradeRepository.findByEvaluation(evaluationId)
+                .stream()
+                .flatMap(List::stream)
+                .filter(gradeDto -> gradeDto.getEvaluation().getSubject().getTeacher().getUsername().equals(teacherId))
+                .collect(Collectors.toList()));
+    }
 }

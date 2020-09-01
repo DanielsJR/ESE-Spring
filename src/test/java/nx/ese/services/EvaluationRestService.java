@@ -47,6 +47,7 @@ public class EvaluationRestService {
 
         restService.loginManager();
         subjectRestService.postSubject();
+        subjectRestService.postSubject2();
 
         logger.info("*****************************CREATING_EVALUATIONS********************************************");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(NxPattern.DATE_FORMAT);
@@ -60,8 +61,8 @@ public class EvaluationRestService {
         this.evaluationDto2 = new EvaluationDto();
         this.evaluationDto2.setType(EvaluationType.PRUEBA);
         this.evaluationDto2.setTitle(EVALUATION_TITLE_02);
-        this.evaluationDto2.setDate(LocalDate.of(2018, 01, 11));
-        this.evaluationDto2.setSubject(subjectRestService.getSubjectDto());
+        this.evaluationDto2.setDate(LocalDate.of(2018, 03, 05));
+        this.evaluationDto2.setSubject(subjectRestService.getSubjectDto2());
 
         logger.info("*****************************************************************************************");
     }
@@ -126,6 +127,28 @@ public class EvaluationRestService {
                 .build();
     }
 
+
+    public EvaluationDto getEvaluationById(String id) {
+        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.PATH_ID).expand(id)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    public EvaluationDto getTeacherEvaluationById(String evaluationtId, String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.PATH_ID).expand(evaluationtId)
+                .path(EvaluationController.TEACHER)
+                .path(EvaluationController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<EvaluationDto> getEvaluationsBySubject(String subjectId) {
         return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
@@ -137,10 +160,14 @@ public class EvaluationRestService {
                 .build();
     }
 
-    public EvaluationDto getEvaluationById(String id) {
-        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<EvaluationDto> getTeacherEvaluationsBySubject(String subjectId, String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(EvaluationController.EVALUATION)
-                .path(EvaluationController.PATH_ID).expand(id)
+                .path(EvaluationController.SUBJECT)
+                .path(EvaluationController.PATH_ID).expand(subjectId)
+                .path(EvaluationController.TEACHER)
+                .path(EvaluationController.PATH_USERNAME).expand(teacherUsername)
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();
@@ -151,7 +178,22 @@ public class EvaluationRestService {
                 .path(EvaluationController.EVALUATION)
                 .path(EvaluationController.SUBJECT)
                 .path(EvaluationController.PATH_ID).expand(subjectId)
+                .path(EvaluationController.DATE)
                 .path(EvaluationController.PATH_DATE).expand(date)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    public EvaluationDto getTeacherEvaluationBySubjectAndDate(String subjectId, LocalDate date,String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<EvaluationDto>()).clazz(EvaluationDto.class)
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.SUBJECT)
+                .path(EvaluationController.PATH_ID).expand(subjectId)
+                .path(EvaluationController.DATE)
+                .path(EvaluationController.PATH_DATE).expand(date)
+                .path(EvaluationController.TEACHER)
+                .path(EvaluationController.PATH_USERNAME).expand(teacherUsername)
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();

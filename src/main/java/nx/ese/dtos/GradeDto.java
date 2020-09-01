@@ -3,6 +3,7 @@ package nx.ese.dtos;
 import java.util.Date;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -20,15 +21,18 @@ public class GradeDto {
     @Getter
     private String id;
 
+    @NotNull
     @Valid
     @Getter
     @Setter
     private UserDto student;
 
+    @NotNull
     @Getter
     @Setter
-    private double grade;
+    private Double grade;
 
+    @NotNull
     @Valid
     @Getter
     @Setter

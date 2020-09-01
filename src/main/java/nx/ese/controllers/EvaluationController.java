@@ -34,6 +34,8 @@ public class EvaluationController {
 
     public static final String EVALUATION = "/evaluation";
     public static final String SUBJECT = "/subject";
+    public static final String TEACHER = "/teacher";
+    public static final String DATE = "/date";
 
     public static final String PATH_ID = "/{id}";
     public static final String PATH_USERNAME = "/{username}";
@@ -73,24 +75,44 @@ public class EvaluationController {
         return this.evaluationService.deleteEvaluation(id).orElseThrow(() -> new FieldNotFoundException("Id"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping(SUBJECT + PATH_ID)
     public List<EvaluationDto> getEvaluationsBySubject(@PathVariable String id) throws DocumentNotFoundException {
         return this.evaluationService.getEvaluationsBySubject(id).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(SUBJECT + PATH_ID + TEACHER + PATH_USERNAME)
+    public List<EvaluationDto> getTeacherEvaluationsBySubject(@PathVariable String id, @PathVariable String username) throws DocumentNotFoundException {
+        return this.evaluationService.getTeacherEvaluationsBySubject(id, username).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping(PATH_ID)
     public EvaluationDto getEvaluationById(@PathVariable String id) throws FieldNotFoundException {
         return this.evaluationService.getEvaluationById(id).orElseThrow(() -> new FieldNotFoundException("Id"));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
-    @GetMapping(SUBJECT + PATH_ID + PATH_DATE)
-    public EvaluationDto getEvaluationBySubjectAndDate(@PathVariable String id, @PathVariable LocalDate date)
-            throws DocumentNotFoundException, FieldInvalidException {
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(PATH_ID + TEACHER + PATH_USERNAME)
+    public EvaluationDto getTeacherEvaluationById(@PathVariable String id, @PathVariable String username) throws FieldNotFoundException {
+        return this.evaluationService.getTeacherEvaluationById(id, username).orElseThrow(() -> new FieldNotFoundException("Id"));
+    }
 
-        return this.evaluationService.getEvaluationBySubjectAndDate(id, date).orElseThrow(() -> new DocumentNotFoundException("Evaluation(s)"));
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(SUBJECT + PATH_ID + DATE + PATH_DATE)
+    public EvaluationDto getEvaluationBySubjectAndDate(@PathVariable String id, @PathVariable LocalDate date)
+            throws DocumentNotFoundException {
+
+        return this.evaluationService.getEvaluationBySubjectAndDate(id, date).orElseThrow(() -> new DocumentNotFoundException("Evaluation"));
+    }
+
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(SUBJECT + PATH_ID + DATE + PATH_DATE + TEACHER + PATH_USERNAME)
+    public EvaluationDto getTeacherEvaluationBySubjectAndDate(@PathVariable String id, @PathVariable LocalDate date, @PathVariable String username)
+            throws DocumentNotFoundException {
+
+        return this.evaluationService.getTeacherEvaluationBySubjectAndDate(id, date,username).orElseThrow(() -> new DocumentNotFoundException("Evaluation"));
     }
 
 

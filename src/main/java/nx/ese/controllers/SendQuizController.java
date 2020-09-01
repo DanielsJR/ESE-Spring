@@ -78,7 +78,7 @@ public class SendQuizController {
 
         GradeDto gradeDto = new GradeDto();
         gradeDto.setEvaluation(eDto);
-        gradeDto.setGrade(0);
+        gradeDto.setGrade(0.0);
         gradeDto.setQuizStudent(qsDto);
 
         // String course = eDto.getSubject().getCourse().getName().getCode();

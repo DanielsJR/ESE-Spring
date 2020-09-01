@@ -1,7 +1,6 @@
 package nx.ese.repositories;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,18 +10,19 @@ import nx.ese.documents.core.Evaluation;
 import nx.ese.documents.core.EvaluationType;
 import nx.ese.dtos.EvaluationDto;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 
-public interface EvaluationRepository extends MongoRepository<Evaluation, String> {
+public interface EvaluationRepository extends MongoRepository<Evaluation, String>, QuerydslPredicateExecutor<Evaluation> {
 
     @Query(value = "{'_id' : ?0 }")
     Optional<EvaluationDto> findByIdOptionalDto(String evaluationId);
 
-    EvaluationDto findFirstBySubject(String subjectId);
+    Optional<EvaluationDto> findFirstBySubject(String subjectId);
 
-    EvaluationDto findFirstByQuiz(String quizId);
+    Optional<EvaluationDto> findFirstByQuiz(String quizId);
 
-    EvaluationDto findByTitleAndTypeAndSubjectAndDate(String title, EvaluationType type, String subjectId, LocalDate date);
+    Optional<EvaluationDto> findByTitleAndTypeAndSubjectAndDate(String title, EvaluationType type, String subjectId, LocalDate date);
 
     Optional<List<EvaluationDto>> findBySubject(String subjectId);
 

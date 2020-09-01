@@ -7,16 +7,20 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.querydsl.core.types.Predicate;
+import nx.ese.documents.User;
+import nx.ese.documents.core.*;
+import nx.ese.dtos.CourseDto;
+import nx.ese.dtos.SubjectDto;
 import nx.ese.dtos.validators.NxPattern;
+import nx.ese.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import nx.ese.documents.core.Evaluation;
-import nx.ese.documents.core.Quiz;
-import nx.ese.documents.core.Subject;
 import nx.ese.dtos.EvaluationDto;
 import nx.ese.repositories.EvaluationRepository;
 import nx.ese.repositories.QuizRepository;
@@ -34,6 +38,10 @@ public class EvaluationService {
     @Autowired
     private QuizRepository quizRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+
     // Exceptions*********************
     public boolean isIdNull(@Valid EvaluationDto evaluationDto) {
         return evaluationDto.getId() == null;
@@ -45,9 +53,9 @@ public class EvaluationService {
             return false;
         }
 
-        EvaluationDto evaluationDB = evaluationRepository.findByTitleAndTypeAndSubjectAndDate(evaluationDto.getTitle(),
+        Optional<EvaluationDto> evaluationDB = evaluationRepository.findByTitleAndTypeAndSubjectAndDate(evaluationDto.getTitle(),
                 evaluationDto.getType(), evaluationDto.getSubject().getId(), evaluationDto.getDate());
-        return evaluationDB != null && !evaluationDB.getId().equals(evaluationDto.getId());
+        return evaluationDB.isPresent() && !evaluationDB.get().getId().equals(evaluationDto.getId());
     }
 
     private boolean isSubjectNull(@Valid EvaluationDto evaluationDto) {
@@ -121,13 +129,33 @@ public class EvaluationService {
         return evaluationRepository.findBySubject(subjectId);
     }
 
-    public Optional<EvaluationDto> getEvaluationById(String id) {
-        return evaluationRepository.findByIdOptionalDto(id);
+    public Optional<List<EvaluationDto>> getTeacherEvaluationsBySubject(String subjectId, String teacherUsername) {
+        return Optional.of(evaluationRepository.findBySubject(subjectId)
+                .stream()
+                .flatMap(es -> es
+                        .stream()
+                        .filter(e -> e.getSubject().getTeacher().getUsername().equals(teacherUsername)))
+                .collect(Collectors.toList()));
+    }
+
+    public Optional<EvaluationDto> getEvaluationById(String evaluationId) {
+        return evaluationRepository.findByIdOptionalDto(evaluationId);
+    }
+
+    public Optional<EvaluationDto> getTeacherEvaluationById(String evaluationId, String teacherUsername) {
+        return evaluationRepository.findById(evaluationId)
+                .filter(e -> e.getSubject().getTeacher().getUsername().equals(teacherUsername))
+                .map(EvaluationDto::new);
     }
 
     public Optional<EvaluationDto> getEvaluationBySubjectAndDate(String subjectId, LocalDate date) {
         return evaluationRepository.findBySubjectAndDate(subjectId, date);
     }
 
+
+    public Optional<EvaluationDto> getTeacherEvaluationBySubjectAndDate(String subjectId, LocalDate date, String teacherUsername) {
+        return evaluationRepository.findBySubjectAndDate(subjectId, date)
+                .filter(e -> e.getSubject().getTeacher().getUsername().equals(teacherUsername));
+    }
 
 }

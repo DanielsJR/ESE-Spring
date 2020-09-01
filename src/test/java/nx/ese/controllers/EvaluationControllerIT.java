@@ -12,6 +12,7 @@ import nx.ese.documents.core.EvaluationType;
 import nx.ese.dtos.validators.NxPattern;
 import nx.ese.repositories.EvaluationRepository;
 
+import nx.ese.services.UserRestService;
 import nx.ese.utils.NxDateFormatter;
 import org.junit.After;
 import org.junit.Assert;
@@ -58,6 +59,9 @@ public class EvaluationControllerIT {
     private EvaluationRestService evaluationRestService;
 
     @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
     private RestService restService;
 
     private static final Logger logger = LoggerFactory.getLogger(EvaluationControllerIT.class);
@@ -78,13 +82,9 @@ public class EvaluationControllerIT {
     public void testPostEvaluation() {
         evaluationRestService.postEvaluation();
 
+        restService.loginManager();
         EvaluationDto eDto = evaluationRestService.getEvaluationById(evaluationRestService.getEvaluationDto().getId());
         assertEquals(eDto, evaluationRestService.getEvaluationDto());
-
-        evaluationRestService.postEvaluation2();
-
-        EvaluationDto eDto2 = evaluationRestService.getEvaluationById(evaluationRestService.getEvaluationDto2().getId());
-        assertEquals(eDto2.getId(), evaluationRestService.getEvaluationDto2().getId());
     }
 
     @Test
@@ -180,6 +180,7 @@ public class EvaluationControllerIT {
         evaluationRestService.getEvaluationDto().setTitle("new Title");
         evaluationRestService.putEvaluation();
 
+        restService.loginManager();
         EvaluationDto eDto = evaluationRestService.getEvaluationById(evaluationRestService.getEvaluationDto().getId());
         Assert.assertEquals("new Title", eDto.getTitle());
     }
@@ -302,6 +303,7 @@ public class EvaluationControllerIT {
 
         evaluationRestService.deleteEvaluation(evaluationRestService.getEvaluationDto().getId());
 
+        restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
         evaluationRestService.getEvaluationById(evaluationRestService.getEvaluationDto().getId());
     }
@@ -339,6 +341,8 @@ public class EvaluationControllerIT {
     @Test
     public void testGetEvaluationById() {
         evaluationRestService.postEvaluation();
+
+        restService.loginManager();
         EvaluationDto eDto = evaluationRestService.getEvaluationById(evaluationRestService.getEvaluationDto().getId());
         Assert.assertEquals(eDto, evaluationRestService.getEvaluationDto());
     }
@@ -347,7 +351,7 @@ public class EvaluationControllerIT {
     public void testGetEvaluationByIdPreAuthorize() {
         evaluationRestService.postEvaluation();
 
-        restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or MANAGER")
+        restService.loginAdmin();// PreAuthorize("hasRole MANAGER")
 
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         evaluationRestService.getEvaluationById(evaluationRestService.getEvaluationDto().getId());
@@ -358,6 +362,7 @@ public class EvaluationControllerIT {
     public void testGetEvaluationByIdNoBearerAuth() {
         evaluationRestService.postEvaluation();
 
+        restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         restService.restBuilder()
                 .path(EvaluationController.EVALUATION)
@@ -369,8 +374,85 @@ public class EvaluationControllerIT {
 
     @Test
     public void testGetEvaluationByIdFieldNotFoundExceptionId() {
+        restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
         evaluationRestService.getEvaluationById("xxx");
+    }
+
+    //
+    @Test
+    public void testGetTeacherEvaluationsById() {
+        evaluationRestService.postEvaluation();
+
+        String eId = evaluationRestService.getEvaluationDto().getId();
+
+        restService.loginUser(userRestService.getTeacherDto2Username(), userRestService.getTeacherDto2Username() + "@ESE1");
+        EvaluationDto eDto = evaluationRestService.getTeacherEvaluationById(eId, userRestService.getTeacherDto2Username());
+
+        Assert.assertEquals(EvaluationType.DISERTACION, eDto.getType());
+        Assert.assertEquals(EvaluationRestService.EVALUATION_TITLE_01, eDto.getTitle());
+
+/*        restService.loginUser(userRestService.getTeacherDtoUsername(), userRestService.getTeacherDtoUsername() + "@ESE1");
+        EvaluationDto eDto2 = evaluationRestService.getTeacherEvaluationById(eId, userRestService.getTeacherDtoUsername());
+
+        Assert.assertNull(eDto2);*/
+    }
+
+    @Test
+    public void testGetTeacherEvaluationsByIdPreAuthorize() {
+        evaluationRestService.postEvaluation();
+
+        String eId = evaluationRestService.getEvaluationDto().getId();
+
+        restService.loginAdmin();//hasRole('TEACHER')
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        evaluationRestService.getTeacherEvaluationById(eId, userRestService.getTeacherDto2Username());
+
+    }
+
+    @Test
+    public void testGetTeacherEvaluationsByIdAuthorizeUsername() {
+        evaluationRestService.postEvaluation();
+
+        String eId = evaluationRestService.getEvaluationDto().getId();
+
+        //#username == authentication.principal.username
+        restService.loginUser(userRestService.getTeacherDto2Username(), userRestService.getTeacherDto2Username() + "@ESE1");
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        evaluationRestService.getTeacherEvaluationById(eId, userRestService.getTeacherDtoUsername());
+
+    }
+
+    @Test
+    public void testGetTeacherEvaluationsByIdNoBearerAuth() {
+        evaluationRestService.postEvaluation();
+
+        String eId = evaluationRestService.getEvaluationDto().getId();
+
+        restService.loginUser(userRestService.getTeacherDto2Username(), userRestService.getTeacherDto2Username() + "@ESE1");
+
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.PATH_ID).expand(eId)
+                .path(EvaluationController.TEACHER)
+                .path(EvaluationController.PATH_USERNAME).expand(userRestService.getTeacherDto2Username())
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    @Test
+    public void testGetTeacherEvaluationsByIdDocumentNotFoundException() {
+        evaluationRestService.postEvaluation();
+
+        String eId = evaluationRestService.getEvaluationDto().getId();
+        restService.loginUser(userRestService.getTeacherDtoUsername(), userRestService.getTeacherDtoUsername() + "@ESE1");
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        evaluationRestService.getTeacherEvaluationById(eId, userRestService.getTeacherDtoUsername());
+
     }
 
     //
@@ -378,6 +460,7 @@ public class EvaluationControllerIT {
     public void testGetEvaluationsBySubject() {
         evaluationRestService.postEvaluation();
 
+        restService.loginManager();
         List rawList = evaluationRestService.getEvaluationsBySubject(evaluationRestService.getEvaluationDto().getSubject().getId());
 
         ObjectMapper mapper = new ObjectMapper();
@@ -393,7 +476,7 @@ public class EvaluationControllerIT {
     public void testGetEvaluationsBySubjectPreAuthorize() {
         evaluationRestService.postEvaluation();
 
-        restService.loginAdmin();// PreAuthorize("hasRole('TEACHER') or MANAGER")
+        restService.loginAdmin();// PreAuthorize("hasRole MANAGER")
 
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         evaluationRestService.getEvaluationsBySubject(evaluationRestService.getEvaluationDto().getSubject().getId());
@@ -412,7 +495,73 @@ public class EvaluationControllerIT {
                 .build();
     }
 
-    //TODO
+    //
+    @Test
+    public void testGetTeacherEvaluationsBySubject() {
+        evaluationRestService.postEvaluation();
+
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+
+        restService.loginUser(userRestService.getTeacherDto2Username(), userRestService.getTeacherDto2Username() + "@ESE1");
+        List rawList = evaluationRestService.getTeacherEvaluationsBySubject(sId, userRestService.getTeacherDto2Username());
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<EvaluationDto> evsDto = mapper.convertValue(rawList, new TypeReference<List<EvaluationDto>>() {
+        });
+
+        Assert.assertTrue(evsDto.size() > 0);
+        Assert.assertEquals(EvaluationType.DISERTACION, evsDto.get(0).getType());
+        Assert.assertEquals(EvaluationRestService.EVALUATION_TITLE_01, evsDto.get(0).getTitle());
+    }
+
+    @Test
+    public void testGetTeacherEvaluationsBySubjectPreAuthorize() {
+        evaluationRestService.postEvaluation();
+
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+
+        restService.loginManager();//hasRole('TEACHER')
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        evaluationRestService.getTeacherEvaluationsBySubject(sId, userRestService.getTeacherDto2Username());
+
+    }
+
+    @Test
+    public void testGetTeacherEvaluationsBySubjectPreAuthorizeUsername() {
+        evaluationRestService.postEvaluation();
+
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+
+        //#username == authentication.principal.username
+        restService.loginUser(userRestService.getTeacherDtoUsername(), userRestService.getTeacherDtoUsername() + "@ESE1");
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        evaluationRestService.getTeacherEvaluationsBySubject(sId, userRestService.getTeacherDto2Username());
+
+    }
+
+    @Test
+    public void testGetTeacherEvaluationsBySubjectNoBearerAuth() {
+        evaluationRestService.postEvaluation();
+
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+
+        restService.loginUser(userRestService.getTeacherDto2Username(), userRestService.getTeacherDto2Username() + "@ESE1");
+
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.SUBJECT)
+                .path(EvaluationController.PATH_ID).expand(sId)
+                .path(EvaluationController.TEACHER)
+                .path(EvaluationController.PATH_USERNAME).expand(userRestService.getTeacherDto2Username())
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    //
     @Test
     public void testGetEvaluationBySubjectAndDate() {
         evaluationRestService.postEvaluation();
@@ -421,6 +570,7 @@ public class EvaluationControllerIT {
 
         logger.warn("date Raw = {}", date);
 
+        restService.loginManager();
         Assert.assertNotNull(evaluationRestService.getEvaluationBySubjectAndDate(sId, date));
 
     }
@@ -431,7 +581,7 @@ public class EvaluationControllerIT {
         String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
         LocalDate date = evaluationRestService.getEvaluationDto().getDate();
 
-        restService.loginAdmin();// PreAuthorize("hasRole('TEACHER')
+        restService.loginAdmin();// PreAuthorize("hasRole('MANAGER')
 
         thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
         evaluationRestService.getEvaluationBySubjectAndDate(sId, date);
@@ -443,11 +593,13 @@ public class EvaluationControllerIT {
         String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
         LocalDate date = evaluationRestService.getEvaluationDto().getDate();
 
+        restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         restService.restBuilder()
                 .path(EvaluationController.EVALUATION)
                 .path(EvaluationController.SUBJECT)
                 .path(EvaluationController.PATH_ID).expand(sId)
+                .path(EvaluationController.DATE)
                 .path(EvaluationController.PATH_DATE).expand(date)
                 .get()
                 .build();
@@ -457,32 +609,110 @@ public class EvaluationControllerIT {
     public void testGetEvaluationBySubjectAndDateDocumentNotFoundException() {
         evaluationRestService.postEvaluation();
 
+        restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
         restService.restBuilder()
                 .path(EvaluationController.EVALUATION)
                 .path(EvaluationController.SUBJECT)
                 .path(EvaluationController.PATH_ID).expand("767644")
+                .path(EvaluationController.DATE)
                 .path(EvaluationController.PATH_DATE).expand("2018-08-11")
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();
     }
 
-    //TODO
     @Test
     public void testGetEvaluationBySubjectAndDateFieldInvalidException() {
         evaluationRestService.postEvaluation();
         String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
 
+        restService.loginManager();
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         restService.restBuilder()
                 .path(EvaluationController.EVALUATION)
                 .path(EvaluationController.SUBJECT)
                 .path(EvaluationController.PATH_ID).expand(sId)
+                .path(EvaluationController.DATE)
                 .path(EvaluationController.PATH_DATE).expand("11-02-2018")
                 .bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();
     }
+
+    //
+    @Test
+    public void testGetTeacherEvaluationBySubjectAndDate() {
+        evaluationRestService.postEvaluation();
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+        LocalDate date = evaluationRestService.getEvaluationDto().getDate();
+
+        restService.loginUser(userRestService.getTeacherDto2Username(), userRestService.getTeacherDto2Username() + "@ESE1");
+        EvaluationDto eDto = evaluationRestService.getTeacherEvaluationBySubjectAndDate(sId, date, userRestService.getTeacherDto2Username());
+
+        Assert.assertNotNull(eDto);
+        Assert.assertEquals(EvaluationType.DISERTACION, eDto.getType());
+        Assert.assertEquals(EvaluationRestService.EVALUATION_TITLE_01, eDto.getTitle());
+
+    }
+
+    @Test
+    public void testGetTeacherEvaluationBySubjectAndDatePreAuthorize() {
+        evaluationRestService.postEvaluation();
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+        LocalDate date = evaluationRestService.getEvaluationDto().getDate();
+
+        restService.loginManager();//PreAuthorize("hasRole('TEACHER')
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        evaluationRestService.getTeacherEvaluationBySubjectAndDate(sId, date, userRestService.getTeacherDto2Username());
+
+    }
+
+    @Test
+    public void testGetTeacherEvaluationBySubjectAndDatePreAuthorizeUsername() {
+        evaluationRestService.postEvaluation();
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+        LocalDate date = evaluationRestService.getEvaluationDto().getDate();
+
+        //#username == authentication.principal.username
+        restService.loginUser(userRestService.getTeacherDtoUsername(), userRestService.getTeacherDtoUsername() + "@ESE1");
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        evaluationRestService.getTeacherEvaluationBySubjectAndDate(sId, date, userRestService.getTeacherDto2Username());
+    }
+
+    @Test
+    public void testGetTeacherEvaluationBySubjectAndDateNoBearerAuth() {
+        evaluationRestService.postEvaluation();
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+        LocalDate date = evaluationRestService.getEvaluationDto().getDate();
+
+        restService.loginUser(userRestService.getTeacherDto2Username(), userRestService.getTeacherDto2Username() + "@ESE1");
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(EvaluationController.EVALUATION)
+                .path(EvaluationController.SUBJECT)
+                .path(EvaluationController.PATH_ID).expand(sId)
+                .path(EvaluationController.DATE)
+                .path(EvaluationController.PATH_DATE).expand(date)
+                .path(EvaluationController.TEACHER)
+                .path(EvaluationController.PATH_USERNAME).expand(userRestService.getTeacherDto2Username())
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    @Test
+    public void testGetTeacherEvaluationBySubjectAndDateDocumentNotFoundException() {
+        evaluationRestService.postEvaluation();
+        String sId = evaluationRestService.getEvaluationDto().getSubject().getId();
+        LocalDate date = evaluationRestService.getEvaluationDto().getDate();
+
+        restService.loginUser(userRestService.getTeacherDtoUsername(), userRestService.getTeacherDtoUsername() + "@ESE1");
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        evaluationRestService.getTeacherEvaluationBySubjectAndDate(sId, date, userRestService.getTeacherDtoUsername());
+    }
+
 
 }
