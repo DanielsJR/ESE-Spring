@@ -182,4 +182,30 @@ public class GradeRestService {
 
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<GradeDto> getGradesByEvaluation(String evaluationId) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(GradeController.GRADE)
+                .path(GradeController.EVALUATION)
+                .path(GradeController.PATH_ID).expand(evaluationId)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<GradeDto> getTeacherGradesByEvaluation(String evaluationId, String studentUsername) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(GradeController.GRADE)
+                .path(GradeController.EVALUATION)
+                .path(GradeController.PATH_ID).expand(evaluationId)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(studentUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+
+    }
+
 }

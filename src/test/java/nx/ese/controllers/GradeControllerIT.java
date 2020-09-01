@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nx.ese.documents.core.CourseName;
-import nx.ese.documents.core.SubjectName;
-import nx.ese.dtos.EvaluationDto;
 import nx.ese.services.*;
 import org.junit.After;
 import org.junit.Assert;
@@ -24,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import nx.ese.dtos.GradeDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -37,12 +33,6 @@ public class GradeControllerIT {
 
     @Autowired
     private GradeRestService gradeRestService;
-
-    @Autowired
-    private SubjectRestService subjectRestService;
-
-    @Autowired
-    private CourseRestService courseRestService;
 
     @Autowired
     private RestService restService;
@@ -468,6 +458,15 @@ public class GradeControllerIT {
     }
 
     @Test
+    public void testGetTeacherGradeByIdIsTeacherInGrade() {
+        gradeRestService.postGrade(teacherUsername);
+
+        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        gradeRestService.getTeacherGradeById(gradeRestService.getGradeDto().getId(), teacherUsername2);
+    }
+
+    @Test
     public void testGetTeacherGradeByIdFieldNotFoundExceptionId() {
         thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
         gradeRestService.getTeacherGradeById("xxx", teacherUsername);
@@ -553,6 +552,21 @@ public class GradeControllerIT {
     }
 
     @Test
+    public void testGetTeacherGradesBySubjectIsTeacherInGrade() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String sId = gDto.getEvaluation().getSubject().getId();
+
+        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
+        List<GradeDto> rawList = gradeRestService.getTeacherGradesBySubject(sId, teacherUsername2);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {
+        });
+
+        assertEquals(0, gList.size());
+    }
+
+    @Test
     public void testGetTeacherGradesBySubjectNoBearerAuth() {
         GradeDto gDto = gradeRestService.postGrade(teacherUsername);
         String sId = gDto.getEvaluation().getSubject().getId();
@@ -610,6 +624,23 @@ public class GradeControllerIT {
     }
 
     @Test
+    public void testGetStudentGradesBySubjectIsStudentInGrade() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String sId = gDto.getEvaluation().getSubject().getId();
+        String studentUsername = gDto.getStudent().getUsername();
+
+        restService.loginUser("u031", "p031@ESE1");
+        List<GradeDto> rawList = gradeRestService.getStudentGradesBySubject(sId, "u031");
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {
+        });
+
+        assertEquals(0, gList.size());
+
+    }
+
+    @Test
     public void testGetStudentGradesBySubjectNoBearerAuth() {
         GradeDto gDto = gradeRestService.postGrade(teacherUsername);
         String sId = gDto.getEvaluation().getSubject().getId();
@@ -622,6 +653,120 @@ public class GradeControllerIT {
                 .path(GradeController.PATH_ID).expand(sId)
                 .path(GradeController.STUDENT)
                 .path(GradeController.PATH_USERNAME).expand(studentUsername)
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    //
+    @Test
+    public void testGetGradesByEvaluation() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        restService.loginManager();
+        List<GradeDto> rawList = gradeRestService.getGradesByEvaluation(eId);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {
+        });
+
+        Assert.assertTrue(gList.size() > 0);
+
+    }
+
+    @Test
+    public void testGetGradesByEvaluationPreAuthorizeRole() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        restService.loginTeacher();// PreAuthorize("hasRole MANAGER")
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getGradesByEvaluation(eId);
+
+    }
+
+    @Test
+    public void testGetGradesByEvaluationNoBearerAuth() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        restService.loginManager();
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(GradeController.GRADE)
+                .path(GradeController.EVALUATION)
+                .path(GradeController.PATH_ID).expand(eId)
+                //.bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+
+    //
+    @Test
+    public void testGetTeacherGradesByEvaluation() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        List<GradeDto> rawList = gradeRestService.getTeacherGradesByEvaluation(eId, teacherUsername);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {
+        });
+
+        Assert.assertTrue(gList.size() > 0);
+    }
+
+    @Test
+    public void testGetTeacherGradesByEvaluationPreAuthorizeRole() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        restService.loginManager();// PreAuthorize("hasRole TEACHER")
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getTeacherGradesByEvaluation(eId, teacherUsername);
+
+    }
+
+    @Test
+    public void testGetTeacherGradesByEvaluationPreAuthorizeUsername() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        restService.loginTeacher();//#username == authentication.principal.username
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.getTeacherGradesByEvaluation(eId, teacherUsername);
+
+    }
+
+    @Test
+    public void testGetTeacherGradesByEvaluationIsTeacherInGrade() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
+        List<GradeDto> rawList = gradeRestService.getTeacherGradesByEvaluation(eId, teacherUsername2);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {
+        });
+
+        assertEquals(0, gList.size());
+    }
+
+    @Test
+    public void testGetTeacherGradesByEvaluationNoBearerAuth() {
+        GradeDto gDto = gradeRestService.postGrade(teacherUsername);
+        String eId = gDto.getEvaluation().getId();
+
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(GradeController.GRADE)
+                .path(GradeController.EVALUATION)
+                .path(GradeController.PATH_ID).expand(eId)
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
                 //.bearerAuth(restService.getAuthToken().getToken())
                 .get()
                 .build();

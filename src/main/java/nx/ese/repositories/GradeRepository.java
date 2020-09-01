@@ -21,6 +21,6 @@ public interface GradeRepository extends MongoRepository<Grade, String> {
 
     Optional<List<GradeDto>> findByEvaluation(String evaluationId);
 
-    Optional<GradeDto> findByStudent(String studentId);
+    Optional<List<GradeDto>> findByStudent(String studentId);
 
 }

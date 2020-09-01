@@ -27,6 +27,7 @@ public class GradeController {
 
     public static final String GRADE = "/grade";
     public static final String SUBJECT = "/subject";
+    public static final String EVALUATION = "/evaluation";
     public static final String TEACHER = "/teacher";
     public static final String STUDENT = "/student";
 
@@ -101,5 +102,17 @@ public class GradeController {
     @GetMapping(SUBJECT + PATH_ID + STUDENT + PATH_USERNAME)
     public List<GradeDto> getStudentGradesBySubject(@PathVariable String id, @PathVariable String username) {
         return this.gradeService.getStudentGradesBySubject(id, username).orElse(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping(EVALUATION + PATH_ID)
+    public List<GradeDto> getGradesByEvaluation(@PathVariable String id) {
+        return this.gradeService.getGradesByEvaluation(id).orElse(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('TEACHER') and #username == authentication.principal.username")
+    @GetMapping(EVALUATION + PATH_ID + TEACHER + PATH_USERNAME)
+    public List<GradeDto> getTeacherGradesByEvaluation(@PathVariable String id, @PathVariable String username) {
+        return this.gradeService.getTeacherGradesByEvaluation(id, username).orElse(Collections.emptyList());
     }
 }
