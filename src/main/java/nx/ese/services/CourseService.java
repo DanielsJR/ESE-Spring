@@ -41,7 +41,7 @@ public class CourseService {
 
     private User setChiefTeacher(CourseDto courseDto) {
         return userRepository.findById(courseDto.getChiefTeacher().getId())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("ChiefTeacher"));
     }
 
     private List<User> setStudentsList(CourseDto courseDto) {

@@ -44,6 +44,7 @@ public class GradeControllerIT {
     @Before
     public void before() {
         gradeRestService.createGradesDto();
+
         teacherUsername = gradeRestService.getGradeDto().getEvaluation().getSubject().getTeacher().getUsername();
         teacherUsername2 = gradeRestService.getGradeDto2().getEvaluation().getSubject().getTeacher().getUsername();
         restService.loginUser(teacherUsername, teacherUsername + "@ESE1");
@@ -80,17 +81,7 @@ public class GradeControllerIT {
     }
 
     @Test
-    public void testPostGradeIsTeacherInGrade() {
-        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
-
-        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        gradeRestService.postGrade(teacherUsername2);
-    }
-
-    @Test
     public void testPostGradeNoBearerAuth() {
-        gradeRestService.postGrade(teacherUsername);
-
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         restService.restBuilder()
                 .path(GradeController.GRADE)
@@ -123,6 +114,14 @@ public class GradeControllerIT {
     }
 
     @Test
+    public void testPostGradeIsTeacherInGrade() {
+        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.postGrade(teacherUsername2);
+    }
+
+    @Test
     public void testPostGradeBodyNull() {
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         restService.restBuilder()
@@ -130,14 +129,14 @@ public class GradeControllerIT {
                 .path(GradeController.TEACHER)
                 .path(GradeController.PATH_USERNAME).expand(teacherUsername)
                 .bearerAuth(restService.getAuthToken().getToken())
-                .body(null)
+                .body(null)//@NotNull
                 .post()
                 .build();
     }
 
     @Test
     public void testPostGradeStudentNull() {
-        gradeRestService.getGradeDto().setStudent(null);
+        gradeRestService.getGradeDto().setStudent(null);//@NotNull
 
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         gradeRestService.postGrade(teacherUsername);
@@ -145,7 +144,7 @@ public class GradeControllerIT {
 
     @Test
     public void testPostGradeEvaluationNull() {
-        gradeRestService.getGradeDto().setEvaluation(null);
+        gradeRestService.getGradeDto().setEvaluation(null);//@NotNull
 
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         gradeRestService.postGrade(teacherUsername);
@@ -153,7 +152,7 @@ public class GradeControllerIT {
 
     @Test
     public void testPostGradeGradeNull() {
-        gradeRestService.getGradeDto().setGrade(null);
+        gradeRestService.getGradeDto().setGrade(null);//@NotNull
 
         thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
         gradeRestService.postGrade(teacherUsername);
@@ -216,50 +215,6 @@ public class GradeControllerIT {
     }
 
     @Test
-    public void testPutGradeDocumentAlreadyExistException() {
-        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
-        gradeRestService.postGrade2(teacherUsername2);
-
-        restService.loginUser(teacherUsername, teacherUsername + "@ESE1");
-
-        gradeRestService.postGrade(teacherUsername);
-
-        gradeRestService.getGradeDto().setStudent(gradeRestService.getGradeDto2().getStudent());
-        gradeRestService.getGradeDto().setEvaluation(gradeRestService.getGradeDto2().getEvaluation());
-
-        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-        gradeRestService.putGrade(teacherUsername);
-
-    }
-
-    @Test
-    public void testPutGradeFieldNotFoundExceptionId() {
-        gradeRestService.getGradeDto().setGrade(1.0);
-
-        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
-        restService.restBuilder()
-                .path(GradeController.GRADE)
-                .path(GradeController.PATH_ID).expand("xxx")
-                .path(GradeController.TEACHER)
-                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
-                .bearerAuth(restService.getAuthToken().getToken())
-                .body(gradeRestService.getGradeDto())
-                .put()
-                .build();
-    }
-
-    @Test
-    public void testPutGradeIsTeacherInGrade() {
-        gradeRestService.postGrade(teacherUsername);
-        gradeRestService.getGradeDto().setGrade(1.0);
-
-        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
-
-        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
-        gradeRestService.putGrade(teacherUsername2);
-    }
-
-    @Test
     public void testPutGradeBodyNull() {
         gradeRestService.postGrade(teacherUsername);
 
@@ -305,6 +260,49 @@ public class GradeControllerIT {
         gradeRestService.putGrade(teacherUsername);
     }
 
+    @Test
+    public void testPutGradeDocumentAlreadyExistException() {
+        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
+        gradeRestService.postGrade2(teacherUsername2);
+
+        restService.loginUser(teacherUsername, teacherUsername + "@ESE1");
+
+        gradeRestService.postGrade(teacherUsername);
+
+        gradeRestService.getGradeDto().setStudent(gradeRestService.getGradeDto2().getStudent());
+        gradeRestService.getGradeDto().setEvaluation(gradeRestService.getGradeDto2().getEvaluation());
+
+        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
+        gradeRestService.putGrade(teacherUsername);
+
+    }
+
+    @Test
+    public void testPutGradeIsTeacherInGrade() {
+        gradeRestService.postGrade(teacherUsername);
+        gradeRestService.getGradeDto().setGrade(1.0);
+
+        restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
+
+        thrown.expect(new HttpMatcher(HttpStatus.FORBIDDEN));
+        gradeRestService.putGrade(teacherUsername2);
+    }
+
+    @Test
+    public void testPutGradeFieldNotFoundExceptionId() {
+        gradeRestService.getGradeDto().setGrade(1.0);
+
+        thrown.expect(new HttpMatcher(HttpStatus.NOT_FOUND));
+        restService.restBuilder()
+                .path(GradeController.GRADE)
+                .path(GradeController.PATH_ID).expand("xxx")
+                .path(GradeController.TEACHER)
+                .path(GradeController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(gradeRestService.getGradeDto())
+                .put()
+                .build();
+    }
 
     // DELETE********************************
     @Test

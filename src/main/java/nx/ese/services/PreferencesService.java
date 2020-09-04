@@ -25,7 +25,7 @@ public class PreferencesService {
 
     public ThemeDto getUserTheme(String id) {
         ThemeDto themeDto = new ThemeDto();
-        User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("User"));
         if (preferencesRepository.findByUserId(id).isPresent()
                 && preferencesRepository.findByUserId(id).get().getTheme() != null) {
             Theme themeDb = preferencesRepository.findByUserId(id).get().getTheme();

@@ -32,10 +32,16 @@ public class GradeRestService {
     @Setter
     private GradeDto gradeDto2;
 
+    String teacherUsername;
+    String teacherUsername2;
+
     private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
 
     public void createGradesDto() {
         evaluationRestService.createEvaluationsDto();
+        teacherUsername = evaluationRestService.getEvaluationDto().getSubject().getTeacher().getUsername();
+        teacherUsername2 = evaluationRestService.getEvaluationDto2().getSubject().getTeacher().getUsername();
+
 
         restService.loginTeacher();
         evaluationRestService.postEvaluation();
@@ -57,16 +63,17 @@ public class GradeRestService {
 
     public void deleteGrades() {
         logger.info("*********************************DELETING_GRADE**************************************");
-        this.restService.loginTeacher();
 
+        this.restService.loginUser(teacherUsername, teacherUsername + "@ESE1");
         try {
-            this.deleteGrade(gradeDto.getId(),gradeDto.getEvaluation().getSubject().getTeacher().getUsername());
+            this.deleteGrade(gradeDto.getId(), teacherUsername);
         } catch (Exception e) {
             logger.info("gradeDto: nothing to delete");
         }
 
+        this.restService.loginUser(teacherUsername2, teacherUsername2 + "@ESE1");
         try {
-            this.deleteGrade(gradeDto2.getId(),gradeDto2.getEvaluation().getSubject().getTeacher().getUsername());
+            this.deleteGrade(gradeDto2.getId(), teacherUsername2);
         } catch (Exception e) {
             logger.info("gradeDto2: nothing to delete");
         }
@@ -144,7 +151,7 @@ public class GradeRestService {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<GradeDto> getGradesBySubject(String subjectId) {
-        return  restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(GradeController.GRADE)
                 .path(GradeController.SUBJECT)
                 .path(GradeController.PATH_ID).expand(subjectId)
@@ -156,7 +163,7 @@ public class GradeRestService {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<GradeDto> getTeacherGradesBySubject(String subjectId, String teacherUsername) {
-        return  restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
                 .path(GradeController.GRADE)
                 .path(GradeController.SUBJECT)
                 .path(GradeController.PATH_ID).expand(subjectId)

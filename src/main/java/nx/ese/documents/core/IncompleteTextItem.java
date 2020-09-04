@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class IncompleteTextItem {
 
 	@NotNull
