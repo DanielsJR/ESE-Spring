@@ -477,7 +477,7 @@ public class GradeControllerIT {
         String sId = gDto.getEvaluation().getSubject().getId();
 
         restService.loginManager();
-        List<GradeDto> rawList = gradeRestService.getGradesBySubject(sId);
+        List rawList = gradeRestService.getGradesBySubject(sId);
 
         ObjectMapper mapper = new ObjectMapper();
         List<GradeDto> gList = mapper.convertValue(rawList, new TypeReference<List<GradeDto>>() {

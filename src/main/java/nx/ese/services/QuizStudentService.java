@@ -1,11 +1,13 @@
 package nx.ese.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import nx.ese.dtos.GradeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -60,7 +62,12 @@ public class QuizStudentService {
     }
 
     public boolean isQuizStudentInGrade(String id) {
-        return gradeRepository.findFirstByQuizStudent(id) != null;
+        return gradeRepository.findByQuizStudent(id).isPresent();
+    }
+
+    public boolean isTeacherInQuizStudent(String quizStudentId, String teacherUsername) {
+        Optional<GradeDto> gDto = gradeRepository.findByQuizStudent(quizStudentId);
+        return gDto.isPresent() && gDto.get().getEvaluation().getSubject().getTeacher().getUsername().equals(teacherUsername);
     }
 
     // CRUD******************************
@@ -69,15 +76,15 @@ public class QuizStudentService {
         return new QuizStudentDto(quizStudentRepository.insert(setQuizStudentFromDto(quizStudent, quizStudentDto)));
     }
 
-    public Optional<QuizStudentDto> modifyQuizStudent(String id, @Valid QuizStudentDto quizStudentDto) {
-        Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
-        return quizStudent.map(student -> new QuizStudentDto(quizStudentRepository.save(setQuizStudentFromDto(student, quizStudentDto))));
+    public Optional<QuizStudentDto> modifyQuizStudent(String quizStudentId, @Valid QuizStudentDto quizStudentDto) {
+        return quizStudentRepository.findById(quizStudentId).map(qs -> new QuizStudentDto(quizStudentRepository.save(setQuizStudentFromDto(qs, quizStudentDto))));
+
     }
 
-    public Optional<QuizStudentDto> deleteQuizStudent(String id) {
-        Optional<QuizStudent> quizStudent = quizStudentRepository.findById(id);
+    public Optional<QuizStudentDto> deleteQuizStudent(String quizStudentid) {
+        Optional<QuizStudent> quizStudent = quizStudentRepository.findById(quizStudentid);
         if (quizStudent.isPresent()) {
-            quizStudentRepository.deleteById(id);
+            quizStudentRepository.deleteById(quizStudentid);
             return quizStudent.map(QuizStudentDto::new);
         }
         return Optional.empty();
@@ -88,14 +95,5 @@ public class QuizStudentService {
         return quizStudent.map(QuizStudentDto::new);
     }
 
-    public Optional<List<QuizStudentDto>> getFullQuizesStudent() {
-        List<QuizStudentDto> list = quizStudentRepository.findAll(Sort.by(Sort.Direction.ASC, "grade"))
-                .stream()
-                .map(QuizStudentDto::new)
-                .collect(Collectors.toList());
-        if (list.isEmpty())
-            return Optional.empty();
-        return Optional.of(list);
-    }
 
 }
