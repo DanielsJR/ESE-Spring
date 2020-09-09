@@ -18,15 +18,19 @@ public class RestService {
 	@Value("${server.servlet.contextPath}")
 	private String contextPath;
 
+	@Getter
 	@Value("${nx.test.admin.username}")
 	private String adminUsername;
 
+	@Getter
 	@Value("${nx.test.admin.password}")
 	private String adminPassword;
 
+	@Getter
 	@Value("${nx.test.manager.username}")
 	private String managerUsername;
 
+	@Getter
 	@Value("${nx.test.manager.password}")
 	private String managerPassword;
 
@@ -34,6 +38,7 @@ public class RestService {
 	@Value("${nx.test.teacher.username}")
 	private String teacherUsername;
 
+	@Getter
 	@Value("${nx.test.teacher.password}")
 	private String teacherPassword;
 
@@ -41,18 +46,22 @@ public class RestService {
 	@Value("${nx.test.student.username}")
 	private String studentUsername;
 
+	@Getter
 	@Value("${nx.test.student.password}")
 	private String studentPassword;
-	
+
+	@Getter
 	@Value("${nx.test.megauser.username}")
 	private String megauserUsername;
 
+	@Getter
 	@Value("${nx.test.megauser.password}")
 	private String megauserPassword;
 
 	@Value("${nx.test.databaseSeeder.ymlFileName}")
 	private String testFile;
 
+	@Getter
 	private AuthToken authToken;
 
 	private int port() {
@@ -72,8 +81,13 @@ public class RestService {
 	}
 	
 	public RestService loginUser(String username, String pass) {
-		this.authToken = new RestBuilder<AuthToken>(this.port()).path(contextPath).path(AuthenticationController.TOKEN)
-				.path(AuthenticationController.GENERATE_TOKEN).login(username, pass).clazz(AuthToken.class).post().build();
+		this.authToken = new RestBuilder<AuthToken>(this.port()).clazz(AuthToken.class)
+				.path(contextPath)
+				.path(AuthenticationController.TOKEN)
+				.path(AuthenticationController.GENERATE_TOKEN)
+				.login(username, pass)
+				.post()
+				.build();
 		return this;
 	}
 
@@ -87,7 +101,6 @@ public class RestService {
 
 	public RestService loginTeacher() {
 		return this.loginUser(this.teacherUsername, this.teacherPassword);
-
 	}
 
 	public RestService loginStudent() {
@@ -98,34 +111,9 @@ public class RestService {
 		return this.loginUser(this.megauserUsername, this.megauserPassword);
 	}
 
-
-
 	public RestService logout() {
 		this.authToken = null;
 		return this;
-	}
-	/*
-	 * public void reLoadTestDB() {
-	 * this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(
-	 * AdminResource.DB).delete().build();
-	 * this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(
-	 * AdminResource.DB).body(testFile).post().build(); }
-	 */
-
-	public String getAdminUsername() {
-		return adminUsername;
-	}
-
-	public AuthToken getAuthToken() {
-		return authToken;
-	}
-
-	public void setAuthToken(AuthToken authToken) {
-		this.authToken = authToken;
-	}
-
-	public String getAdminPassword() {
-		return adminPassword;
 	}
 
 }

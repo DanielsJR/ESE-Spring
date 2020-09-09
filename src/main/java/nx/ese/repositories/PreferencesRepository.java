@@ -8,8 +8,7 @@ import java.util.Optional;
 
 public interface PreferencesRepository extends MongoRepository<Preferences, String> {
 
-    // @Query("{'user':{'$ref':'user','$id':?0 } }")
-    Optional<Preferences> findByUserId(String id);
+    Optional<Preferences> findByUser(String id);
 
     Optional<Preferences> findByThemeName(String name);
 
