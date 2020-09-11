@@ -85,7 +85,8 @@ public class RestService {
 				.path(contextPath)
 				.path(AuthenticationController.TOKEN)
 				.path(AuthenticationController.GENERATE_TOKEN)
-				.login(username, pass)
+				.basicAuth(username,pass)
+//				.log()
 				.post()
 				.build();
 		return this;

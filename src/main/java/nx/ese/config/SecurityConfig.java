@@ -47,17 +47,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.httpBasic();
         http.cors();
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/token/*").permitAll()
                 .antMatchers("/socket/**").permitAll()
                 .anyRequest().authenticated();
         http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
     }
+
 
     @Bean
     public BCryptPasswordEncoder encoder() {

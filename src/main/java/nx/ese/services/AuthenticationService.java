@@ -1,36 +1,44 @@
 package nx.ese.services;
 
+import nx.ese.documents.Role;
+import nx.ese.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import nx.ese.jwt.TokenProvider;
 import nx.ese.documents.AuthToken;
 import nx.ese.documents.LoginUser;
 
+import java.util.Arrays;
+
 @Service
 public class AuthenticationService {
-	
-	@Autowired
-	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private TokenProvider jwtTokenProvider;
-	
-	public ResponseEntity<AuthToken> register(LoginUser loginUser) {
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-		final Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
+    @Autowired
+    private UserRepository userRepository;
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+    @Autowired
+    private TokenProvider jwtTokenProvider;
 
-		final String token = jwtTokenProvider.generateToken(authentication);
+    public ResponseEntity<AuthToken> getToken(User activeUser) {
+//		final String token = jwtTokenProvider.generateToken(SecurityContextHolder.getContext().getAuthentication());
 
-		return ResponseEntity.ok(new AuthToken(token));
-	}
+        final String token = userRepository.findByUsernameOptional(activeUser.getUsername())
+                .map(user -> {
+                    String[] roles = Arrays.stream(user.getRoles()).map(Role::roleName).toArray(String[]::new);
+                    return jwtTokenProvider.generateToken(user.getUsername(), roles);
+                }).orElseThrow();
+
+        return ResponseEntity.ok(new AuthToken(token));
+    }
 
 }
