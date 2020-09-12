@@ -44,6 +44,7 @@ public class WebSocketAuthChannelInterceptorAdapter extends ChannelInterceptorAd
             String authToken = null;
 
             if (header != null && header.startsWith(TOKEN_PREFIX)) {
+                logger.info("++++++++++++++ Bearer Found +++++++++++++++");
                 authToken = header.replace(TOKEN_PREFIX, "");
                 try {
                     username = jwtTokenProvider.getUsernameFromToken(authToken);
@@ -55,7 +56,7 @@ public class WebSocketAuthChannelInterceptorAdapter extends ChannelInterceptorAd
                     logger.error("Authentication Failed. Username or Password not valid.");
                 }
             } else {
-                logger.info("couldn't find bearer string, will ignore the header");
+                logger.info("++++++++++++++ Bearer NotFound +++++++++++++++");
             }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -65,7 +66,7 @@ public class WebSocketAuthChannelInterceptorAdapter extends ChannelInterceptorAd
                 if (jwtTokenProvider.validateToken(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = jwtTokenProvider.getAuthentication(authToken, userDetails);
                     accessor.setUser(authentication);
-                    logger.info("Access granted to: {} in WebSocket",username);
+                    logger.info("Access granted to user: {}, Authorities {}", authentication.getName(), authentication.getAuthorities());
                 }
             }
         }

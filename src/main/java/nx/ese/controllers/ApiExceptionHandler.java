@@ -174,12 +174,12 @@ public class ApiExceptionHandler {
         return new ApiError(exception, exception.getMessage(), HttpStatus.UNAUTHORIZED, "");
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+/*    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({Exception.class})
     @ResponseBody
     public ApiError exception(HttpServletRequest request, Exception exception) {
         return new ApiError(exception, "ha ocurrido un error", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
-    }
+    }*/
 
 
 }

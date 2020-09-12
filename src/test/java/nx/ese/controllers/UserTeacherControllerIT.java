@@ -535,8 +535,12 @@ public class UserTeacherControllerIT {
         userRestService.postTeacher();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER)
-                .path(UserController.PATH_USERNAME).expand(userRestService.getTeacherDto().getUsername()).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .path(UserController.PATH_USERNAME).expand(userRestService.getTeacherDto().getUsername())
+                .get()
+                .build();
     }
 
     @Test
@@ -570,7 +574,11 @@ public class UserTeacherControllerIT {
     @Test
     public void testGetFullTeachersNoBearerAuth() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USER).path(UserController.TEACHER).get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.TEACHER)
+                .get()
+                .build();
     }
 
     //
@@ -594,8 +602,12 @@ public class UserTeacherControllerIT {
         restService.loginAdmin();
 
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
-        restService.restBuilder().path(UserController.USER).path(UserController.MANAGER).path(UserController.USER_MIN)
-                .get().build();
+        restService.restBuilder()
+                .path(UserController.USER)
+                .path(UserController.MANAGER)
+                .path(UserController.USER_MIN)
+                .get()
+                .build();
     }
 
 }

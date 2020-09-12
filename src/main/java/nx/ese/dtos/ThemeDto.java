@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nx.ese.documents.Theme;
+
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,59 +19,55 @@ public class ThemeDto {
     @Setter
     private String name;
 
-    @NotNull
-    private boolean isDark;
+    @Setter
+    private boolean dark;
 
     @NotNull
     @Getter
     @Setter
-    private String color;
+    private String primaryColor;
 
-    public boolean getIsDark() {
-        return isDark;
+    @NotNull
+    @Getter
+    @Setter
+    private String accentColor;
+
+    public ThemeDto(Theme theme) {
+        this.name = theme.getName();
+        this.dark = theme.getDark();
+        this.primaryColor = theme.getPrimaryColor();
+        this.accentColor = theme.getAccentColor();
     }
 
-    public void setIsDark(boolean isDark) {
-        this.isDark = isDark;
+    public boolean getDark() {
+        return dark;
     }
 
     @Override
     public String toString() {
-        return "ThemeDto [name=" + name + ", isDark=" + isDark + ", color=" + color + "]";
+        return "ThemeDto{" +
+                "name='" + name + '\'' +
+                ", dark=" + dark +
+                ", primaryColor='" + primaryColor + '\'' +
+                ", accentColor='" + accentColor + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ThemeDto themeDto = (ThemeDto) o;
+        return dark == themeDto.dark &&
+                name.equals(themeDto.name) &&
+                primaryColor.equals(themeDto.primaryColor) &&
+                accentColor.equals(themeDto.accentColor);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((color == null) ? 0 : color.hashCode());
-        result = prime * result + (isDark ? 1231 : 1237);
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+        return Objects.hash(name, dark, primaryColor, accentColor);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ThemeDto other = (ThemeDto) obj;
-        if (color == null) {
-            if (other.color != null)
-                return false;
-        } else if (!color.equals(other.color))
-            return false;
-        if (isDark != other.isDark)
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
-    }
 
 }

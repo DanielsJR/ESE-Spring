@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.crypto.SecretKey;
 
@@ -56,7 +57,12 @@ public class TokenProvider implements Serializable {
     }
 
     public String generateToken(Authentication authentication) {
-        final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+        final String authorities = authentication
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
@@ -66,9 +72,21 @@ public class TokenProvider implements Serializable {
                 .compact();
     }
 
+    public String generateToken(String username, String[] roles) {
+        final String authorities = String.join(",", roles);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(SignatureAlgorithm.HS256, base64EncodedKey)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 400))
+                .compact();
+    }
+
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String usernameToken = getUsernameFromToken(token);
+        return (usernameToken.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public UsernamePasswordAuthenticationToken getAuthentication(final String token, final UserDetails userDetails) {
@@ -80,10 +98,12 @@ public class TokenProvider implements Serializable {
         final Claims claims = claimsJws.getBody();
 
         final Collection<? extends GrantedAuthority> authorities = Arrays
-                .stream(claims.get(AUTHORITIES_KEY).toString().split(",")).map(SimpleGrantedAuthority::new)
+                .stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
+
 
 }

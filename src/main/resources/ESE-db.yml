@@ -322,74 +322,86 @@ preferencesList:
   - user: *u010
     theme:
       name: indigo-lightblue
-      isDark: false
-      color: '#9E9E9E'
+      dark: false
+      primaryColor: '#9E9E9E'
+      accentColor: '#03a9f4'
 
   - user: *u011
     theme:
       name: brown-orange
-      isDark: false
-      color: '#795548'
+      dark: false
+      primaryColor: '#795548'
+      accentColor: '#ef6c00'
 
   - user: *u012
     theme:
       name: blue-orange-dark
-      isDark: true
-      color: '#2196F3'
+      dark: true
+      primaryColor: '#2196F3'
+      accentColor: '#ef6c00'
 
   - user: *u020
     theme:
       name: purple-pink-dark
-      isDark: true
-      color: '#E91E63'
+      dark: true
+      primaryColor: '#E91E63'
+      accentColor: '#ff4081'
 
   - user: *u021
     theme:
       name: lime-pink
-      isDark: false
-      color: '#CDDC39'
+      dark: false
+      primaryColor: '#CDDC39'
+      accentColor: '#ff4081'
 
   - user: *u022
     theme:
-      name: bluegrey-light-blue
-      isDark: true
-      color: '#F44336'
+      name: bluegrey-lightblue
+      dark: true
+      primaryColor: '#F44336'
+      accentColor: '#03a9f4'
 
   - user: *u030
     theme:
       name: indigo-pink-dark
-      isDark: true
-      color: '#3F51B5'
+      dark: true
+      primaryColor: '#3F51B5'
+      accentColor: '#ff4081'
 
   - user: *u031
     theme:
       name: yellow-deeppurple
-      isDark: false
-      color: '#CDDC39'
+      dark: false
+      primaryColor: '#CDDC39'
+      accentColor: '#7c4dff'
 
   - user: *u032
     theme:
       name: green-purple-dark
-      isDark: true
-      color: '#2196F3'
+      dark: true
+      primaryColor: '#2196F3'
+      accentColor: '#d500f9'
 
   - user: *u033
     theme:
       name: lightblue-purple-dark
-      isDark: true
-      color: '#3F51B5'
+      dark: true
+      primaryColor: '#3F51B5'
+      accentColor: '#d500f9'
 
   - user: *u034
     theme:
       name: amber-blue
-      isDark: false
-      color: '#CDDC39'
+      dark: false
+      primaryColor: '#CDDC39'
+      accentColor: '#2979ff'
 
   - user: *u035
     theme:
       name: orange-indigo-dark
-      isDark: true
-      color: '#2196F3'
+      dark: true
+      primaryColor: '#2196F3'
+      accentColor: '#3F51B5'
 
 # COURSES
 coursesList:

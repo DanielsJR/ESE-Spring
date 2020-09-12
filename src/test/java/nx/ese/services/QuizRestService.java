@@ -28,6 +28,9 @@ public class QuizRestService {
     @Autowired
     private UserRestService userRestService;
 
+    @Autowired
+    private EvaluationRestService evaluationRestService;
+
     @Getter
     @Setter
     private QuizDto quizDto;
@@ -37,8 +40,10 @@ public class QuizRestService {
     private QuizDto quizDto2;
 
     @Getter
-    @Setter
-    private List<QuizDto> listQuizDto;
+    private String teacherUsername;
+
+    @Getter
+    private String teacherUsername2;
 
     private static final Logger logger = LoggerFactory.getLogger(QuizRestService.class);
 
@@ -49,6 +54,10 @@ public class QuizRestService {
         userRestService.postTeacher();
         userRestService.postTeacher2();
 
+        teacherUsername = userRestService.getTeacherDto().getUsername();
+        teacherUsername2 = userRestService.getTeacherDto2().getUsername();
+
+
         logger.info("*********************************CREATING_QUIZES*****************************************");
         this.quizDto = new QuizDto();
         this.quizDto.setTitle("quiz-test");
@@ -56,6 +65,7 @@ public class QuizRestService {
         this.quizDto.setAuthor(userRestService.getTeacherDto());
         this.quizDto.setSubjectName(SubjectName.MATEMATICAS);
         this.quizDto.setQuizLevel(QuizLevel.CUARTO_BASICO);
+        this.quizDto.setShared(false);
 
         CorrespondItem ci = new CorrespondItem("fdf", "dsd");
         CorrespondItem ci2 = new CorrespondItem("gjg", "fdfd");
@@ -89,9 +99,10 @@ public class QuizRestService {
         this.quizDto2 = new QuizDto();
         this.quizDto2.setTitle("quiz-test2");
         this.quizDto2.setDescription("this is a quiz test2");
-        this.quizDto2.setAuthor(userRestService.getTeacherDto());
+        this.quizDto2.setAuthor(userRestService.getTeacherDto2());
         this.quizDto2.setSubjectName(SubjectName.INGLES);
         this.quizDto2.setQuizLevel(QuizLevel.CUARTO_BASICO);
+        this.quizDto.setShared(false);
 
         CorrespondItem ci3 = new CorrespondItem("fdf", "dsd");
         CorrespondItem ci4 = new CorrespondItem("gjg", "fdfd");
@@ -126,16 +137,15 @@ public class QuizRestService {
 
     public void deleteQuizesDto() {
         logger.info("*********************************DELETING_QUIZES**************************************");
-        this.restService.loginTeacher();
-
+        this.restService.loginUser(teacherUsername,teacherUsername+"@ESE1");
         try {
-            this.deleteQuiz(this.getQuizDto().getId());
+            this.deleteQuiz(this.getQuizDto().getId(), teacherUsername);
         } catch (Exception e) {
             logger.info("quizDto: nothing to delete");
         }
-
+        this.restService.loginUser(teacherUsername2,teacherUsername2+"@ESE1");
         try {
-            this.deleteQuiz(this.getQuizDto2().getId());
+            this.deleteQuiz(this.getQuizDto2().getId(), teacherUsername2);
         } catch (Exception e) {
             logger.info("quizDto2: nothing to delete");
         }
@@ -146,41 +156,114 @@ public class QuizRestService {
 
     }
 
-    public QuizDto postQuiz() {
+    public QuizDto postQuiz(String teacherUsername) {
         return quizDto = restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class)
-                .path(QuizController.QUIZ).bearerAuth(restService.getAuthToken().getToken()).body(quizDto).post()
+                .path(QuizController.QUIZ)
+                .path(QuizController.TEACHER)
+                .path(QuizController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(quizDto)
+                .post()
                 .build();
     }
 
-    public QuizDto postQuiz2() {
+    public QuizDto postQuiz2(String teacherUsername) {
         return quizDto2 = restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class)
-                .path(QuizController.QUIZ).bearerAuth(restService.getAuthToken().getToken()).body(quizDto2).post()
+                .path(QuizController.QUIZ)
+                .path(QuizController.TEACHER)
+                .path(QuizController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(quizDto2)
+                .post()
                 .build();
 
     }
 
-    public QuizDto putQuiz() {
+    public QuizDto putQuiz(String teacherUsername) {
         return quizDto = restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class)
-                .path(QuizController.QUIZ).path(QuizController.PATH_ID).expand(quizDto.getId())
-                .bearerAuth(restService.getAuthToken().getToken()).body(quizDto).put().build();
-    }
-
-    public QuizDto deleteQuiz(String id) {
-        return restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class).path(QuizController.QUIZ)
-                .path(QuizController.PATH_ID).expand(id).bearerAuth(restService.getAuthToken().getToken()).delete()
+                .path(QuizController.QUIZ)
+                .path(QuizController.PATH_ID).expand(quizDto.getId())
+                .path(QuizController.TEACHER)
+                .path(QuizController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .body(quizDto)
+                .put()
                 .build();
     }
 
-    public QuizDto getQuizById(String id) {
-        return restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class).path(QuizController.QUIZ)
-                .path(QuizController.PATH_ID).expand(id).bearerAuth(restService.getAuthToken().getToken()).get()
+    public QuizDto deleteQuiz(String id, String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class)
+                .path(QuizController.QUIZ)
+                .path(QuizController.PATH_ID).expand(id)
+                .path(QuizController.TEACHER)
+                .path(QuizController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .delete()
+                .build();
+    }
+
+    public QuizDto getQuizById(String quizId) {
+        return restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class)
+                .path(QuizController.QUIZ)
+                .path(QuizController.PATH_ID).expand(quizId)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    public QuizDto getTeacherQuizById(String quizId, String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<QuizDto>()).clazz(QuizDto.class)
+                .path(QuizController.QUIZ)
+                .path(QuizController.PATH_ID).expand(quizId)
+                .path(QuizController.TEACHER)
+                .path(QuizController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
                 .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<QuizDto> getFullQuizes() {
-        return listQuizDto = restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
-                .path(QuizController.QUIZ).bearerAuth(restService.getAuthToken().getToken()).get().build();
+    public List<QuizDto> getQuizes() {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(QuizController.QUIZ)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get().log()
+                .build();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<QuizDto> getTeacherQuizes(String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(QuizController.QUIZ)
+                .path(QuizController.TEACHER)
+                .path(QuizController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<QuizDto> getQuizesByAuthor(String authorId) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(QuizController.QUIZ)
+                .path(QuizController.AUTHOR)
+                .path(QuizController.PATH_ID).expand(authorId)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<QuizDto> getTeacherQuizesByAuthor(String authorId, String teacherUsername) {
+        return restService.restBuilder(new RestBuilder<List>()).clazz(List.class)
+                .path(QuizController.QUIZ)
+                .path(QuizController.AUTHOR)
+                .path(QuizController.PATH_ID).expand(authorId)
+                .path(QuizController.TEACHER)
+                .path(QuizController.PATH_USERNAME).expand(teacherUsername)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
     }
 
 }

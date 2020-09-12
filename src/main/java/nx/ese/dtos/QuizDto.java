@@ -53,6 +53,10 @@ public class QuizDto {
     @Setter
     private QuizLevel quizLevel;
 
+    //@Getter
+    @Setter
+    private boolean shared;
+
     @Getter
     @Setter
     private List<@Valid CorrespondItem> correspondItems;
@@ -92,6 +96,7 @@ public class QuizDto {
         this.author = new UserDto(quiz.getAuthor());
         this.subjectName = quiz.getSubjectName();
         this.quizLevel = quiz.getQuizLevel();
+        this.shared = quiz.getShared();
 
         this.correspondItems = quiz.getCorrespondItems();
         this.incompleteTextItems = quiz.getIncompleteTextItems();
@@ -104,13 +109,29 @@ public class QuizDto {
         this.lastModifiedDate = quiz.getLastModifiedDate();
     }
 
+    public boolean getShared() {
+        return shared;
+    }
+
     @Override
     public String toString() {
-        return "QuizDto [id=" + id + ", title=" + title + ", description=" + description + ", author=" + author
-                + ", subjectName=" + subjectName + ", quizLevel=" + quizLevel + ", correspondItems=" + correspondItems
-                + ", incompleteTextItems=" + incompleteTextItems + ", trueFalseItems=" + trueFalseItems
-                + ", multipleSelectionItems=" + multipleSelectionItems + ", createdBy=" + createdBy + ", createdDate="
-                + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
+        return "QuizDto{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", author=" + author +
+                ", subjectName=" + subjectName +
+                ", quizLevel=" + quizLevel +
+                ", shared=" + shared +
+                ", correspondItems=" + correspondItems +
+                ", incompleteTextItems=" + incompleteTextItems +
+                ", trueFalseItems=" + trueFalseItems +
+                ", multipleSelectionItems=" + multipleSelectionItems +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) +
+                ", lastModifiedUser='" + lastModifiedUser + '\'' +
+                ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) +
+                '}';
     }
 
     @Override

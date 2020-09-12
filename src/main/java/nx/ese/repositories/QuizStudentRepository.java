@@ -1,5 +1,6 @@
 package nx.ese.repositories;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,11 +14,11 @@ import nx.ese.dtos.QuizStudentDto;
 
 
 public interface QuizStudentRepository extends MongoRepository<QuizStudent, String> {
-	
 
-	public QuizStudentDto findByCorrespondItemsAndTrueFalseItemsAndMultipleSelectionItemsAndIncompleteTextItems(
-			List<CorrespondItem> correspondItems, List<TrueFalseItem> trueFalseItems,
-			List<MultipleSelectionItem> multipleSelectionItems, List<IncompleteTextItem> incompleteTextItems);
-	
 
+    QuizStudentDto findByCorrespondItemsAndTrueFalseItemsAndMultipleSelectionItemsAndIncompleteTextItems(
+            List<CorrespondItem> correspondItems, List<TrueFalseItem> trueFalseItems,
+            List<MultipleSelectionItem> multipleSelectionItems, List<IncompleteTextItem> incompleteTextItems);
+
+    QuizStudentDto findByCreatedByAndCreatedDate(String studentUsername, Date date);
 }

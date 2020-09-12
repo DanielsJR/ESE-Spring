@@ -99,8 +99,8 @@ public class UserRestService {
     }
 
     // MANGER********************************************
-    public void postManager() {
-        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto postManager() {
+        return managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.MANAGER)
                 .bearerAuth(restService.getAuthToken().getToken())
@@ -109,8 +109,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void postManager2() {
-        managerDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto postManager2() {
+        return managerDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.MANAGER)
                 .bearerAuth(restService.getAuthToken().getToken())
@@ -119,8 +119,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void putManager() {
-        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USER)
+    public UserDto putManager() {
+        return managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class).path(UserController.USER)
                 .path(UserController.MANAGER)
                 .path(UserController.PATH_USERNAME)
                 .expand(managerDto.getUsername())
@@ -142,8 +142,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void patchManagerSetRole(UserDto userDto) {
-        managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto patchManagerSetRole(UserDto userDto) {
+        return managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.MANAGER)
                 .path(UserController.ROLE)
@@ -154,8 +154,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void deleteManager(String username) {
-        restService.restBuilder(new RestBuilder<>())
+    public UserDto deleteManager(String username) {
+        return managerDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.MANAGER)
                 .path(UserController.PATH_USERNAME).expand(username)
@@ -227,8 +227,8 @@ public class UserRestService {
     }
 
     // TEACHER*******************************************
-    public void postTeacher() {
-        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto postTeacher() {
+        return teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.TEACHER)
                 .bearerAuth(restService.getAuthToken().getToken())
@@ -237,8 +237,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void postTeacher2() {
-        teacherDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto postTeacher2() {
+        return teacherDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.TEACHER)
                 .bearerAuth(restService.getAuthToken().getToken())
@@ -247,8 +247,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void putTeacher() {
-        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto putTeacher() {
+        return teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.TEACHER)
                 .path(UserController.PATH_USERNAME).expand(teacherDto.getUsername())
@@ -270,8 +270,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void patchTeacherSetRole(UserDto userDto) {
-        teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto patchTeacherSetRole(UserDto userDto) {
+        return teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.TEACHER)
                 .path(UserController.ROLE)
@@ -282,8 +282,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void deleteTeacher(String username) {
-        restService.restBuilder(new RestBuilder<>())
+    public UserDto deleteTeacher(String username) {
+        return teacherDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.TEACHER)
                 .path(UserController.PATH_USERNAME).expand(username)
@@ -354,8 +354,8 @@ public class UserRestService {
     }
 
     // STUDENT*******************************************
-    public void postStudent() {
-        studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto postStudent() {
+        return studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.STUDENT)
                 .bearerAuth(restService.getAuthToken().getToken())
@@ -364,8 +364,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void postStudent2() {
-        studentDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto postStudent2() {
+        return studentDto2 = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.STUDENT)
                 .bearerAuth(restService.getAuthToken().getToken())
@@ -374,8 +374,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void putStudent() {
-        studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
+    public UserDto putStudent() {
+        return studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.STUDENT)
                 .path(UserController.PATH_USERNAME).expand(studentDto.getUsername())
@@ -397,8 +397,8 @@ public class UserRestService {
                 .build();
     }
 
-    public void deleteStudent(String username) {
-        restService.restBuilder(new RestBuilder<>())
+    public UserDto deleteStudent(String username) {
+        return studentDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserController.USER)
                 .path(UserController.STUDENT)
                 .path(UserController.PATH_USERNAME).expand(username)

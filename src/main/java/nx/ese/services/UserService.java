@@ -48,14 +48,17 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
+
         user.setDni(userDto.getDni());
         user.setBirthday(userDto.getBirthday());
         user.setGender(userDto.getGender());
         user.setAvatar(userDto.getAvatar());
+
         user.setEmail(userDto.getEmail());
         user.setMobile(userDto.getMobile());
         user.setAddress(userDto.getAddress());
         user.setCommune(userDto.getCommune());
+
         return user;
     }
 

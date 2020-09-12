@@ -96,12 +96,12 @@ public class EvaluationService {
 
     private Quiz setQuiz(EvaluationDto evaluationDto) {
         return quizRepository.findById(evaluationDto.getQuiz().getId())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(()-> new NoSuchElementException("Quiz"));
     }
 
     private Subject setSubject(EvaluationDto evaluationDto) {
         return subjectRepository.findById(evaluationDto.getSubject()
-                .getId()).orElseThrow(NoSuchElementException::new);
+                .getId()).orElseThrow(()-> new NoSuchElementException("Subject"));
     }
 
     // CRUD******************************

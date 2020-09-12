@@ -77,10 +77,17 @@ public class QuizStudentDto {
 
     @Override
     public String toString() {
-        return "QuizStudentDto [id=" + id + ", multipleSelectionIitems=" + multipleSelectionItems + ", trueFalseItems="
-                + trueFalseItems + ", correspondItems=" + correspondItems + ", incompleteTextItems="
-                + incompleteTextItems + ", createdBy=" + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser="
-                + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
+        return "QuizStudentDto{" +
+                "id='" + id + '\'' +
+                ", correspondItems=" + correspondItems +
+                ", incompleteTextItems=" + incompleteTextItems +
+                ", trueFalseItems=" + trueFalseItems +
+                ", multipleSelectionItems=" + multipleSelectionItems +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdDate=" + NxDateFormatter.formatterDate(createdDate) +
+                ", lastModifiedUser='" + lastModifiedUser + '\'' +
+                ", lastModifiedDate=" + NxDateFormatter.formatterDate(lastModifiedDate) +
+                '}';
     }
 
     @Override

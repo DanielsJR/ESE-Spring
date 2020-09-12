@@ -54,6 +54,10 @@ public class Quiz {
     @Setter
     private QuizLevel quizLevel;
 
+    //@Getter
+    @Setter
+    private boolean shared;
+
     @Getter
     @Setter
     private List<CorrespondItem> correspondItems;
@@ -86,13 +90,29 @@ public class Quiz {
     @Getter
     private Date lastModifiedDate;
 
+    public boolean getShared() {
+        return shared;
+    }
+
     @Override
     public String toString() {
-        return "Quiz [id=" + id + ", title=" + title + ", description=" + description + ", author=" + author
-                + ", subjectName=" + subjectName + ", quizLevel=" + quizLevel + ", correspondItems=" + correspondItems
-                + ", incompleteTextItems=" + incompleteTextItems + ", trueFalseItems=" + trueFalseItems
-                + ", multipleSelectionItems=" + multipleSelectionItems + ", createdBy=" + createdBy + ", createdDate="
-                + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
+        return "Quiz{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", author=" + author +
+                ", subjectName=" + subjectName +
+                ", quizLevel=" + quizLevel +
+                ", shared=" + shared +
+                ", correspondItems=" + correspondItems +
+                ", incompleteTextItems=" + incompleteTextItems +
+                ", trueFalseItems=" + trueFalseItems +
+                ", multipleSelectionItems=" + multipleSelectionItems +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) +
+                ", lastModifiedUser='" + lastModifiedUser + '\'' +
+                ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) +
+                '}';
     }
 
     @Override

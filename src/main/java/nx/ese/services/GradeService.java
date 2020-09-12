@@ -42,9 +42,7 @@ public class GradeService {
         grade.setGrade(gradeDto.getGrade());
         grade.setStudent(this.setStudent(gradeDto));
         grade.setEvaluation(this.setEvaluation(gradeDto));
-        if (gradeDto.getQuizStudent() != null) {
-            grade.setQuizStudent(this.setQuizStudent(gradeDto));
-        }
+        if (gradeDto.getQuizStudent() != null) grade.setQuizStudent(this.setQuizStudent(gradeDto));
         return grade;
     }
 
@@ -131,9 +129,9 @@ public class GradeService {
     public Optional<List<GradeDto>> getGradesBySubject(String subjectId) {
         Optional<List<EvaluationDto>> evaluationList = this.evaluationRepository.findBySubject(subjectId);
 
-        List<GradeDto> list = evaluationList.orElseThrow(NoSuchElementException::new)
+        List<GradeDto> list = evaluationList.orElseThrow(() -> new NoSuchElementException("Evaluation List"))
                 .stream()
-                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(NoSuchElementException::new))
+                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(() -> new NoSuchElementException("Evaluation")))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
@@ -143,10 +141,10 @@ public class GradeService {
     public Optional<List<GradeDto>> getTeacherGradesBySubject(String subjectId, String username) {
         Optional<List<EvaluationDto>> evaluationList = this.evaluationRepository.findBySubject(subjectId);
 
-        List<GradeDto> gradeList = evaluationList.orElseThrow(NoSuchElementException::new)
+        List<GradeDto> gradeList = evaluationList.orElseThrow(() -> new NoSuchElementException("Evaluation List"))
                 .stream()
                 .filter(e -> e.getSubject().getTeacher().getUsername().equals(username))
-                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(NoSuchElementException::new))
+                .map(e -> gradeRepository.findByEvaluation(e.getId()).orElseThrow(() -> new NoSuchElementException("Evaluation")))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 

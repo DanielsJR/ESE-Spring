@@ -17,7 +17,7 @@ public interface GradeRepository extends MongoRepository<Grade, String> {
 
     GradeDto findByStudentAndEvaluation(String studentId, String evaluationId);
 
-    GradeDto findFirstByQuizStudent(String quizId);
+    Optional<GradeDto> findByQuizStudent(String quizId);
 
     Optional<List<GradeDto>> findByEvaluation(String evaluationId);
 

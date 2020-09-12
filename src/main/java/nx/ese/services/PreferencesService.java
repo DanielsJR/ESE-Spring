@@ -11,7 +11,6 @@ import nx.ese.dtos.ThemeDto;
 import nx.ese.repositories.PreferencesRepository;
 import nx.ese.repositories.UserRepository;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,49 +22,65 @@ public class PreferencesService {
     @Autowired
     private PreferencesRepository preferencesRepository;
 
-    public ThemeDto getUserTheme(String id) {
-        ThemeDto themeDto = new ThemeDto();
-        User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
-        if (preferencesRepository.findByUserId(id).isPresent()
-                && preferencesRepository.findByUserId(id).get().getTheme() != null) {
-            Theme themeDb = preferencesRepository.findByUserId(id).get().getTheme();
-            themeDto.setName(themeDb.getName());
-            themeDto.setIsDark(themeDb.getIsDark());
-            themeDto.setColor(themeDb.getColor());
-            return themeDto;
-        } else {
-            themeDto.setIsDark(false);
-            if (user.getGender().equals(Gender.MUJER)) {
-                themeDto.setName("pink-purple");
-                themeDto.setColor("#E91E63");
-            } else {
-                themeDto.setName("indigo-pink");
-                themeDto.setColor("#3F51B5");
-            }
-            return themeDto;
-        }
+    public ThemeDto getUserTheme(String username) {
+        User user = userRepository.findByUsernameOptional(username).orElseThrow();
+
+        Optional<Preferences> preferences = preferencesRepository.findByUser(user.getId());
+
+        if (preferences.isPresent() && preferences.get().getTheme() != null)
+            return new ThemeDto(preferences.get().getTheme());
+
+        return this.defaultTheme(user.getId());
     }
 
-    public boolean saveUserTheme(String userId, ThemeDto theme) {
-        Theme nTheme = new Theme(theme.getName(), theme.getIsDark(), theme.getColor());
+    private ThemeDto defaultTheme(String userId) {
+        ThemeDto themeDto = new ThemeDto();
+        Optional<User> user = userRepository.findById(userId);
+        themeDto.setDark(false);
+        if (user.isPresent() && (user.get().getGender() != (null) && user.get().getGender().equals(Gender.MUJER))) {
+            themeDto.setName("purple-pink");
+            themeDto.setPrimaryColor("#9c27b0");
+            themeDto.setAccentColor("#ff4081");
+        } else {
+            themeDto.setName("indigo-pink");
+            themeDto.setPrimaryColor("#3F51B5");
+            themeDto.setAccentColor("#ff4081");
+        }
 
-        Optional<Preferences> preferences = preferencesRepository.findByUserId(userId);
+        return themeDto;
+    }
+
+    public ThemeDto saveUserTheme(String username, ThemeDto theme) {
+        Theme nTheme = new Theme(theme.getName(), theme.getDark(), theme.getPrimaryColor(), theme.getAccentColor());
+        User user = this.userRepository.findByUsernameOptional(username).orElseThrow();
+
+        Optional<Preferences> preferences = preferencesRepository.findByUser(user.getId());
         if (preferences.isPresent()) {
             preferences.ifPresent(p -> {
                 p.setTheme(nTheme);
                 preferencesRepository.save(p);
             });
-            return true;
+            return preferences
+                    .map(Preferences::getTheme)
+                    .map(ThemeDto::new).orElseThrow();
 
         } else {
-            Optional<User> user = this.userRepository.findById(userId);
-            if (user.isPresent()) {
-                Preferences prefUser = new Preferences(user.get(), nTheme);
-                preferencesRepository.save(prefUser);
-                return true;
-            }
-            return false;
+            Preferences prefUser = new Preferences(user, nTheme);
+            preferencesRepository.insert(prefUser);
+            return new ThemeDto(prefUser.getTheme());
         }
+
     }
+
+    public boolean deleteUserTheme(String username) {
+        User user = this.userRepository.findByUsernameOptional(username).orElseThrow();
+        preferencesRepository.findByUser(user.getId())
+                .ifPresent(p -> {
+                    p.setTheme(null);
+                    preferencesRepository.save(p);
+                });
+        return true;
+    }
+
 
 }

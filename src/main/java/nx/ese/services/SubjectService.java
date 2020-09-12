@@ -50,12 +50,12 @@ public class SubjectService {
 
     private User setTeacher(SubjectDto subjectDto) {
         return userRepository.findById(subjectDto.getTeacher().getId())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(()-> new NoSuchElementException("User"));
     }
 
     private Course setCourse(SubjectDto subjectDto) {
         return courseRepository.findById(subjectDto.getCourse().getId())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(()-> new NoSuchElementException("Course"));
     }
 
 

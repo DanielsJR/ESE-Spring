@@ -1,5 +1,6 @@
 package nx.ese.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -36,6 +37,8 @@ public class QuizService {
         quiz.setAuthor(this.setAuthor(quizDto));
         quiz.setSubjectName(quizDto.getSubjectName());
         quiz.setQuizLevel(quizDto.getQuizLevel());
+        quiz.setShared(quizDto.getShared());
+
         quiz.setCorrespondItems(quizDto.getCorrespondItems());
         quiz.setIncompleteTextItems(quizDto.getIncompleteTextItems());
         quiz.setTrueFalseItems(quizDto.getTrueFalseItems());
@@ -45,7 +48,7 @@ public class QuizService {
 
     private User setAuthor(QuizDto quizDto) {
         return userRepository.findById(quizDto.getAuthor().getId())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Author"));
     }
 
     // Exceptions*********************
@@ -91,6 +94,10 @@ public class QuizService {
         return evaluationRepository.findFirstByQuiz(id).isPresent();
     }
 
+    public boolean isTeacherInQuiz(QuizDto quizDto, String username) {
+        return quizDto.getAuthor().getUsername().equals(username);
+    }
+
     // CRUD******************************
     public QuizDto createQuiz(@Valid QuizDto quizDto) {
         Quiz quiz = new Quiz();
@@ -102,8 +109,10 @@ public class QuizService {
         return quiz.map(value -> new QuizDto(quizRepository.save(setQuizFromDto(value, quizDto))));
     }
 
-    public Optional<QuizDto> deleteQuiz(String id) {
-        Optional<Quiz> quiz = quizRepository.findById(id);
+    public Optional<QuizDto> deleteQuiz(String id, String teacherUsername) {
+        Optional<Quiz> quiz = quizRepository.findById(id)
+                .filter(quiz1 -> quiz1.getAuthor().getUsername().equals(teacherUsername));
+
         if (quiz.isPresent()) {
             quizRepository.deleteById(id);
             return quiz.map(QuizDto::new);
@@ -111,27 +120,47 @@ public class QuizService {
         return Optional.empty();
     }
 
+
     public Optional<QuizDto> getQuizById(String id) {
-        return quizRepository.findById(id).map(QuizDto::new);
+        return quizRepository.findById(id)
+                .map(QuizDto::new);
     }
 
-    public Optional<List<QuizDto>> getFullQuizes() {
-        List<QuizDto> list = quizRepository.findAll(Sort.by(Sort.Direction.ASC, "title"))
+    public Optional<QuizDto> getTeacherQuizById(String quizId, String teacherUsername) {
+        return quizRepository.findById(quizId)
+                .filter(quiz1 -> quiz1.getAuthor().getUsername().equals(teacherUsername))
+                .map(QuizDto::new);
+    }
+
+    public Optional<List<QuizDto>> getQuizes() {
+        return Optional.of(quizRepository.findAll(Sort.by(Sort.Direction.ASC, "title"))
                 .stream()
                 .map(QuizDto::new)
+                .collect(Collectors.toList())
+        );
+    }
+
+    public Optional<List<QuizDto>> getTeacherQuizes(String teacherUsername) {
+        List<QuizDto> list = quizRepository.findAll(Sort.by(Sort.Direction.ASC, "title"))
+                .stream()
+                .filter(quiz1 -> quiz1.getAuthor().getUsername().equals(teacherUsername))
+                .map(QuizDto::new)
                 .collect(Collectors.toList());
+
         if (list.isEmpty())
             return Optional.empty();
 
         return Optional.of(list);
     }
 
-    public Optional<List<QuizDto>> getFullQuizesByAuthor(String id) {
-        List<QuizDto> list = quizRepository.findByAuthor(id);
-        if (list.isEmpty())
-            return Optional.empty();
-
-        return Optional.of(list);
+    public Optional<List<QuizDto>> getQuizesByAuthor(String id) {
+        return Optional.of(quizRepository.findByAuthor(id));
     }
 
+    public Optional<List<QuizDto>> getTeacherQuizesByAuthor(String id, String teacherUsername) {
+        return Optional.of(quizRepository.findByAuthor(id)
+                .stream()
+                .filter(quiz1 -> (quiz1.getAuthor().getUsername().equals(teacherUsername)) || quiz1.getShared())
+                .collect(Collectors.toList()));
+    }
 }

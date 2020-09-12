@@ -28,6 +28,9 @@ public class EvaluationRestService {
     @Autowired
     private SubjectRestService subjectRestService;
 
+    @Autowired
+    private QuizRestService quizRestService;
+
     @Getter
     @Setter
     private EvaluationDto evaluationDto;
@@ -43,9 +46,8 @@ public class EvaluationRestService {
     private static final Logger logger = LoggerFactory.getLogger(GradeRestService.class);
 
     public void createEvaluationsDto() {
-        subjectRestService.createSubjectsDto();
-
         restService.loginManager();
+        subjectRestService.createSubjectsDto();
         subjectRestService.postSubject();
         subjectRestService.postSubject2();
 
@@ -57,6 +59,7 @@ public class EvaluationRestService {
         this.evaluationDto.setTitle(EVALUATION_TITLE_01);
         this.evaluationDto.setDate(LocalDate.of(2018, 01, 11));
         this.evaluationDto.setSubject(subjectRestService.getSubjectDto());
+
 
         this.evaluationDto2 = new EvaluationDto();
         this.evaluationDto2.setType(EvaluationType.PRUEBA);
@@ -147,7 +150,6 @@ public class EvaluationRestService {
                 .get()
                 .build();
     }
-
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<EvaluationDto> getEvaluationsBySubject(String subjectId) {

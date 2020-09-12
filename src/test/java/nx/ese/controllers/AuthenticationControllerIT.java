@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class TokenControllerIT {
+public class AuthenticationControllerIT {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -32,10 +32,12 @@ public class TokenControllerIT {
 
     private UserDto getUserByUsername(String username) {
         UserDto userDto = restService.restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
-                .path(UserController.USER).path(UserController.PATH_USERNAME).expand(username)
-                .bearerAuth(restService.getAuthToken().getToken()).get().log().build();
+                .path(UserController.USER)
+                .path(UserController.PATH_USERNAME).expand(username)
+                .bearerAuth(restService.getAuthToken().getToken())
+                .get()
+                .build();
         return userDto;
-
     }
 
     @Test
@@ -48,7 +50,6 @@ public class TokenControllerIT {
     public void testLoginAdminUnauthorized() {
         thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
         restService.loginUser(restService.getAdminUsername(), "incorrectPass");
-
     }
 
     @Test
@@ -59,9 +60,13 @@ public class TokenControllerIT {
 
     @Test
     public void testLoginNoUserAndPass() {
-        thrown.expect(new HttpMatcher(HttpStatus.BAD_REQUEST));
-        restService.restBuilder().path(AuthenticationController.TOKEN).path(AuthenticationController.GENERATE_TOKEN)
-                .post().build();
+        thrown.expect(new HttpMatcher(HttpStatus.UNAUTHORIZED));
+        restService.restBuilder()
+                .path(AuthenticationController.TOKEN)
+                .path(AuthenticationController.GENERATE_TOKEN)
+                //.basicAuth("null","null")
+                .post()
+                .build();
     }
 
 
