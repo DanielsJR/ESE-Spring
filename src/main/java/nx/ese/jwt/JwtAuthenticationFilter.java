@@ -69,7 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                log.info("Access granted to user: {}, Authorities {}", authentication.getName(), authentication.getAuthorities());
+                log.info("Access granted to User: {}, Authorities {}", authentication.getName(), authentication.getAuthorities());
             }
         }
 
