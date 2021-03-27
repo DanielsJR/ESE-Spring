@@ -349,10 +349,10 @@ preferencesList:
 
   - user: *u021
     theme:
-      name: lime-pink
+      name: deeppurple-amber
       dark: false
-      primaryColor: '#CDDC39'
-      accentColor: '#ff4081'
+      primaryColor: '#673ab7'
+      accentColor: '#ffab00'
 
   - user: *u022
     theme:
@@ -405,6 +405,35 @@ preferencesList:
 
 # COURSES
 coursesList:
+
+  #2020-----
+  - &1-A-20
+    name: PRIMERO_A
+    chiefTeacher: *u020
+    students:
+      - *u030
+      - *u031
+      - *u032
+    year: 2020
+
+  - &1-B-20
+    name: PRIMERO_B
+    chiefTeacher: *u021
+    students:
+      - *u033
+      - *u034
+      - *u035
+    year: 2020
+
+  - &1-C-20
+    name: PRIMERO_C
+    chiefTeacher: *u022
+    students:
+      - *u036
+      - *u037
+      - *u038
+    year: 2020
+
 
   #2018-----
   - &8-C-18

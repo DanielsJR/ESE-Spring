@@ -175,7 +175,7 @@ public class DatabaseSeederService {
             user.setCommune(Commune.QUINTA_NORMAL);
             this.userRepository.save(user);
 
-            Theme theme = new Theme("indigo-pink-dark", true, "#3F51B5","#ff4081");
+            Theme theme = new Theme("blue-orange-dark", true, "#448aff","#ffab40");
             Preferences preference = new Preferences(user, theme);
             this.preferencesRepository.insert(preference);
         }

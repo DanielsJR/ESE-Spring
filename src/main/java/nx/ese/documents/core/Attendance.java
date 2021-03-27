@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import nx.ese.utils.NxDateFormatter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -56,22 +57,16 @@ public class Attendance {
 
 	@Override
 	public String toString() {
-
-		String fDate = "null";
-		if (this.date != null)
-			fDate = new SimpleDateFormat("dd-MMM-yyyy").format(date.getTime());
-
-		String cDate = "null";
-		if (this.createdDate != null)
-			cDate = new SimpleDateFormat("dd-MMM-yyyy").format(createdDate.getTime());
-
-		String lModified = "null";
-		if (this.lastModifiedDate != null)
-			lModified = new SimpleDateFormat("dd-MMM-yyyy").format(lastModifiedDate.getTime());
-		
-		return "Attendance [id=" + id + ", subjectId=" + subjectId + ", students=" + students + ", date=" + fDate
-				+ ", createdBy=" + createdBy + ", createdDate=" + cDate + ", lastModifiedUser=" + lastModifiedUser
-				+ ", lastModifiedDate=" + lModified + "]";
+		return "Attendance{" +
+				"id='" + id + '\'' +
+				", subjectId='" + subjectId + '\'' +
+				", students=" + students +
+				", date=" + date +
+				", createdBy='" + createdBy + '\'' +
+				", createdDate=" + NxDateFormatter.formatterDate(createdDate) +
+				", lastModifiedUser='" + lastModifiedUser + '\'' +
+				", lastModifiedDate=" + NxDateFormatter.formatterDate(lastModifiedDate) +
+				'}';
 	}
 
 	@Override

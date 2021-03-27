@@ -80,9 +80,16 @@ public class AttendanceDto {
 
     @Override
     public String toString() {
-        return "Attendance [id=" + id + ", subjectId=" + subjectId + ", students=" + students + ", date=" + NxDateFormatter.formatterDate(this.date)
-                + ", createdBy=" + createdBy + ", createdDate=" + NxDateFormatter.formatterDate(this.createdDate) + ", lastModifiedUser=" + lastModifiedUser
-                + ", lastModifiedDate=" + NxDateFormatter.formatterDate(this.lastModifiedDate) + "]";
+        return "AttendanceDto{" +
+                "id='" + id + '\'' +
+                ", subjectId='" + subjectId + '\'' +
+                ", students=" + students +
+                ", date=" + date +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdDate=" + NxDateFormatter.formatterDate(createdDate) +
+                ", lastModifiedUser='" + lastModifiedUser + '\'' +
+                ", lastModifiedDate=" + NxDateFormatter.formatterDate(lastModifiedDate) +
+                '}';
     }
 
     @Override
